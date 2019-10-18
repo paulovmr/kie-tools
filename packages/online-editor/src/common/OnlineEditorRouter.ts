@@ -22,7 +22,7 @@ export class OnlineEditorRouter extends Router {
   }
 
   public getRelativePathTo(uri: string): string {
-    return `${this.getTargetOrigin()}${uri}`;
+    return `${this.getTargetOrigin()}/${uri}`;
   }
 
   public getLanguageData(fileExtension: string) {
@@ -30,6 +30,6 @@ export class OnlineEditorRouter extends Router {
   }
 
   public getTargetOrigin() {
-    return "/";
+    return "";
   }
 }

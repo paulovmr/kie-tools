@@ -20,16 +20,12 @@ import { EditorContext } from "./EditorContext";
 import { EnvelopeBusOuterMessageHandler } from "@kogito-tooling/microeditor-envelope-protocol";
 import { Router } from "@kogito-tooling/core-api";
 
-const ONLINE_EDITOR_SYNC_POLLING_INTERVAL = 1500;
-
-let polling: any;
-
 export function EditorIframe(props: {
   router: Router;
   openFileExtension: string;
   getFileContents: () => Promise<string | undefined>;
 }) {
-  const isolatedEditorState = useContext(EditorContext);
+  const editorState = useContext(EditorContext);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const envelopeBusOuterMessageHandler = new EnvelopeBusOuterMessageHandler(
@@ -54,7 +50,6 @@ export function EditorIframe(props: {
         props
           .getFileContents()
           .then(c => self.respond_contentRequest(c || ""))
-          .then(() => startPollingForChangesOnDiagram());
       },
       receive_setContentError() {
         //TODO: Display a nice message with explanation why "setContent" failed
@@ -66,37 +61,20 @@ export function EditorIframe(props: {
       },
       receive_ready() {
         console.info(`Editor is ready`);
-        if (isolatedEditorState.onEditorReady) {
-          isolatedEditorState.onEditorReady();
+        if (editorState.onEditorReady) {
+          editorState.onEditorReady();
         }
       }
     })
   );
-
-  function startPollingForChangesOnDiagram() {
-    if (polling) {
-      return;
-    }
-
-    polling = setInterval(
-      () => envelopeBusOuterMessageHandler.request_contentResponse(),
-      ONLINE_EDITOR_SYNC_POLLING_INTERVAL
-    );
-  }
-
-  function stopPollingForChangesOnDiagram() {
-    clearInterval(polling);
-    polling = undefined;
-  }
 
   useEffect(
     () => {
       props
         .getFileContents()
         .then(c => envelopeBusOuterMessageHandler.respond_contentRequest(c || ""))
-        .then(startPollingForChangesOnDiagram);
     },
-    [isolatedEditorState]
+    [editorState]
   );
 
   useEffect(() => {
@@ -107,7 +85,6 @@ export function EditorIframe(props: {
     return () => {
       envelopeBusOuterMessageHandler.stopInitPolling();
       window.removeEventListener("message", listener);
-      stopPollingForChangesOnDiagram();
     };
   }, []);
 
@@ -115,7 +92,7 @@ export function EditorIframe(props: {
     <iframe
       ref={iframeRef}
       id={"kogito-iframe"}
-      className={isolatedEditorState.fullscreen ? "fullscreen" : "not-fullscreen"}
+      className={editorState.fullscreen ? "fullscreen" : "not-fullscreen"}
       src={props.router.getRelativePathTo("envelope/index.html")}
     />
   );

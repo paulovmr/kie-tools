@@ -33,8 +33,8 @@ module.exports = {
     new CopyPlugin([
       { from: "./static/resources", to: "./resources" },
       { from: "./static/envelope", to: "./envelope" },
+      { from: "./static/images", to: "./images" },
       { from: "./static/index.html", to: "./index.html" },
-      { from: "./static/kogito_logo.png", to: "./kogito_logo.png" },
       { from: "../unpacked-gwt-editors", to: "./unpacked-gwt-editors" }
     ]),
   ],
@@ -66,7 +66,9 @@ module.exports = {
     },
     watchContentBase: true,
     contentBase: [
-      path.join(__dirname, "./dist")
+      path.join(__dirname, "./dist"),
+      path.join(__dirname, "./src"),
+      path.join(__dirname, "./static")
     ],
     compress: true,
     port: 9000

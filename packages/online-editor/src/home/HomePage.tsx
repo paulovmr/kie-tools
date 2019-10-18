@@ -15,11 +15,55 @@
  */
 
 import * as React from "react";
+import { useContext } from "react";
+import { GlobalContext } from "../common/GlobalContext";
 
 export function HomePage() {
+  const globalContext = useContext(GlobalContext);
+
+  let uploadBoxOnDragOver = (e: any) => {
+    const uploadBox = document.getElementById("upload-box")!;
+    uploadBox.className = 'hover';
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  };
+
+  let uploadBoxOnDragEnd = (e: any) => {
+    const uploadBox = document.getElementById("upload-box")!;
+    uploadBox.className = '';
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  };
+
+  let uploadBoxOnDrop = (e: any) => {
+    const uploadBox = document.getElementById("upload-box")!;
+    uploadBox.className = '';
+    e.stopPropagation();
+    e.preventDefault();
+
+    var file = e.dataTransfer.files[0],
+    reader = new FileReader();
+    reader.onload = function(event: any) {
+      console.log(event.target);
+      uploadBox.innerText = event.target.result;
+    };
+    console.log(file);
+    reader.readAsText(file);
+
+    return false;
+  };
+
   return (
-    <div>
-      {"Welcome!"}
+    <div className="fullscreen centered">
+      <img src={globalContext.router.getRelativePathTo("images/kogito_logo.png")} />
+      <div 
+        id="upload-box" 
+        onDragOver={uploadBoxOnDragOver} 
+        onDragLeave={uploadBoxOnDragEnd} 
+        onDrop={uploadBoxOnDrop} 
+      ></div> 
     </div>
   );
 }

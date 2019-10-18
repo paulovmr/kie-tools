@@ -16,17 +16,21 @@
 
 import * as React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { routes } from "./Routes";
+import { routes } from "./common/Routes";
 import { Page } from "@patternfly/react-core";
-import { HomePage } from "./HomePage";
+import { HomePage } from "./home/HomePage";
 import { Editor } from "./editor/Editor";
+import { NoMatchPage } from "./NoMatchPage";
 
 export function Main() {
   return (
     <Router>
       <Page>
-        <Route path="/editor" component={Editor} />
-        <Route exact path="/" component={HomePage} />
+        <Switch>
+          <Route path="/editor" component={Editor} />
+          <Route exact path="/" component={HomePage} />
+          <Route component={NoMatchPage} />
+        </Switch>
       </Page>
     </Router>
   );

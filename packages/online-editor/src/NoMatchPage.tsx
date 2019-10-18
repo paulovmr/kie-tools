@@ -15,21 +15,11 @@
  */
 
 import * as React from "react";
-import { GlobalContext } from "./common/GlobalContext";
-import { OnlineEditorRouter } from "./common/OnlineEditorRouter";
-import { GwtEditorRoutes } from "@kogito-tooling/gwt-editors";
-import { Main } from "./Main";
 
-export function App() {
-  const onlineEditorRouter = new OnlineEditorRouter(new GwtEditorRoutes(
-    {
-      bpmnPath: "../unpacked-gwt-editors/bpmn",
-    }
-  ));
-
+export function NoMatchPage() {
   return (
-    <GlobalContext.Provider value={{ router: onlineEditorRouter }}>
-      <Main />
-    </GlobalContext.Provider>
+    <div>
+      404
+    </div>
   );
 }

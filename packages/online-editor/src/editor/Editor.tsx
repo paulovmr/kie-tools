@@ -22,9 +22,9 @@ import { SingleEditorToolbar } from "./EditorToolbar";
 import { FullScreenToolbar } from "./EditorFullScreenToolbar";
 import { EditorIframe } from "./EditorIframe";
 
-export function Editor(props: { filePath: string }) {
+export function Editor(props: { content: string }) {
     const globalContext = useContext(GlobalContext);
-    const openFileExtension = extractOpenFileExtension(window.location.href);
+    const editorType = extractEditorType(window.location.href);
     const [fullscreen, setFullscreen] = useState(false);
   
     return (
@@ -46,19 +46,15 @@ export function Editor(props: { filePath: string }) {
 
         <EditorIframe
           router={globalContext.router}
-          openFileExtension={openFileExtension!}
-          getFileContents={getFileContents}
+          openFileExtension={editorType!}
+          getFileContents={() => { return Promise.resolve(props.content); }}
         />
       </EditorContext.Provider>
     );
 }
 
-export function getFileContents() {
-  return Promise.resolve("test");
-}
-
-export function extractOpenFileExtension(url: string) {
-  const splitLocationHref = url.split(".").pop();
+export function extractEditorType(url: string) {
+  const splitLocationHref = url.split("/").pop();
   if (!splitLocationHref) {
     return undefined;
   }
