@@ -26,11 +26,13 @@ export function Main() {
   return (
     <Router>
       <Page>
-        <Switch>
-          <Route path="/editor" component={Editor} />
-          <Route exact path="/" component={HomePage} />
-          <Route component={NoMatchPage} />
-        </Switch>
+        <div id="main-container">
+          <Switch>
+            <Route path="/editor" component={Editor} />
+            <Route exact path="/" component={HomePage} />
+            <Route component={NoMatchPage} />
+          </Switch>
+        </div>
       </Page>
     </Router>
   );

@@ -15,10 +15,14 @@
  */
 
 import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { History } from "history";
 import { useContext } from "react";
 import { GlobalContext } from "../common/GlobalContext";
+import { Editor } from "../editor/Editor";
+import { routes } from "../common/Routes";
 
-export function HomePage() {
+export function HomePage(props: { history: History; }) {
   const globalContext = useContext(GlobalContext);
 
   let uploadBoxOnDragOver = (e: any) => {
@@ -46,8 +50,13 @@ export function HomePage() {
     var file = e.dataTransfer.files[0],
     reader = new FileReader();
     reader.onload = function(event: any) {
-      console.log(event.target);
-      uploadBox.innerText = event.target.result;
+      console.log(event.target.result);
+      //uploadBox.innerText = event.target.result;
+      props.history.push(routes.editor({ type: extractEditorType(file.name)! }))
+      ReactDOM.render(
+        <Editor content={event.target.result} />,
+        document.getElementById("main-container")!
+      );
     };
     console.log(file);
     reader.readAsText(file);
@@ -66,4 +75,23 @@ export function HomePage() {
       ></div> 
     </div>
   );
+}
+
+export function extractEditorType(fileName: string) {
+  const fileExtension = fileName.split(".").pop();
+  if (!fileExtension) {
+    return undefined;
+  }
+
+  const openFileExtensionRegex = fileExtension.match(/[\w\d]+/);
+  if (!openFileExtensionRegex) {
+    return undefined;
+  }
+
+  const openFileExtension = openFileExtensionRegex.pop();
+  if (!openFileExtension) {
+    return undefined;
+  }
+
+  return openFileExtension;
 }
