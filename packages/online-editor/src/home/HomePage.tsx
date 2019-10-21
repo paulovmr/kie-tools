@@ -18,14 +18,25 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { History } from "history";
 import { useContext } from "react";
-import { GlobalContext } from "../common/GlobalContext";
+import { GlobalContext, GlobalContextType } from "../common/GlobalContext";
 import { Editor } from "../editor/Editor";
 import { routes } from "../common/Routes";
+import { GlobalStateType } from "../common/GlobalState";
+import { match } from "react-router";
 
-export function HomePage(props: { history: History; }) {
-  const globalContext = useContext(GlobalContext);
+interface Props {
+  context: GlobalContextType;
+  onFileUpload: (file: any) => void;
+}
 
-  let uploadBoxOnDragOver = (e: any) => {
+export class HomePageComponent extends React.Component<Props, GlobalStateType> {
+  static globalContext = GlobalContext;
+
+  constructor(props: Props) {
+    super(props);
+  }
+
+  private uploadBoxOnDragOver = (e: any) => {
     const uploadBox = document.getElementById("upload-box")!;
     uploadBox.className = 'hover';
     e.stopPropagation();
@@ -33,7 +44,7 @@ export function HomePage(props: { history: History; }) {
     return false;
   };
 
-  let uploadBoxOnDragEnd = (e: any) => {
+  private uploadBoxOnDragEnd = (e: any) => {
     const uploadBox = document.getElementById("upload-box")!;
     uploadBox.className = '';
     e.stopPropagation();
@@ -41,57 +52,35 @@ export function HomePage(props: { history: History; }) {
     return false;
   };
 
-  let uploadBoxOnDrop = (e: any) => {
+  private uploadBoxOnDrop = (e: any) => {
     const uploadBox = document.getElementById("upload-box")!;
     uploadBox.className = '';
     e.stopPropagation();
     e.preventDefault();
 
-    var file = e.dataTransfer.files[0],
-    reader = new FileReader();
-    reader.onload = function(event: any) {
-      console.log(event.target.result);
-      //uploadBox.innerText = event.target.result;
-      props.history.push(routes.editor({ type: extractEditorType(file.name)! }))
-      ReactDOM.render(
-        <Editor content={event.target.result} />,
-        document.getElementById("main-container")!
-      );
-    };
-    console.log(file);
-    reader.readAsText(file);
+    var file = e.dataTransfer.files[0];
+    this.props.onFileUpload(file);
 
     return false;
   };
 
-  return (
-    <div className="fullscreen centered">
-      <img src={globalContext.router.getRelativePathTo("images/kogito_logo.png")} />
-      <div 
-        id="upload-box" 
-        onDragOver={uploadBoxOnDragOver} 
-        onDragLeave={uploadBoxOnDragEnd} 
-        onDrop={uploadBoxOnDrop} 
-      ></div> 
-    </div>
-  );
+  render() {
+    return (
+      <div className="fullscreen centered">
+        <img src={this.props.context.router.getRelativePathTo("images/kogito_logo.png")} />
+        <div 
+          id="upload-box" 
+          onDragOver={this.uploadBoxOnDragOver} 
+          onDragLeave={this.uploadBoxOnDragEnd} 
+          onDrop={this.uploadBoxOnDrop} 
+        ></div> 
+      </div>
+    )
+  };
 }
 
-export function extractEditorType(fileName: string) {
-  const fileExtension = fileName.split(".").pop();
-  if (!fileExtension) {
-    return undefined;
-  }
+export function HomePage(props: { onFileUpload: (file: any) => void }) {
+  let globalContext = useContext(GlobalContext);
 
-  const openFileExtensionRegex = fileExtension.match(/[\w\d]+/);
-  if (!openFileExtensionRegex) {
-    return undefined;
-  }
-
-  const openFileExtension = openFileExtensionRegex.pop();
-  if (!openFileExtension) {
-    return undefined;
-  }
-
-  return openFileExtension;
-}
+  return <HomePageComponent context={globalContext} onFileUpload={props.onFileUpload} />
+};

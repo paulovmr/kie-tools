@@ -15,12 +15,13 @@
  */
 
 import * as React from "react";
+import { History } from "history";
 import { GlobalContext } from "./common/GlobalContext";
 import { OnlineEditorRouter } from "./common/OnlineEditorRouter";
 import { GwtEditorRoutes } from "@kogito-tooling/gwt-editors";
 import { Main } from "./Main";
 
-export function App() {
+export function App(props: { history: History; }) {
   const onlineEditorRouter = new OnlineEditorRouter(new GwtEditorRoutes(
     {
       bpmnPath: "../unpacked-gwt-editors/bpmn",
@@ -29,7 +30,7 @@ export function App() {
 
   return (
     <GlobalContext.Provider value={{ router: onlineEditorRouter }}>
-      <Main />
+      <Main history={props.history} />
     </GlobalContext.Provider>
   );
 }

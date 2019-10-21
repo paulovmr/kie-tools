@@ -15,7 +15,7 @@
  */
 
 import * as React from "react";
-import { useLayoutEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { GlobalContext } from "../common/GlobalContext";
 import { EditorContext } from "./EditorContext";
 import { SingleEditorToolbar } from "./EditorToolbar";

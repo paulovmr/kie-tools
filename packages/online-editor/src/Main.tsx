@@ -16,24 +16,83 @@
 
 import * as React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { History } from "history";
 import { routes } from "./common/Routes";
 import { Page } from "@patternfly/react-core";
 import { HomePage } from "./home/HomePage";
 import { Editor } from "./editor/Editor";
 import { NoMatchPage } from "./NoMatchPage";
+import { useState, useContext } from "react";
+import { GlobalContextType } from "./common/GlobalContext";
+import { GlobalStateType } from "./common/GlobalState";
 
-export function Main() {
-  return (
-    <Router>
-      <Page>
-        <div id="main-container">
-          <Switch>
-            <Route path="/editor" component={Editor} />
-            <Route exact path="/" component={HomePage} />
-            <Route component={NoMatchPage} />
-          </Switch>
-        </div>
-      </Page>
-    </Router>
-  );
+interface Props {
+  history: History;
+}
+
+export class Main extends React.Component<Props, GlobalStateType> {
+  private fileContent: string;
+  private fileExtension: string;
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      openedFile: null
+    };
+  }
+
+  onFileChanged(file: any) {
+    this.fileExtension = extractEditorType(file.name)!;
+    this.props.history.push(routes.editor({ type: this.fileExtension }));
+
+    if (file != null) {
+      const setFileContent = (fileContent: string) => {
+        this.fileContent = fileContent;
+        this.setState({ openedFile: file });
+      }
+
+      let reader = new FileReader();
+      reader.onload = function(event: any) {
+        console.log(event.target.result);
+        setFileContent(event.target.result);
+      };
+      reader.readAsText(file);
+    } else {
+      this.fileContent = "";
+      this.setState({ openedFile: file });
+    }
+  }
+
+  render() {
+    return (
+      <>
+        {this.state.openedFile == null && (
+          <HomePage onFileUpload={(file) => this.onFileChanged(file)} />
+        )}
+
+        {this.state.openedFile != null && (
+          <Editor content={this.fileContent}/>
+        )}
+      </>
+    )
+  };
+}
+
+export function extractEditorType(fileName: string) {
+  const fileExtension = fileName.split(".").pop();
+  if (!fileExtension) {
+    return undefined;
+  }
+
+  const openFileExtensionRegex = fileExtension.match(/[\w\d]+/);
+  if (!openFileExtensionRegex) {
+    return undefined;
+  }
+
+  const openFileExtension = openFileExtensionRegex.pop();
+  if (!openFileExtension) {
+    return undefined;
+  }
+
+  return openFileExtension;
 }
