@@ -16,14 +16,10 @@
 
 import * as React from "react";
 
-export interface EditorContextType {
+export interface EditorStateType {
   fullscreen: boolean;
-  onEditorReady?: () => void;
 }
 
-export const EditorContext = React.createContext<EditorContextType>({
-  fullscreen: false,
-  onEditorReady: () => {
-    /**/
-  }
+export const EditorState = React.createContext<EditorStateType>({
+  fullscreen: false
 });

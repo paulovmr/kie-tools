@@ -15,59 +15,69 @@
  */
 
 import * as React from "react";
-import { useState, useContext } from "react";
-import { GlobalContext } from "../common/GlobalContext";
-import { EditorContext } from "./EditorContext";
+import { useContext, useRef } from "react";
+import { GlobalContext, GlobalContextType } from "../common/GlobalContext";
 import { SingleEditorToolbar } from "./EditorToolbar";
 import { FullScreenToolbar } from "./EditorFullScreenToolbar";
 import { EditorIframe } from "./EditorIframe";
+import { EditorStateType, EditorState } from "./EditorState";
+import { RefObject } from "react";
 
-export function Editor(props: { content: string }) {
-    const globalContext = useContext(GlobalContext);
-    const editorType = extractEditorType(window.location.href);
-    const [fullscreen, setFullscreen] = useState(false);
-  
+interface Props {
+  context: GlobalContextType;
+  getFileContents: () => Promise<string | undefined>;
+  fileExtension: string;
+}
+
+export function Editor(props: { getFileContents: () => Promise<string | undefined>, fileExtension: string }) {
+  const globalContext = useContext(GlobalContext);
+
+  return <EditorComponent context={globalContext} getFileContents={props.getFileContents} fileExtension={props.fileExtension} />
+};
+
+export class EditorComponent extends React.Component<Props, EditorStateType> {
+  private editorIframeRef: RefObject<EditorIframe>;
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      fullscreen: false
+    };
+  }
+
+  private save(content: string) {
+    const element = document.createElement("a");
+    const file = new Blob([content], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "myFile.bpmn";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  }
+
+  render() {
+    this.editorIframeRef = React.createRef();
     return (
-      <EditorContext.Provider
-        value={{
-          fullscreen: fullscreen,
-        }}
-      >
-        {!fullscreen &&
+      <EditorState.Provider value={{ fullscreen: this.state.fullscreen }}>
+        {!this.state.fullscreen &&
           <SingleEditorToolbar
-            onFullScreen={() => setFullscreen(true)}
-            save={() => alert("Save!")}
+            onFullScreen={() => this.setState({ fullscreen: true })}
+            save={() => this.editorIframeRef.current!.requestSave()}
           />
         }
 
-        {fullscreen &&
-          <FullScreenToolbar onExitFullScreen={() => setFullscreen(false)} />
+        {this.state.fullscreen &&
+          <FullScreenToolbar onExitFullScreen={() => this.setState({ fullscreen: false })} />
         }
 
         <EditorIframe
-          router={globalContext.router}
-          openFileExtension={editorType!}
-          getFileContents={() => { return Promise.resolve(props.content); }}
+          ref={this.editorIframeRef}
+          openFileExtension={this.props.fileExtension}
+          getFileContents={this.props.getFileContents}
+          context={this.props.context}
+          onSave={(content) => { this.save(content) }}
+          fullscreen={this.state.fullscreen}
         />
-      </EditorContext.Provider>
-    );
-}
-
-export function extractEditorType(url: string) {
-  const splitLocationHref = url.split("/").pop();
-  if (!splitLocationHref) {
-    return undefined;
-  }
-
-  const openFileExtensionRegex = splitLocationHref.match(/[\w\d]+/);
-  if (!openFileExtensionRegex) {
-    return undefined;
-  }
-
-  const openFileExtension = openFileExtensionRegex.pop();
-  if (!openFileExtension) {
-    return undefined;
-  }
-
-  return openFileExtension;
+      </EditorState.Provider>
+    )
+  };
 }

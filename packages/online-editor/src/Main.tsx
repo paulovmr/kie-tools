@@ -15,15 +15,10 @@
  */
 
 import * as React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { History } from "history";
 import { routes } from "./common/Routes";
-import { Page } from "@patternfly/react-core";
 import { HomePage } from "./home/HomePage";
 import { Editor } from "./editor/Editor";
-import { NoMatchPage } from "./NoMatchPage";
-import { useState, useContext } from "react";
-import { GlobalContextType } from "./common/GlobalContext";
 import { GlobalStateType } from "./common/GlobalState";
 
 interface Props {
@@ -31,7 +26,7 @@ interface Props {
 }
 
 export class Main extends React.Component<Props, GlobalStateType> {
-  private fileContent: string;
+  private getFileContents: () => Promise<string | undefined>;
   private fileExtension: string;
 
   constructor(props: Props) {
@@ -41,26 +36,41 @@ export class Main extends React.Component<Props, GlobalStateType> {
     };
   }
 
-  onFileChanged(file: any) {
-    this.fileExtension = extractEditorType(file.name)!;
+  private extractEditorType(fileName: string) {
+    const fileExtension = fileName.split(".").pop();
+    if (!fileExtension) {
+      return undefined;
+    }
+  
+    const openFileExtensionRegex = fileExtension.match(/[\w\d]+/);
+    if (!openFileExtensionRegex) {
+      return undefined;
+    }
+  
+    const openFileExtension = openFileExtensionRegex.pop();
+    if (!openFileExtension) {
+      return undefined;
+    }
+  
+    return openFileExtension;
+  }
+
+  private onFileChanged(file: any) {
+    this.fileExtension = this.extractEditorType(file.name)!;
     this.props.history.push(routes.editor({ type: this.fileExtension }));
 
     if (file != null) {
-      const setFileContent = (fileContent: string) => {
-        this.fileContent = fileContent;
-        this.setState({ openedFile: file });
-      }
-
-      let reader = new FileReader();
-      reader.onload = function(event: any) {
-        console.log(event.target.result);
-        setFileContent(event.target.result);
-      };
-      reader.readAsText(file);
+      this.getFileContents = () => new Promise<string | undefined>((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = (event: any) => {
+          resolve(event.target.result as string);
+        };
+        reader.readAsText(file);
+      });
     } else {
-      this.fileContent = "";
-      this.setState({ openedFile: file });
+      this.getFileContents = () => { return Promise.resolve("") };
     }
+    this.setState({ openedFile: file });
   }
 
   render() {
@@ -71,28 +81,9 @@ export class Main extends React.Component<Props, GlobalStateType> {
         )}
 
         {this.state.openedFile != null && (
-          <Editor content={this.fileContent}/>
+          <Editor getFileContents={this.getFileContents} fileExtension={this.fileExtension} />
         )}
       </>
     )
   };
-}
-
-export function extractEditorType(fileName: string) {
-  const fileExtension = fileName.split(".").pop();
-  if (!fileExtension) {
-    return undefined;
-  }
-
-  const openFileExtensionRegex = fileExtension.match(/[\w\d]+/);
-  if (!openFileExtensionRegex) {
-    return undefined;
-  }
-
-  const openFileExtension = openFileExtensionRegex.pop();
-  if (!openFileExtension) {
-    return undefined;
-  }
-
-  return openFileExtension;
 }

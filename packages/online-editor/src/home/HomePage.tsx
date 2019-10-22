@@ -15,22 +15,22 @@
  */
 
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { History } from "history";
 import { useContext } from "react";
 import { GlobalContext, GlobalContextType } from "../common/GlobalContext";
-import { Editor } from "../editor/Editor";
-import { routes } from "../common/Routes";
 import { GlobalStateType } from "../common/GlobalState";
-import { match } from "react-router";
 
 interface Props {
   context: GlobalContextType;
   onFileUpload: (file: any) => void;
 }
 
+export function HomePage(props: { onFileUpload: (file: any) => void }) {
+  const globalContext = useContext(GlobalContext);
+
+  return <HomePageComponent context={globalContext} onFileUpload={props.onFileUpload} />
+};
+
 export class HomePageComponent extends React.Component<Props, GlobalStateType> {
-  static globalContext = GlobalContext;
 
   constructor(props: Props) {
     super(props);
@@ -78,9 +78,3 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
     )
   };
 }
-
-export function HomePage(props: { onFileUpload: (file: any) => void }) {
-  let globalContext = useContext(GlobalContext);
-
-  return <HomePageComponent context={globalContext} onFileUpload={props.onFileUpload} />
-};

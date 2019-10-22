@@ -15,85 +15,115 @@
  */
 
 import * as React from "react";
-import { useContext, useEffect, useRef } from "react";
-import { EditorContext } from "./EditorContext";
+import { RefObject, useEffect } from "react";
+import { EditorStateType, EditorState } from "./EditorState";
 import { EnvelopeBusOuterMessageHandler } from "@kogito-tooling/microeditor-envelope-protocol";
 import { Router } from "@kogito-tooling/core-api";
+import { GlobalContextType, GlobalContext } from "../common/GlobalContext";
+import { GlobalStateType } from "../common/GlobalState";
 
-export function EditorIframe(props: {
-  router: Router;
+interface Props {
+  context: GlobalContextType;
   openFileExtension: string;
   getFileContents: () => Promise<string | undefined>;
-}) {
-  const editorState = useContext(EditorContext);
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  onSave: (fileContent: string) => void;
+  fullscreen: boolean;
+}
 
-  const envelopeBusOuterMessageHandler = new EnvelopeBusOuterMessageHandler(
-    {
-      postMessage: msg => {
-        if (iframeRef.current && iframeRef.current.contentWindow) {
-          iframeRef.current.contentWindow.postMessage(msg, "*");
+export class EditorIframe extends React.Component<Props> {
+
+  private readonly envelopeBusOuterMessageHandler: EnvelopeBusOuterMessageHandler;
+  private iframeRef: RefObject<HTMLIFrameElement>;
+
+  public constructor(props: Props) {
+    super(props);
+    this.envelopeBusOuterMessageHandler = new EnvelopeBusOuterMessageHandler(
+      {
+        postMessage: msg => {
+          if (this.iframeRef.current && this.iframeRef.current.contentWindow) {
+            this.iframeRef.current.contentWindow.postMessage(msg, "*");
+          }
         }
-      }
-    },
-    self => ({
-      pollInit() {
-        self.request_initResponse(window.location.origin);
       },
-      receive_languageRequest() {
-        self.respond_languageRequest(props.router.getLanguageData(props.openFileExtension));
-      },
-      receive_contentResponse(content: string) {
-        console.info("Save on Drive");
-      },
-      receive_contentRequest() {
-        props
-          .getFileContents()
-          .then(c => self.respond_contentRequest(c || ""))
-      },
-      receive_setContentError() {
-        //TODO: Display a nice message with explanation why "setContent" failed
-        console.info("Set content error");
-      },
-      receive_dirtyIndicatorChange(isDirty: boolean) {
-        //TODO: Perhaps show window.alert to warn that the changes were not saved?
-        console.info(`Dirty indicator changed to ${isDirty}`);
-      },
-      receive_ready() {
-        console.info(`Editor is ready`);
-        if (editorState.onEditorReady) {
-          editorState.onEditorReady();
+      self => ({
+        pollInit() {
+          self.request_initResponse(window.location.origin);
+        },
+        receive_languageRequest() {
+          self.respond_languageRequest(props.context.router.getLanguageData(props.openFileExtension));
+        },
+        receive_contentResponse(content: string) {
+          props.onSave(content);
+        },
+        receive_contentRequest() {
+          props
+            .getFileContents()
+            .then(c => self.respond_contentRequest(c || ""))
+        },
+        receive_setContentError() {
+          //TODO: Display a nice message with explanation why "setContent" failed
+          console.info("Set content error");
+        },
+        receive_dirtyIndicatorChange(isDirty: boolean) {
+          //TODO: Perhaps show window.alert to warn that the changes were not saved?
+          console.info(`Dirty indicator changed to ${isDirty}`);
+        },
+        receive_ready() {
+          console.info(`Editor is ready`);
         }
-      }
-    })
-  );
+      })
+    );
+  }
 
-  useEffect(
-    () => {
-      props
-        .getFileContents()
-        .then(c => envelopeBusOuterMessageHandler.respond_contentRequest(c || ""))
-    },
-    [editorState]
-  );
+  public requestSave() {
+    this.envelopeBusOuterMessageHandler.request_contentResponse();
+  }
 
-  useEffect(() => {
-    const listener = (msg: MessageEvent) => envelopeBusOuterMessageHandler.receive(msg.data);
-    window.addEventListener("message", listener, false);
-    envelopeBusOuterMessageHandler.startInitPolling();
+  private listener: (msg: MessageEvent) => void;
 
-    return () => {
-      envelopeBusOuterMessageHandler.stopInitPolling();
-      window.removeEventListener("message", listener);
-    };
-  }, []);
+  componentDidMount() {
+    this.props.getFileContents().then(c => this.envelopeBusOuterMessageHandler.respond_contentRequest(c || ""))
+    this.listener = (msg: MessageEvent) => this.envelopeBusOuterMessageHandler.receive(msg.data);
+    window.addEventListener("message", this.listener, false);
+    this.envelopeBusOuterMessageHandler.startInitPolling();
+  }
 
-  return (
-    <iframe
-      ref={iframeRef}
-      id={"kogito-iframe"}
-      className={editorState.fullscreen ? "fullscreen" : "not-fullscreen"}
-      src={props.router.getRelativePathTo("envelope/index.html")}
-    />
-  );
+  componentWillUnmount() {
+    this.envelopeBusOuterMessageHandler.stopInitPolling();
+    window.removeEventListener("message", this.listener);
+  }
+
+  render() {
+    /*useEffect(
+      () => {
+        this.props.getFileContents().then(c => this.envelopeBusOuterMessageHandler.respond_contentRequest(c || ""))
+      },
+      [this.state]
+    );*/
+  
+    /*useEffect(
+      () => {
+        const listener = (msg: MessageEvent) => this.envelopeBusOuterMessageHandler.receive(msg.data);
+        window.addEventListener("message", listener, false);
+        this.envelopeBusOuterMessageHandler.startInitPolling();
+    
+        return () => {
+          this.envelopeBusOuterMessageHandler.stopInitPolling();
+          window.removeEventListener("message", listener);
+        };
+      }, 
+      []
+    );*/
+
+    this.iframeRef = React.createRef();
+  
+    return (
+      <iframe
+        ref={this.iframeRef}
+        id={"kogito-iframe"}
+        className={this.props.fullscreen ? "fullscreen" : "not-fullscreen"}
+        src={this.props.context.router.getRelativePathTo("envelope/index.html")}
+      />
+    );
+  };
 }
