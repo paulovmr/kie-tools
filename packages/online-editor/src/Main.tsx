@@ -15,11 +15,13 @@
  */
 
 import * as React from "react";
+import { Router, Switch, Route } from "react-router";
 import { History } from "history";
 import { routes } from "./common/Routes";
 import { HomePage } from "./home/HomePage";
 import { Editor } from "./editor/Editor";
 import { GlobalStateType } from "./common/GlobalState";
+import { NoMatchPage } from "./NoMatchPage";
 
 interface Props {
   history: History;
@@ -59,7 +61,7 @@ export class Main extends React.Component<Props, GlobalStateType> {
   private onFileChanged(file: any) {
     this.fileName = file.name;
     this.fileExtension = this.extractEditorType(file.name)!;
-    this.props.history.push(routes.editor({ type: this.fileExtension }));
+    this.props.history.replace(routes.editor({ type: this.fileExtension }));
 
     if (file != null) {
       this.getFileContents = () => new Promise<string | undefined>((resolve, reject) => {
@@ -75,17 +77,23 @@ export class Main extends React.Component<Props, GlobalStateType> {
     this.setState({ openedFile: file });
   }
 
+  private onClose() {
+    this.props.history.replace(routes.home());
+  }
+
   public render() {
     return (
-      <>
-        {this.state.openedFile == null && (
-          <HomePage onFileUpload={(file) => this.onFileChanged(file)} />
-        )}
-
-        {this.state.openedFile != null && (
-          <Editor getFileContents={this.getFileContents} fileName={this.fileName} fileExtension={this.fileExtension} />
-        )}
-      </>
+      <Router history={this.props.history}>
+        <Switch>
+          <Route exact={true} path="/editor/bpmn">
+            <Editor getFileContents={this.getFileContents} fileName={this.fileName} fileExtension={this.fileExtension} onClose={() => this.onClose()} />
+          </Route>
+          <Route exact={true} path="/">
+            <HomePage onFileUpload={(file) => this.onFileChanged(file)} />
+          </Route>
+          <Route component={NoMatchPage} />
+        </Switch>
+      </Router>
     )
   };
 }

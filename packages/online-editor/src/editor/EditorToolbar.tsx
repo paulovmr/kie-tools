@@ -18,7 +18,8 @@ import * as React from "react";
 
 export function SingleEditorToolbar(props: {
   onFullScreen: () => void;
-  save: () => void;
+  onSave: () => void;
+  onClose: () => void;
 }) {
   const goFullScreen = (e: any) => {
     e.preventDefault();
@@ -27,12 +28,20 @@ export function SingleEditorToolbar(props: {
 
   const save = (e: any) => {
     e.preventDefault();
-    props.save();
+    props.onSave();
+  };
+
+  const close = (e: any) => {
+    e.preventDefault();
+    props.onClose();
   };
 
   return (
     <>
       <div>
+        <button className={"btn btn-sm kogito-button"} onClick={close}>
+          Close
+        </button>
         <button className={"btn btn-sm kogito-button"} onClick={save}>
           Save
         </button>

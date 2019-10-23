@@ -28,16 +28,18 @@ interface Props {
   getFileContents: () => Promise<string | undefined>;
   fileName: string;
   fileExtension: string;
+  onClose: () => void;
 }
 
-export function Editor(props: { getFileContents: () => Promise<string | undefined>, fileName: string, fileExtension: string }) {
+export function Editor(props: { getFileContents: () => Promise<string | undefined>, fileName: string, fileExtension: string, onClose: () => void }) {
   const globalContext = useContext(GlobalContext);
 
   return <EditorComponent 
            context={globalContext} 
            getFileContents={props.getFileContents}  
            fileName={props.fileName}
-           fileExtension={props.fileExtension} />
+           fileExtension={props.fileExtension}
+           onClose={props.onClose} />
 };
 
 export class EditorComponent extends React.Component<Props, EditorStateType> {
@@ -66,7 +68,8 @@ export class EditorComponent extends React.Component<Props, EditorStateType> {
         {!this.state.fullscreen &&
           <SingleEditorToolbar
             onFullScreen={() => this.setState({ fullscreen: true })}
-            save={() => this.editorIframeRef.current!.requestSave()}
+            onSave={() => this.editorIframeRef.current!.requestSave()}
+            onClose={this.props.onClose}
           />
         }
 

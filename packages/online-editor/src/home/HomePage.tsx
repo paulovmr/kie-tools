@@ -64,16 +64,25 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
     return false;
   };
 
+  private createFile() {
+    //this.props.onCreateFile("bpmn");
+  }
+
   public render() {
     return (
       <div className="fullscreen centered">
         <img src={this.props.context.router.getRelativePathTo("images/kogito_logo.png")} />
+        <div>
+          <a onClick={this.createFile}>Create</a>
+        </div>
         <div 
           id="upload-box" 
           onDragOver={this.uploadBoxOnDragOver} 
           onDragLeave={this.uploadBoxOnDragEnd} 
           onDrop={this.uploadBoxOnDrop} 
-        /> 
+        >
+          Drop a file here to open it
+        </div> 
       </div>
     )
   };
