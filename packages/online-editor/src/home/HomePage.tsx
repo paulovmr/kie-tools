@@ -58,13 +58,13 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
     e.stopPropagation();
     e.preventDefault();
 
-    var file = e.dataTransfer.files[0];
+    const file = e.dataTransfer.files[0];
     this.props.onFileUpload(file);
 
     return false;
   };
 
-  render() {
+  public render() {
     return (
       <div className="fullscreen centered">
         <img src={this.props.context.router.getRelativePathTo("images/kogito_logo.png")} />
@@ -73,7 +73,7 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
           onDragOver={this.uploadBoxOnDragOver} 
           onDragLeave={this.uploadBoxOnDragEnd} 
           onDrop={this.uploadBoxOnDrop} 
-        ></div> 
+        /> 
       </div>
     )
   };

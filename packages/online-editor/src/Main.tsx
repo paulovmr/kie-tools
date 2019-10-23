@@ -27,6 +27,7 @@ interface Props {
 
 export class Main extends React.Component<Props, GlobalStateType> {
   private getFileContents: () => Promise<string | undefined>;
+  private fileName: string;
   private fileExtension: string;
 
   constructor(props: Props) {
@@ -56,24 +57,25 @@ export class Main extends React.Component<Props, GlobalStateType> {
   }
 
   private onFileChanged(file: any) {
+    this.fileName = file.name;
     this.fileExtension = this.extractEditorType(file.name)!;
     this.props.history.push(routes.editor({ type: this.fileExtension }));
 
     if (file != null) {
       this.getFileContents = () => new Promise<string | undefined>((resolve, reject) => {
-        let reader = new FileReader();
+        const reader = new FileReader();
         reader.onload = (event: any) => {
           resolve(event.target.result as string);
         };
         reader.readAsText(file);
       });
     } else {
-      this.getFileContents = () => { return Promise.resolve("") };
+      this.getFileContents = () => Promise.resolve("");
     }
     this.setState({ openedFile: file });
   }
 
-  render() {
+  public render() {
     return (
       <>
         {this.state.openedFile == null && (
@@ -81,7 +83,7 @@ export class Main extends React.Component<Props, GlobalStateType> {
         )}
 
         {this.state.openedFile != null && (
-          <Editor getFileContents={this.getFileContents} fileExtension={this.fileExtension} />
+          <Editor getFileContents={this.getFileContents} fileName={this.fileName} fileExtension={this.fileExtension} />
         )}
       </>
     )

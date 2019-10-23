@@ -26,13 +26,18 @@ import { RefObject } from "react";
 interface Props {
   context: GlobalContextType;
   getFileContents: () => Promise<string | undefined>;
+  fileName: string;
   fileExtension: string;
 }
 
-export function Editor(props: { getFileContents: () => Promise<string | undefined>, fileExtension: string }) {
+export function Editor(props: { getFileContents: () => Promise<string | undefined>, fileName: string, fileExtension: string }) {
   const globalContext = useContext(GlobalContext);
 
-  return <EditorComponent context={globalContext} getFileContents={props.getFileContents} fileExtension={props.fileExtension} />
+  return <EditorComponent 
+           context={globalContext} 
+           getFileContents={props.getFileContents}  
+           fileName={props.fileName}
+           fileExtension={props.fileExtension} />
 };
 
 export class EditorComponent extends React.Component<Props, EditorStateType> {
@@ -49,12 +54,12 @@ export class EditorComponent extends React.Component<Props, EditorStateType> {
     const element = document.createElement("a");
     const file = new Blob([content], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = "myFile.bpmn";
+    element.download = this.props.fileName;
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   }
 
-  render() {
+  public render() {
     this.editorIframeRef = React.createRef();
     return (
       <EditorState.Provider value={{ fullscreen: this.state.fullscreen }}>

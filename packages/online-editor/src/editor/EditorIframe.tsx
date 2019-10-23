@@ -34,6 +34,7 @@ export class EditorIframe extends React.Component<Props> {
 
   private readonly envelopeBusOuterMessageHandler: EnvelopeBusOuterMessageHandler;
   private iframeRef: RefObject<HTMLIFrameElement>;
+  private listener: (msg: MessageEvent) => void;
 
   public constructor(props: Props) {
     super(props);
@@ -79,42 +80,19 @@ export class EditorIframe extends React.Component<Props> {
     this.envelopeBusOuterMessageHandler.request_contentResponse();
   }
 
-  private listener: (msg: MessageEvent) => void;
-
-  componentDidMount() {
+  public componentDidMount() {
     this.props.getFileContents().then(c => this.envelopeBusOuterMessageHandler.respond_contentRequest(c || ""))
     this.listener = (msg: MessageEvent) => this.envelopeBusOuterMessageHandler.receive(msg.data);
     window.addEventListener("message", this.listener, false);
     this.envelopeBusOuterMessageHandler.startInitPolling();
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     this.envelopeBusOuterMessageHandler.stopInitPolling();
     window.removeEventListener("message", this.listener);
   }
 
-  render() {
-    /*useEffect(
-      () => {
-        this.props.getFileContents().then(c => this.envelopeBusOuterMessageHandler.respond_contentRequest(c || ""))
-      },
-      [this.state]
-    );*/
-  
-    /*useEffect(
-      () => {
-        const listener = (msg: MessageEvent) => this.envelopeBusOuterMessageHandler.receive(msg.data);
-        window.addEventListener("message", listener, false);
-        this.envelopeBusOuterMessageHandler.startInitPolling();
-    
-        return () => {
-          this.envelopeBusOuterMessageHandler.stopInitPolling();
-          window.removeEventListener("message", listener);
-        };
-      }, 
-      []
-    );*/
-
+  public render() {
     this.iframeRef = React.createRef();
   
     return (
