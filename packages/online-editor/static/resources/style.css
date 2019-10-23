@@ -29,13 +29,13 @@ body {
 
 .fullscreen {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 4px);
   border: 0;
 }
 
 .not-fullscreen {
-  width: 100%;
-  height: 100%;
+  width: calc(100vw - 4px);
+  height: calc(100vh - 51px);
 }
 
 #kogito-iframe-fullscreen-toolbar {
@@ -73,4 +73,46 @@ body {
 
 #upload-box.hover {
   border: 10px dashed #333; 
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.home {
+  font-size: 20px;
+  font-weight: bold;
+  color: gray;
+}
+
+.home .file-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home .file-actions span {
+  margin: 0 10px;
 }

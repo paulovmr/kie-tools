@@ -58,7 +58,7 @@ export class Main extends React.Component<Props, GlobalStateType> {
     return openFileExtension;
   }
 
-  private onFileChanged(file: any) {
+  private onFileUpload(file: any) {
     this.fileName = file.name;
     this.fileExtension = this.extractEditorType(file.name)!;
     this.props.history.replace(routes.editor({ type: this.fileExtension }));
@@ -77,6 +77,14 @@ export class Main extends React.Component<Props, GlobalStateType> {
     this.setState({ openedFile: file });
   }
 
+  private onFileCreation(type: string) {
+    this.fileName = "new-file." + type;
+    this.fileExtension = type;
+    this.props.history.replace(routes.editor({ type: this.fileExtension }));
+    this.getFileContents = () => Promise.resolve("");
+    this.setState({ openedFile: this.fileName });
+  }
+
   private onClose() {
     this.props.history.replace(routes.home());
   }
@@ -85,11 +93,12 @@ export class Main extends React.Component<Props, GlobalStateType> {
     return (
       <Router history={this.props.history}>
         <Switch>
-          <Route exact={true} path="/editor/bpmn">
+          <Route path="/editor">
             <Editor getFileContents={this.getFileContents} fileName={this.fileName} fileExtension={this.fileExtension} onClose={() => this.onClose()} />
           </Route>
           <Route exact={true} path="/">
-            <HomePage onFileUpload={(file) => this.onFileChanged(file)} />
+            <HomePage onFileUpload={(file) => this.onFileUpload(file)}
+                      onFileCreation={(type) => this.onFileCreation(type)} />
           </Route>
           <Route component={NoMatchPage} />
         </Switch>

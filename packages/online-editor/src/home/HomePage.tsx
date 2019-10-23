@@ -15,25 +15,32 @@
  */
 
 import * as React from "react";
-import { useContext } from "react";
+import { useContext, RefObject } from "react";
 import { GlobalContext, GlobalContextType } from "../common/GlobalContext";
 import { GlobalStateType } from "../common/GlobalState";
 
 interface Props {
   context: GlobalContextType;
   onFileUpload: (file: any) => void;
+  onFileCreation: (type: string) => void;
 }
 
-export function HomePage(props: { onFileUpload: (file: any) => void }) {
+export function HomePage(props: { onFileUpload: (file: any) => void, onFileCreation: (type: string) => void }) {
   const globalContext = useContext(GlobalContext);
 
-  return <HomePageComponent context={globalContext} onFileUpload={props.onFileUpload} />
+  return <HomePageComponent context={globalContext} 
+                            onFileUpload={props.onFileUpload} 
+                            onFileCreation={props.onFileCreation} />
 };
 
 export class HomePageComponent extends React.Component<Props, GlobalStateType> {
+  private typeSelect: RefObject<HTMLSelectElement>;
+  private uploadInput: RefObject<HTMLInputElement>;
 
   constructor(props: Props) {
     super(props);
+    this.typeSelect = React.createRef();
+    this.uploadInput = React.createRef();
   }
 
   private uploadBoxOnDragOver = (e: any) => {
@@ -65,23 +72,42 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
   };
 
   private createFile() {
-    //this.props.onCreateFile("bpmn");
+    this.props.onFileCreation(this.typeSelect.current!.value);
+  }
+
+  private editFile() {
+    if (this.uploadInput.current!.files) {
+      const file = this.uploadInput.current!.files![0];
+      this.props.onFileUpload(file);
+    }
   }
 
   public render() {
     return (
-      <div className="fullscreen centered">
+      <div className="fullscreen centered home">
         <img src={this.props.context.router.getRelativePathTo("images/kogito_logo.png")} />
-        <div>
-          <a onClick={this.createFile}>Create</a>
+        <div className="file-actions">
+          <button className="btn" onClick={() => this.createFile()}>Create</button>
+          <span>or</span> 
+          <div className="upload-btn-wrapper">
+            <button className="btn">Edit</button>
+            <input type="file" ref={this.uploadInput} onChange={() => this.editFile()} />
+          </div>
+          <span>a</span>
+          <select className="btn" ref={this.typeSelect}>
+            <option value="bpmn">BPMN</option>
+            <option value="dmn">DMN</option>
+          </select>
+          <span>diagram. Or...</span>
         </div>
         <div 
           id="upload-box" 
+          className="file-actions"
           onDragOver={this.uploadBoxOnDragOver} 
           onDragLeave={this.uploadBoxOnDragEnd} 
           onDrop={this.uploadBoxOnDrop} 
         >
-          Drop a file here to open it
+          ...drop a file here to edit it.
         </div> 
       </div>
     )
