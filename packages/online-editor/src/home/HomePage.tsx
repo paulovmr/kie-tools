@@ -29,32 +29,31 @@ export class HomePage extends React.Component<Props, GlobalStateType> {
 
   private typeSelect: RefObject<HTMLSelectElement>;
   private uploadInput: RefObject<HTMLInputElement>;
+  private uploadBox: RefObject<HTMLDivElement>;
 
   constructor(props: Props) {
     super(props);
     this.typeSelect = React.createRef();
     this.uploadInput = React.createRef();
+    this.uploadBox = React.createRef();
   }
 
   private uploadBoxOnDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    const uploadBox = document.getElementById("upload-box")!;
-    uploadBox.className = 'hover';
+    this.uploadBox.current!.className = 'hover';
     e.stopPropagation();
     e.preventDefault();
     return false;
   };
 
   private uploadBoxOnDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
-    const uploadBox = document.getElementById("upload-box")!;
-    uploadBox.className = '';
+    this.uploadBox.current!.className = '';
     e.stopPropagation();
     e.preventDefault();
     return false;
   };
 
   private uploadBoxOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    const uploadBox = document.getElementById("upload-box")!;
-    uploadBox.className = '';
+    this.uploadBox.current!.className = '';
     e.stopPropagation();
     e.preventDefault();
 
@@ -94,6 +93,7 @@ export class HomePage extends React.Component<Props, GlobalStateType> {
           <span>diagram. Or...</span>
         </div>
         <div 
+          ref={this.uploadBox}
           id="upload-box" 
           className="file-actions"
           onDragOver={this.uploadBoxOnDragOver} 
