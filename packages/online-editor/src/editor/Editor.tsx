@@ -15,8 +15,7 @@
  */
 
 import * as React from "react";
-import { useContext, useRef } from "react";
-import { GlobalContext, GlobalContextType } from "../common/GlobalContext";
+import { GlobalContext } from "../common/GlobalContext";
 import { SingleEditorToolbar } from "./EditorToolbar";
 import { FullScreenToolbar } from "./EditorFullScreenToolbar";
 import { EditorIframe } from "./EditorIframe";
@@ -24,26 +23,14 @@ import { EditorStateType, EditorState } from "./EditorState";
 import { RefObject } from "react";
 
 interface Props {
-  context: GlobalContextType;
   getFileContents: () => Promise<string | undefined>;
   fileName: string;
   fileExtension: string;
   onClose: () => void;
 }
 
-export function Editor(props: { getFileContents: () => Promise<string | undefined>, fileName: string, fileExtension: string, onClose: () => void }) {
-  const globalContext = useContext(GlobalContext);
-
-  return <EditorComponent 
-           context={globalContext} 
-           getFileContents={props.getFileContents}  
-           fileName={props.fileName}
-           fileExtension={props.fileExtension}
-           onClose={props.onClose} />
-};
-
-export class EditorComponent extends React.Component<Props, EditorStateType> {
-  private editorIframeRef: RefObject<EditorIframe>;
+export class Editor extends React.Component<Props, EditorStateType> {
+  public static contextType = GlobalContext;
 
   constructor(props: Props) {
     super(props);
@@ -62,14 +49,15 @@ export class EditorComponent extends React.Component<Props, EditorStateType> {
   }
 
   public render() {
-    this.editorIframeRef = React.createRef();
+    const editorIframeRef: RefObject<EditorIframe> = React.createRef();
+
     return (
       <EditorState.Provider value={{ fullscreen: this.state.fullscreen }}>
         {!this.state.fullscreen &&
           <SingleEditorToolbar
             onFullScreen={() => this.setState({ fullscreen: true })}
-            onSave={() => this.editorIframeRef.current!.requestSave()}
-            onClose={this.props.onClose}
+            onSave={() => editorIframeRef.current!.requestSave()}
+            onClose={() => this.props.onClose()}
           />
         }
 
@@ -78,11 +66,11 @@ export class EditorComponent extends React.Component<Props, EditorStateType> {
         }
 
         <EditorIframe
-          ref={this.editorIframeRef}
+          ref={editorIframeRef}
           openFileExtension={this.props.fileExtension}
           getFileContents={this.props.getFileContents}
-          context={this.props.context}
-          onSave={(content) => { this.save(content) }}
+          context={this.context}
+          onSave={(content) => this.save(content)}
           fullscreen={this.state.fullscreen}
         />
       </EditorState.Provider>

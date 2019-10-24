@@ -15,12 +15,9 @@
  */
 
 import * as React from "react";
-import { RefObject, useEffect } from "react";
-import { EditorStateType, EditorState } from "./EditorState";
+import { RefObject } from "react";
 import { EnvelopeBusOuterMessageHandler } from "@kogito-tooling/microeditor-envelope-protocol";
-import { Router } from "@kogito-tooling/core-api";
-import { GlobalContextType, GlobalContext } from "../common/GlobalContext";
-import { GlobalStateType } from "../common/GlobalState";
+import { GlobalContextType } from "../common/GlobalContext";
 
 interface Props {
   context: GlobalContextType;

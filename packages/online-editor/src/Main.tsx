@@ -58,7 +58,7 @@ export class Main extends React.Component<Props, GlobalStateType> {
     return openFileExtension;
   }
 
-  private onFileUpload(file: any) {
+  private onFileUpload(file: File) {
     this.fileName = file.name;
     this.fileExtension = this.extractEditorType(file.name)!;
     this.props.history.replace(routes.editor({ type: this.fileExtension }));
@@ -82,7 +82,7 @@ export class Main extends React.Component<Props, GlobalStateType> {
     this.fileExtension = type;
     this.props.history.replace(routes.editor({ type: this.fileExtension }));
     this.getFileContents = () => Promise.resolve("");
-    this.setState({ openedFile: this.fileName });
+    this.setState({ openedFile: new File([], this.fileName) });
   }
 
   private onClose() {

@@ -16,39 +16,46 @@
 
 import * as React from "react";
 
-export function SingleEditorToolbar(props: {
+interface Props {
   onFullScreen: () => void;
   onSave: () => void;
   onClose: () => void;
-}) {
-  const goFullScreen = (e: any) => {
+};
+
+export class SingleEditorToolbar extends React.Component<Props> {
+
+  constructor(props: Props) {
+    super(props);
+  }
+  
+  private goFullScreen(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    props.onFullScreen();
+    this.props.onFullScreen();
   };
 
-  const save = (e: any) => {
+  private save(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    props.onSave();
+    this.props.onSave();
   };
 
-  const close = (e: any) => {
+  private close(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    props.onClose();
+    this.props.onClose();
   };
 
-  return (
-    <>
+  public render() {
+    return (
       <div>
-        <button className={"btn btn-sm kogito-button"} onClick={close}>
+        <button className={"btn btn-sm kogito-button"} onClick={(e) => this.close(e)}>
           Close
         </button>
-        <button className={"btn btn-sm kogito-button"} onClick={save}>
+        <button className={"btn btn-sm kogito-button"} onClick={(e) => this.save(e)}>
           Save
         </button>
-        <button className={"btn btn-sm kogito-button"} onClick={goFullScreen}>
+        <button className={"btn btn-sm kogito-button"} onClick={(e) => this.goFullScreen(e)}>
           Full screen
         </button>
       </div>
-    </>
-  );
+    );
+  }
 }

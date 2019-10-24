@@ -16,12 +16,23 @@
 
 import * as React from "react";
 
-export function FullScreenToolbar(props: { onExitFullScreen: () => void }) {
-  return (
-    <div id={"kogito-iframe-fullscreen-toolbar"}>
-      <a href={"#"} onClick={props.onExitFullScreen}>
-        Exit full screen
-      </a>
-    </div>
-  );
+interface Props {
+  onExitFullScreen: () => void
+}
+
+export class FullScreenToolbar extends React.Component<Props> {
+
+  constructor(props: Props) {
+    super(props);
+  }
+
+  public render() {
+    return (
+      <div id={"kogito-iframe-fullscreen-toolbar"}>
+        <a href={"#"} onClick={this.props.onExitFullScreen}>
+          Exit full screen
+        </a>
+      </div>
+    );
+  }
 }

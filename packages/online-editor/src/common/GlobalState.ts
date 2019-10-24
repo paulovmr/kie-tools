@@ -15,5 +15,5 @@
  */
 
 export interface GlobalStateType {
-  openedFile: any;
+  openedFile: File | null;
 }

@@ -15,25 +15,18 @@
  */
 
 import * as React from "react";
-import { useContext, RefObject } from "react";
-import { GlobalContext, GlobalContextType } from "../common/GlobalContext";
+import { RefObject } from "react";
+import { GlobalContext } from "../common/GlobalContext";
 import { GlobalStateType } from "../common/GlobalState";
 
 interface Props {
-  context: GlobalContextType;
-  onFileUpload: (file: any) => void;
+  onFileUpload: (file: File) => void;
   onFileCreation: (type: string) => void;
 }
 
-export function HomePage(props: { onFileUpload: (file: any) => void, onFileCreation: (type: string) => void }) {
-  const globalContext = useContext(GlobalContext);
+export class HomePage extends React.Component<Props, GlobalStateType> {
+  public static contextType = GlobalContext;
 
-  return <HomePageComponent context={globalContext} 
-                            onFileUpload={props.onFileUpload} 
-                            onFileCreation={props.onFileCreation} />
-};
-
-export class HomePageComponent extends React.Component<Props, GlobalStateType> {
   private typeSelect: RefObject<HTMLSelectElement>;
   private uploadInput: RefObject<HTMLInputElement>;
 
@@ -43,7 +36,7 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
     this.uploadInput = React.createRef();
   }
 
-  private uploadBoxOnDragOver = (e: any) => {
+  private uploadBoxOnDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     const uploadBox = document.getElementById("upload-box")!;
     uploadBox.className = 'hover';
     e.stopPropagation();
@@ -51,7 +44,7 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
     return false;
   };
 
-  private uploadBoxOnDragEnd = (e: any) => {
+  private uploadBoxOnDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
     const uploadBox = document.getElementById("upload-box")!;
     uploadBox.className = '';
     e.stopPropagation();
@@ -59,7 +52,7 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
     return false;
   };
 
-  private uploadBoxOnDrop = (e: any) => {
+  private uploadBoxOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
     const uploadBox = document.getElementById("upload-box")!;
     uploadBox.className = '';
     e.stopPropagation();
@@ -85,7 +78,7 @@ export class HomePageComponent extends React.Component<Props, GlobalStateType> {
   public render() {
     return (
       <div className="fullscreen centered home">
-        <img src={this.props.context.router.getRelativePathTo("images/kogito_logo.png")} />
+        <img src={this.context.router.getRelativePathTo("images/kogito_logo.png")} />
         <div className="file-actions">
           <button className="btn" onClick={() => this.createFile()}>Create</button>
           <span>or</span> 
