@@ -24,6 +24,8 @@ import { useMemo } from "react";
 import { useImperativeHandle } from "react";
 import { useLocation } from "react-router";
 import { useCallback } from "react";
+import { Page, Stack, StackItem } from '@patternfly/react-core';
+import "@patternfly/patternfly/patternfly.css";
 
 interface Props {
   fullscreen: boolean;
@@ -49,7 +51,6 @@ const RefForwardingEditor: React.RefForwardingComponent<EditorRef, Props> = (pro
           getFileContents: () => Promise.resolve("")
         };
       }
-
       return context.file!;
     },
     [context.file, editorType]
