@@ -21,6 +21,12 @@ import { FullScreenToolbar } from "./EditorFullScreenToolbar";
 import { EditorIframe } from "./EditorIframe";
 import { EditorStateType, EditorState } from "./EditorState";
 import { RefObject } from "react";
+import {
+  Page,
+  Stack, 
+  StackItem
+} from '@patternfly/react-core';
+import "@patternfly/patternfly/patternfly.css";
 
 interface Props {
   getFileContents: () => Promise<string | undefined>;
@@ -52,28 +58,36 @@ export class Editor extends React.Component<Props, EditorStateType> {
     const editorIframeRef: RefObject<EditorIframe> = React.createRef();
 
     return (
-      <EditorState.Provider value={{ fullscreen: this.state.fullscreen }}>
-        {!this.state.fullscreen &&
-          <SingleEditorToolbar
-            onFullScreen={() => this.setState({ fullscreen: true })}
-            onSave={() => editorIframeRef.current!.requestSave()}
-            onClose={() => this.props.onClose()}
-          />
-        }
+        <EditorState.Provider value={{ fullscreen: this.state.fullscreen }}>
+          <Page>
+            <Stack>
+              <StackItem>
+                {!this.state.fullscreen &&
+                  <SingleEditorToolbar
+                    onFullScreen={() => this.setState({ fullscreen: true })}
+                    onSave={() => editorIframeRef.current!.requestSave()}
+                    onClose={() => this.props.onClose()}
+                  />
+                }
 
-        {this.state.fullscreen &&
-          <FullScreenToolbar onExitFullScreen={() => this.setState({ fullscreen: false })} />
-        }
+                {this.state.fullscreen &&
+                  <FullScreenToolbar onExitFullScreen={() => this.setState({ fullscreen: false })} />
+                }
+              </StackItem>
+              <StackItem className="pf-m-fill">
+                <EditorIframe
+                ref={editorIframeRef}
+                openFileExtension={this.props.fileExtension}
+                getFileContents={this.props.getFileContents}
+                context={this.context}
+                onSave={(content) => this.save(content)}
+                fullscreen={this.state.fullscreen}
+              />
+              </StackItem>
+            </Stack>
+          </Page>
 
-        <EditorIframe
-          ref={editorIframeRef}
-          openFileExtension={this.props.fileExtension}
-          getFileContents={this.props.getFileContents}
-          context={this.context}
-          onSave={(content) => this.save(content)}
-          fullscreen={this.state.fullscreen}
-        />
-      </EditorState.Provider>
+        </EditorState.Provider>
     )
   };
 }
