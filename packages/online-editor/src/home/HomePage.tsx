@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,15 +16,40 @@
 
 import * as React from "react";
 import { RefObject } from "react";
-import { useContext, useRef } from "react";
-import { GlobalContext } from "../common/GlobalContext";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router";
-import { useCallback } from "react";
+import { GlobalContext } from "../common/GlobalContext";
+import {
+  Title,
+  Button,
+  EmptyState,
+  EmptyStateVariant,
+  EmptyStateIcon,
+  EmptyStateBody,
+  EmptyStateSecondaryActions,
+  Bullseye,
+  Stack,
+  StackItem,
+  Page,
+  PageSection,
+  Grid,
+  GridItem,
+  Select,
+  SelectOption,
+  SelectVariant,
+  Toolbar,
+  ToolbarItem,
+  SelectDirection
+} from "@patternfly/react-core";
+import { CubesIcon } from "@patternfly/react-icons";
+import "@patternfly/patternfly/patternfly-variables.css";
+import "@patternfly/patternfly/patternfly-addons.css";
+import "@patternfly/patternfly/patternfly-no-reset.css";
 
 export function HomePage() {
   const context = useContext(GlobalContext);
   const history = useHistory();
-  const typeSelectRef: RefObject<HTMLSelectElement> = useRef(null);
+  
   const uploadInputRef: RefObject<HTMLInputElement> = useRef(null);
   const uploadBoxRef: RefObject<HTMLDivElement> = useRef(null);
 
@@ -62,13 +87,6 @@ export function HomePage() {
     [uploadBoxRef]
   );
 
-  const createFile = useCallback(
-    () => {
-      history.replace(context.routes.editor.url({ type: typeSelectRef.current!.value }));
-    },
-    [context, history, typeSelectRef]
-  );
-
   const editFile = useCallback(
     () => {
       if (uploadInputRef.current!.files) {
@@ -100,36 +118,108 @@ export function HomePage() {
     [context, history]
   );
 
+  const options = useMemo(() => [{ value: "BPMN" }, { value: "DMN" }], []);
+
+  const [fileTypeSelect, setFileTypeSelect] = useState({
+    isExpanded: false,
+    value: "BPMN",
+  });
+
+  const onSelectFileType = useCallback(selection => {
+    setFileTypeSelect({
+      isExpanded: false,
+      value: selection
+    });
+  }, [fileTypeSelect]);
+
+  const onToggleFileType = useCallback((isExpanded) => {
+    setFileTypeSelect({
+      isExpanded: isExpanded,
+      value: fileTypeSelect.value
+    });
+  }, [fileTypeSelect]);
+
+  const createFile = useCallback(
+    () => {
+      if (fileTypeSelect && fileTypeSelect.value) {
+        history.replace(context.routes.editor.url({ type: fileTypeSelect.value!.toLowerCase() }));
+      }
+    },
+    [context, history, fileTypeSelect]
+  );
+
   return (
-    <div className="fullscreen centered home">
-      <img src={context.router.getRelativePathTo("images/kogito_logo.png")} />
-      <div className="file-actions">
-        <button className="btn" onClick={createFile}>
-          Create
-        </button>
-        <span>or</span>
-        <div className="upload-btn-wrapper">
-          <button className="btn">Edit</button>
-          <input type="file" ref={uploadInputRef} onChange={editFile} />
-        </div>
-        <span>a</span>
-        <select className="btn" ref={typeSelectRef}>
-          <option value="bpmn">BPMN</option>
-          <option value="dmn">DMN</option>
-        </select>
-        <span>diagram. Or...</span>
-      </div>
-      <div
-        ref={uploadBoxRef}
-        id="upload-box"
-        className="file-actions"
-        onDragOver={uploadBoxOnDragOver}
-        onDragLeave={uploadBoxOnDragEnd}
-        onDrop={uploadBoxOnDrop}
-      >
-        ...drop a file here to edit it.
-      </div>
-    </div>
+    <Page>
+      <PageSection variant="light">
+        <Bullseye>
+          <Grid gutter="lg">
+            <GridItem className="pf-u-text-align-center" span={12}>
+              <img src={context.router.getRelativePathTo("images/kogito_logo.png")} alt="Kogito Logo" />
+            </GridItem>
+            <GridItem span={6}>
+              {/* Create side */}
+              <Stack gutter="lg">
+                <StackItem>
+                  <Title headingLevel="h2" size="3xl">
+                    Create
+                  </Title>
+                </StackItem>
+                <StackItem>
+                  <Toolbar>
+                    <ToolbarItem>
+                      <Select aria-label="Select file type" 
+                        onSelect={onSelectFileType} 
+                        onToggle={onToggleFileType}
+                        isExpanded={fileTypeSelect.isExpanded}
+                      >
+                        {options.map((option, index) => (
+                          <SelectOption key={index} value={option.value} />
+                        ))}
+                      </Select>
+                    </ToolbarItem>
+                    <ToolbarItem>
+                      <Button className="pf-u-ml-md" variant="secondary" onClick={createFile}>
+                        Create
+                      </Button>
+                    </ToolbarItem>
+                  </Toolbar>
+                </StackItem>
+              </Stack>
+            </GridItem>
+            <GridItem span={6}>
+              {/* Edit side */}
+              <Stack gutter="lg">
+                <StackItem>
+                  <Title headingLevel="h2" size="3xl">
+                    Edit
+                  </Title>
+                </StackItem>
+                <StackItem>
+                  {/* Upload Drag Target */}
+                  <div
+                    ref={uploadBoxRef}
+                    id="upload-box"
+                    className="file-actions kogito--upload-box"
+                    onDragOver={uploadBoxOnDragOver}
+                    onDragLeave={uploadBoxOnDragEnd}
+                    onDrop={uploadBoxOnDrop}
+                  >
+                    <Bullseye>Drag &amp; drop BPMN or DMN file here</Bullseye>
+                  </div>
+                </StackItem>
+                <StackItem>
+                  or
+                  <Button className="pf-u-ml-md" variant="secondary" onClick={editFile}>
+                    Choose a local file
+                  </Button>
+                  <input className="pf-c-button" type="file" ref={uploadInputRef} onChange={editFile} />
+                </StackItem>
+              </Stack>
+            </GridItem>
+          </Grid>
+        </Bullseye>
+      </PageSection>
+    </Page>
   );
 }
 

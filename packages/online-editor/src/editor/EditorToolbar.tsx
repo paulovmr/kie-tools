@@ -15,6 +15,8 @@
  */
 
 import * as React from "react";
+import { Button, Toolbar, ToolbarGroup, ToolbarItem, PageSection } from '@patternfly/react-core';
+import "@patternfly/patternfly/patternfly-no-reset.css";
 
 interface Props {
   onFullScreen: () => void;
@@ -24,16 +26,22 @@ interface Props {
 
 export function EditorToolbar(props: Props) {
   return (
-    <div>
-      <button className={"btn btn-sm kogito-button"} onClick={props.onClose}>
-        Close
-      </button>
-      <button className={"btn btn-sm kogito-button"} onClick={props.onSave}>
-        Save
-      </button>
-      <button className={"btn btn-sm kogito-button"} onClick={props.onFullScreen}>
-        Full screen
-      </button>
-    </div>
+    <PageSection type="nav" variant="dark">
+      <Toolbar className="pf-u-mb-sm">
+        <ToolbarGroup>
+          <ToolbarItem className="pf-u-mr-sm">
+            <Button variant="primary" onClick={props.onSave}>Save</Button>
+          </ToolbarItem>
+          <ToolbarItem>
+          <Button variant="secondary" onClick={props.onClose}>Close</Button>
+          </ToolbarItem>
+        </ToolbarGroup>
+        <ToolbarGroup>
+          <ToolbarItem>
+            <Button variant="link" onClick={props.onFullScreen}>Full Screen</Button>
+          </ToolbarItem>
+        </ToolbarGroup>
+      </Toolbar>
+    </PageSection>
   );
 }

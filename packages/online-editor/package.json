@@ -10,9 +10,16 @@
     "url": "https://github.com/kiegroup/kogito-tooling.git"
   },
   "dependencies": {
-    "@patternfly/patternfly": "1.0.227",
-    "@patternfly/react-core": "2.9.2",
-    "@patternfly/react-icons": "3.7.1",
+    "@patternfly/patternfly": "2.40.2",
+    "@patternfly/react-charts": "5.0.13",
+    "@patternfly/react-core": "3.112.3",
+    "@patternfly/react-inline-edit-extension": "2.11.70",
+    "@patternfly/react-styles": "3.5.27",
+    "@patternfly/react-table": "2.22.19",
+    "@patternfly/react-tokens": "2.6.31",
+    "@patternfly/react-topology": "2.8.65",
+    "@patternfly/react-virtualized-extension": "1.2.55",
+    "@patternfly/react-icons": "3.14.7",
     "@kogito-tooling/gwt-editors": "0.2.2",
     "@kogito-tooling/microeditor-envelope": "0.2.2",
     "@kogito-tooling/microeditor-envelope-protocol": "0.2.2",
@@ -60,6 +67,11 @@
     "typescript": "2.9.2",
     "watch": "1.0.2",
     "webpack": "4.15.1",
-    "webpack-cli": "3.0.8"
+    "webpack-cli": "3.0.8",
+    "css-loader": "3.2.0",
+    "file-loader": "4.2.0",
+    "null-loader": "3.0.0",
+    "sass-loader": "7.3.1",
+    "style-loader": "1.0.0"
   }
 }

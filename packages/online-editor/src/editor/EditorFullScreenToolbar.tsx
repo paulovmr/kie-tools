@@ -15,6 +15,7 @@
  */
 
 import * as React from "react";
+import { Button } from '@patternfly/react-core';
 
 interface Props {
   onExitFullScreen: () => void;
@@ -22,10 +23,8 @@ interface Props {
 
 export function FullScreenToolbar(props: Props) {
   return (
-    <div id={"kogito-iframe-fullscreen-toolbar"}>
-      <a href={"#"} onClick={props.onExitFullScreen}>
-        Exit full screen
-      </a>
+    <div className="kogito--full-screen__toolbar">
+      <Button variant="primary" onClick={this.props.onExitFullScreen}>Exit full screen</Button>
     </div>
   );
 }
