@@ -1,0 +1,118 @@
+/*
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+body {
+  margin: 0;
+}
+
+.centered {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.centered img {
+  margin: 100px;
+}
+
+.fullscreen {
+  width: 100vw;
+  height: calc(100vh - 4px);
+  border: 0;
+}
+
+.not-fullscreen {
+  width: calc(100vw - 4px);
+  height: calc(100vh - 51px);
+}
+
+#kogito-iframe-fullscreen-toolbar {
+  background-color: #222121;
+  border-radius: 0 0 10px 10px;
+  width: 150px;
+  height: 25px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 1000;
+  box-shadow: 0 0 10px 1px black;
+  text-align: center;
+}
+
+#kogito-iframe-fullscreen-toolbar a {
+  color: #e2e2e2;
+}
+
+.kogito-button {
+  margin-right: 4px;
+}
+
+.hidden {
+  display: none;
+}
+
+#upload-box { 
+  border: 10px dashed #ccc; 
+  width: 300px; 
+  height: 300px; 
+  margin: 20px auto;
+}
+
+#upload-box.hover {
+  border: 10px dashed #333; 
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.home {
+  font-size: 20px;
+  font-weight: bold;
+  color: gray;
+}
+
+.home .file-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home .file-actions span {
+  margin: 0 10px;
+}
