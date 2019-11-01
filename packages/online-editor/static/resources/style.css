@@ -39,6 +39,11 @@
   border: var(--pf-global--BorderWidth--lg) dashed var(--pf-global--BorderColor--200); 
 }
 
+.kogito--editor__toolbar-section {
+  background-color: var(--pf-global--BackgroundColor--300); 
+  /*  now getting styles but not variables in the editor toolbar */
+}
+
 .kogito--full-screen__toolbar {
   position: absolute;
   display: flex;

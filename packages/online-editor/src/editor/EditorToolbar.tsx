@@ -16,7 +16,6 @@
 
 import * as React from "react";
 import { Button, Toolbar, ToolbarGroup, ToolbarItem, PageSection } from '@patternfly/react-core';
-import "@patternfly/patternfly/patternfly-no-reset.css";
 
 interface Props {
   onFullScreen: () => void;
@@ -26,8 +25,8 @@ interface Props {
 
 export function EditorToolbar(props: Props) {
   return (
-    <PageSection type="nav" variant="dark">
-      <Toolbar className="pf-u-mb-sm">
+    <PageSection type="nav" className="kogito--editor__toolbar-section">
+      <Toolbar>
         <ToolbarGroup>
           <ToolbarItem className="pf-u-mr-sm">
             <Button variant="primary" onClick={props.onSave}>Save</Button>

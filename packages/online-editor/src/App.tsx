@@ -26,7 +26,10 @@ import { GwtEditorRoutes } from "@kogito-tooling/gwt-editors";
 import { GlobalContext } from "./common/GlobalContext";
 import { createBrowserHistory } from "history";
 import { EnvelopeBusOuterMessageHandlerFactory } from "./editor/EnvelopeBusOuterMessageHandlerFactory";
-
+import "@patternfly/patternfly/patternfly-variables.css";
+import "@patternfly/patternfly/patternfly-addons.css";
+import "@patternfly/patternfly/patternfly.css";
+import "../static/resources/style.css";
 interface Props {
   iframeTemplateRelativePath: string;
 }

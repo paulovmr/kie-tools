@@ -22,11 +22,6 @@ import { GlobalContext } from "../common/GlobalContext";
 import {
   Title,
   Button,
-  EmptyState,
-  EmptyStateVariant,
-  EmptyStateIcon,
-  EmptyStateBody,
-  EmptyStateSecondaryActions,
   Bullseye,
   Stack,
   StackItem,
@@ -41,10 +36,6 @@ import {
   ToolbarItem,
   SelectDirection
 } from "@patternfly/react-core";
-import { CubesIcon } from "@patternfly/react-icons";
-import "@patternfly/patternfly/patternfly-variables.css";
-import "@patternfly/patternfly/patternfly-addons.css";
-import "@patternfly/patternfly/patternfly-no-reset.css";
 
 export function HomePage() {
   const context = useContext(GlobalContext);
