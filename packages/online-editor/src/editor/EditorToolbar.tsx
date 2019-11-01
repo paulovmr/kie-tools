@@ -33,7 +33,7 @@ export function EditorToolbar(props: Props) {
             <Button variant="primary" onClick={props.onSave}>Save</Button>
           </ToolbarItem>
           <ToolbarItem>
-          <Button variant="secondary" onClick={props.onClose}>Close</Button>
+            <Button variant="secondary" onClick={props.onClose}>Close</Button>
           </ToolbarItem>
         </ToolbarGroup>
         <ToolbarGroup>
