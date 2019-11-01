@@ -24,9 +24,9 @@
   height: 100%;
 }
 
-.kogito--upload-box { 
+.kogito--upload-box > div { 
   box-sizing: border-box;
-  border: var(--pf-global--BorderWidth--sm) dashed var(--pf-global--BorderColor--200); 
+  border: var(--pf-global--BorderWidth--lg) dashed var(--pf-global--BorderColor--100); 
   width: 15em; 
   height: 15em;
   display:flex;
@@ -35,8 +35,8 @@
   padding: var(--pf-global--spacer--2xl);
 }
 
-.kogito--upload-box:hover {
-  border: var(--pf-global--BorderWidth--lg) dashed var(--pf-global--BorderColor--100); 
+.kogito--upload-box > div.hover {
+  border: var(--pf-global--BorderWidth--lg) dashed var(--pf-global--BorderColor--200); 
 }
 
 .kogito--full-screen__toolbar {
@@ -44,4 +44,29 @@
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+.kogito--upload-btn-container {
+  display: flex;
+  align-items: center;
+}
+
+.kogito--upload-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  margin-left: 1em;
+}
+
+.kogito--upload-btn button {
+  width: 13em;
+  margin-left: 0 !important;
+}
+
+.kogito--upload-btn input[type=file] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
 }

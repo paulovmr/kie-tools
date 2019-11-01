@@ -49,7 +49,7 @@ import "@patternfly/patternfly/patternfly-no-reset.css";
 export function HomePage() {
   const context = useContext(GlobalContext);
   const history = useHistory();
-  
+
   const uploadInputRef: RefObject<HTMLInputElement> = useRef(null);
   const uploadBoxRef: RefObject<HTMLDivElement> = useRef(null);
 
@@ -60,17 +60,17 @@ export function HomePage() {
       e.preventDefault();
       return false;
     },
-    [uploadBoxRef]
+    []
   );
 
-  const uploadBoxOnDragEnd = useCallback(
+  const uploadBoxOnDragLeave = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
       uploadBoxRef.current!.className = "";
       e.stopPropagation();
       e.preventDefault();
       return false;
     },
-    [uploadBoxRef]
+    []
   );
 
   const uploadBoxOnDrop = useCallback(
@@ -84,7 +84,7 @@ export function HomePage() {
 
       return false;
     },
-    [uploadBoxRef]
+    []
   );
 
   const editFile = useCallback(
@@ -94,7 +94,7 @@ export function HomePage() {
         onFileUpload(file);
       }
     },
-    [uploadInputRef]
+    []
   );
 
   const onFileUpload = useCallback(
@@ -122,22 +122,28 @@ export function HomePage() {
 
   const [fileTypeSelect, setFileTypeSelect] = useState({
     isExpanded: false,
-    value: "BPMN",
+    value: "BPMN"
   });
 
-  const onSelectFileType = useCallback(selection => {
-    setFileTypeSelect({
-      isExpanded: false,
-      value: selection
-    });
-  }, [fileTypeSelect]);
+  const onSelectFileType = useCallback(
+    selection => {
+      setFileTypeSelect({
+        isExpanded: false,
+        value: selection
+      });
+    },
+    []
+  );
 
-  const onToggleFileType = useCallback((isExpanded) => {
-    setFileTypeSelect({
-      isExpanded: isExpanded,
-      value: fileTypeSelect.value
-    });
-  }, [fileTypeSelect]);
+  const onToggleFileType = useCallback(
+    isExpanded => {
+      setFileTypeSelect({
+        isExpanded: isExpanded,
+        value: fileTypeSelect.value
+      });
+    },
+    []
+  );
 
   const createFile = useCallback(
     () => {
@@ -167,8 +173,8 @@ export function HomePage() {
                 <StackItem>
                   <Toolbar>
                     <ToolbarItem>
-                      <Select aria-label="Select file type" 
-                        onSelect={onSelectFileType} 
+                      <Select
+                        onSelect={onSelectFileType}
                         onToggle={onToggleFileType}
                         isExpanded={fileTypeSelect.isExpanded}
                       >
@@ -194,25 +200,25 @@ export function HomePage() {
                     Edit
                   </Title>
                 </StackItem>
-                <StackItem>
+                <StackItem className="kogito--upload-box">
                   {/* Upload Drag Target */}
                   <div
-                    ref={uploadBoxRef}
-                    id="upload-box"
-                    className="file-actions kogito--upload-box"
+                    ref={uploadBoxRef}                    
                     onDragOver={uploadBoxOnDragOver}
-                    onDragLeave={uploadBoxOnDragEnd}
+                    onDragLeave={uploadBoxOnDragLeave}
                     onDrop={uploadBoxOnDrop}
                   >
                     <Bullseye>Drag &amp; drop BPMN or DMN file here</Bullseye>
                   </div>
                 </StackItem>
-                <StackItem>
+                <StackItem className="kogito--upload-btn-container">
                   or
-                  <Button className="pf-u-ml-md" variant="secondary" onClick={editFile}>
-                    Choose a local file
-                  </Button>
-                  <input className="pf-c-button" type="file" ref={uploadInputRef} onChange={editFile} />
+                  <div className="kogito--upload-btn">
+                    <Button className="pf-u-ml-md" variant="secondary" onClick={editFile}>
+                      Choose a local file
+                    </Button>
+                    <input className="pf-c-button" type="file" ref={uploadInputRef} onChange={editFile} />
+                  </div>
                 </StackItem>
               </Stack>
             </GridItem>
