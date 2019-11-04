@@ -24,7 +24,7 @@ import { useMemo } from "react";
 import { useImperativeHandle } from "react";
 import { useLocation } from "react-router";
 import { useCallback } from "react";
-import { Page, Stack, StackItem } from '@patternfly/react-core';
+import { Page, Stack, StackItem, PageSection } from '@patternfly/react-core';
 
 interface Props {
   fullscreen: boolean;
@@ -111,15 +111,14 @@ const RefForwardingEditor: React.RefForwardingComponent<EditorRef, Props> = (pro
   );
 
   return (
-    <Page>
       <iframe
-        ref={iframeRef}
-        id={"kogito-iframe"}
-        className={props.fullscreen ? "fullscreen" : "not-fullscreen"}
-        src={context.router.getRelativePathTo(context.iframeTemplateRelativePath)}
-      />
-      <a ref={downloadRef} />
-    </Page>
+          ref={iframeRef}
+          id={"kogito-iframe"}
+          className="kogito--editor"
+          src={context.router.getRelativePathTo(context.iframeTemplateRelativePath)}
+        >
+        <a ref={downloadRef} />
+        </iframe>
   );
 };
 

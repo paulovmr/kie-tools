@@ -24,7 +24,7 @@ import { useContext } from "react";
 import { GlobalContext } from "../common/GlobalContext";
 import { useRef } from "react";
 import { useCallback } from "react";
-import { Page, Stack, StackItem } from '@patternfly/react-core';
+import { Page, Stack, StackItem, PageSection } from '@patternfly/react-core';
 import "@patternfly/patternfly/patternfly.css";
 
 export function EditorPage() {
@@ -56,17 +56,19 @@ export function EditorPage() {
 
   return (
     <Page>
-      <Stack>
-        <StackItem>
-          {!fullscreen && <EditorToolbar onFullScreen={enterFullscreen} onSave={save} onClose={close} />}
+      <PageSection variant="light" noPadding>
+        <Stack>
+          <StackItem>
+            {!fullscreen && <EditorToolbar onFullScreen={enterFullscreen} onSave={save} onClose={close} />}
 
-          {fullscreen && <FullScreenToolbar onExitFullScreen={exitFullscreen} />}
-        </StackItem>
+            {fullscreen && <FullScreenToolbar onExitFullScreen={exitFullscreen} />}
+          </StackItem>
 
-        <StackItem className="pf-m-fill">
-          <Editor ref={editorRef} fullscreen={fullscreen} />
-        </StackItem>
-      </Stack>
+          <StackItem className="pf-m-fill">
+            <Editor ref={editorRef} fullscreen={fullscreen} />
+          </StackItem>
+        </Stack>
+      </PageSection>
     </Page>
   );
 }

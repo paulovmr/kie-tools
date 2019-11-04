@@ -14,16 +14,6 @@
  * limitations under the License.
  */
 
-.fullscreen {
-  width: 100%;
-  height: 100%;
-}
-
-.not-fullscreen {
-  width: 100%;
-  height: 100%;
-}
-
 .kogito--upload-box > div { 
   box-sizing: border-box;
   border: var(--pf-global--BorderWidth--lg) dashed var(--pf-global--BorderColor--100); 
@@ -39,9 +29,14 @@
   border: var(--pf-global--BorderWidth--lg) dashed var(--pf-global--BorderColor--200); 
 }
 
+.kogito--editor {
+  width: 100%;
+  height: 100%;
+}
+
 .kogito--editor__toolbar-section {
   background-color: var(--pf-global--BackgroundColor--300); 
-  /*  now getting styles but not variables in the editor toolbar */
+  --pf-c-page__main-nav--PaddingBottom: var(--pf-global--spacer--sm);
 }
 
 .kogito--full-screen__toolbar {

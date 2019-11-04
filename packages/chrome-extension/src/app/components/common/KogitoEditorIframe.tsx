@@ -152,7 +152,7 @@ const RefForwardingKogitoEditorIframe: React.RefForwardingComponent<IsolatedEdit
   return (
     <iframe
       ref={ref}
-      className={`kogito-iframe ${fullscreen ? "fullscreen" : "not-fullscreen"}`}
+      className="kogito--editor"
       src={router.getRelativePathTo(editorIndexPath)}
     />
   );

@@ -149,11 +149,11 @@ export function HomePage() {
     <Page>
       <PageSection variant="light">
         <Bullseye>
-          <Grid gutter="lg">
-            <GridItem className="pf-u-text-align-center" span={12}>
+          <Grid gutter="lg" className="pf-m-all-12-col pf-m-all-6-col-on-md">
+            <GridItem className="pf-u-text-align-center pf-m-12-col" >
               <img src={context.router.getRelativePathTo("images/kogito_logo.png")} alt="Kogito Logo" />
             </GridItem>
-            <GridItem span={6}>
+            <GridItem >
               {/* Create side */}
               <Stack gutter="lg">
                 <StackItem>
@@ -183,7 +183,7 @@ export function HomePage() {
                 </StackItem>
               </Stack>
             </GridItem>
-            <GridItem span={6}>
+            <GridItem>
               {/* Edit side */}
               <Stack gutter="lg">
                 <StackItem>
