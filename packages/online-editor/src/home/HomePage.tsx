@@ -31,11 +31,8 @@ import {
   GridItem,
   Select,
   SelectOption,
-  SelectVariant,
   Toolbar,
-  ToolbarItem,
-  SelectDirection
-} from "@patternfly/react-core";
+  ToolbarItem} from "@patternfly/react-core";
 
 export function HomePage() {
   const context = useContext(GlobalContext);
@@ -117,7 +114,7 @@ export function HomePage() {
   });
 
   const onSelectFileType = useCallback(
-    selection => {
+    (event, selection) => {
       setFileTypeSelect({
         isExpanded: false,
         value: selection
@@ -133,12 +130,13 @@ export function HomePage() {
         value: fileTypeSelect.value
       });
     },
-    []
+    [fileTypeSelect]
   );
 
   const createFile = useCallback(
     () => {
       if (fileTypeSelect && fileTypeSelect.value) {
+        context.file = undefined;
         history.replace(context.routes.editor.url({ type: fileTypeSelect.value!.toLowerCase() }));
       }
     },
@@ -168,6 +166,7 @@ export function HomePage() {
                         onSelect={onSelectFileType}
                         onToggle={onToggleFileType}
                         isExpanded={fileTypeSelect.isExpanded}
+                        selections={fileTypeSelect.value}
                       >
                         {options.map((option, index) => (
                           <SelectOption key={index} value={option.value} />

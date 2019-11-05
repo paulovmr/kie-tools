@@ -24,8 +24,9 @@ import { useContext } from "react";
 import { GlobalContext } from "../common/GlobalContext";
 import { useRef } from "react";
 import { useCallback } from "react";
-import { Page, Stack, StackItem, PageSection } from '@patternfly/react-core';
+import { Page, Stack, StackItem, PageSection } from "@patternfly/react-core";
 import "@patternfly/patternfly/patternfly.css";
+import { useEffect } from "react";
 
 export function EditorPage() {
   const context = useContext(GlobalContext);
@@ -42,17 +43,29 @@ export function EditorPage() {
     if (page.requestFullscreen) {
       page.requestFullscreen();
     }
-
-    setFullscreen(true);
   }, []);
 
   const exitFullscreen = useCallback(() => {
     if (document.exitFullscreen) {
       document.exitFullscreen();
     }
-
-    setFullscreen(false);
   }, []);
+
+  const toggleFullScreen = useCallback(() => setFullscreen(!fullscreen), [fullscreen]);
+
+  useEffect(() => {
+    document.addEventListener("fullscreenchange", toggleFullScreen);
+    document.addEventListener("mozfullscreenchange", toggleFullScreen);
+    document.addEventListener("webkitfullscreenchange", toggleFullScreen);
+    document.addEventListener("msfullscreenchange", toggleFullScreen);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", toggleFullScreen);
+      document.removeEventListener("webkitfullscreenchange", toggleFullScreen);
+      document.removeEventListener("mozfullscreenchange", toggleFullScreen);
+      document.removeEventListener("msfullscreenchange", toggleFullScreen);
+    };
+  });
 
   return (
     <Page>
