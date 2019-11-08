@@ -24,10 +24,10 @@ import { useMemo } from "react";
 import { useImperativeHandle } from "react";
 import { useLocation } from "react-router";
 import { useCallback } from "react";
-import { Page, Stack, StackItem, PageSection } from '@patternfly/react-core';
 
 interface Props {
   fullscreen: boolean;
+  onSave: (content: string) => void;
 }
 
 export type EditorRef = {
@@ -36,24 +36,10 @@ export type EditorRef = {
 
 const RefForwardingEditor: React.RefForwardingComponent<EditorRef, Props> = (props, forwardedRef) => {
   const iframeRef: RefObject<HTMLIFrameElement> = useRef(null);
-  const downloadRef: RefObject<HTMLAnchorElement> = useRef(null);
 
   const context = useContext(GlobalContext);
   const location = useLocation();
   const editorType = useMemo(() => context.routes.editor.args(location.pathname).type, [location]);
-
-  const file = useMemo(
-    () => {
-      if (!context.file) {
-        context.file = {
-          fileName: "new-file." + editorType,
-          getFileContents: () => Promise.resolve("")
-        };
-      }
-      return context.file!;
-    },
-    [context.file, editorType]
-  );
 
   const envelopeBusOuterMessageHandler = useMemo(
     () => {
@@ -65,10 +51,10 @@ const RefForwardingEditor: React.RefForwardingComponent<EditorRef, Props> = (pro
           self.respond_languageRequest(context.router.getLanguageData(editorType)!);
         },
         receive_contentResponse(content: string) {
-          save(content);
+          props.onSave(content);
         },
         receive_contentRequest() {
-          file.getFileContents().then(c => self.respond_contentRequest(c || ""));
+          context.file.getFileContents().then(c => self.respond_contentRequest(c || ""));
         },
         receive_setContentError() {
           console.info("Set content error");
@@ -83,15 +69,6 @@ const RefForwardingEditor: React.RefForwardingComponent<EditorRef, Props> = (pro
     },
     [editorType]
   );
-
-  const save = useCallback((content: string) => {
-    if (downloadRef.current) {
-      const fileBlob = new Blob([content], { type: "text/plain" });
-      downloadRef.current.href = URL.createObjectURL(fileBlob);
-      downloadRef.current.download = file.fileName;
-      downloadRef.current.click();
-    }
-  }, [downloadRef]);
 
   useEffect(() => {
     const listener = (msg: MessageEvent) => envelopeBusOuterMessageHandler.receive(msg.data);
@@ -111,14 +88,12 @@ const RefForwardingEditor: React.RefForwardingComponent<EditorRef, Props> = (pro
   );
 
   return (
-      <iframe
-          ref={iframeRef}
-          id={"kogito-iframe"}
-          className="kogito--editor"
-          src={context.router.getRelativePathTo(context.iframeTemplateRelativePath)}
-        >
-        <a ref={downloadRef} />
-        </iframe>
+    <iframe
+      ref={iframeRef}
+      id={"kogito-iframe"}
+      className="kogito--editor"
+      src={context.router.getRelativePathTo(context.iframeTemplateRelativePath)}
+    />
   );
 };
 

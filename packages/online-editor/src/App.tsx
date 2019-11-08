@@ -16,7 +16,8 @@
 
 import * as React from "react";
 import { useMemo } from "react";
-import { Router, Switch, Route } from "react-router";
+import { Switch, Route } from "react-router";
+import { HashRouter } from "react-router-dom";
 import { Routes } from "./common/Routes";
 import { HomePage } from "./home/HomePage";
 import { EditorPage } from "./editor/EditorPage";
@@ -24,19 +25,21 @@ import { NoMatchPage } from "./NoMatchPage";
 import { OnlineEditorRouter } from "./common/OnlineEditorRouter";
 import { GwtEditorRoutes } from "@kogito-tooling/gwt-editors";
 import { GlobalContext } from "./common/GlobalContext";
-import { createBrowserHistory } from "history";
 import { EnvelopeBusOuterMessageHandlerFactory } from "./editor/EnvelopeBusOuterMessageHandlerFactory";
 import "@patternfly/patternfly/patternfly-variables.css";
 import "@patternfly/patternfly/patternfly-addons.css";
 import "@patternfly/patternfly/patternfly.css";
 import "../static/resources/style.css";
+import { useState } from "react";
+import { useCallback } from "react";
+import { emptyFile } from "./common/File";
+
 interface Props {
   iframeTemplateRelativePath: string;
 }
 
 export function App(props: Props) {
   const routes = useMemo(() => new Routes(), []);
-  const history = useMemo(() => createBrowserHistory(), []);
   const envelopeBusOuterMessageHandlerFactory = useMemo(() => new EnvelopeBusOuterMessageHandlerFactory(), []);
   const onlineEditorRouter = useMemo(
     () =>
@@ -49,6 +52,23 @@ export function App(props: Props) {
     []
   );
 
+  const [file, setFile] = useState(emptyFile);
+  const onFileOpened = useCallback(
+    file => {
+      setFile(file);
+    },
+    [file]
+  );
+  const onFileNameChanged = useCallback(
+    fileName => {
+      setFile({
+        fileName: fileName,
+        getFileContents: file.getFileContents
+      });
+    },
+    [file]
+  );
+
   return (
     <GlobalContext.Provider
       value={{
@@ -56,20 +76,20 @@ export function App(props: Props) {
         routes: routes,
         envelopeBusOuterMessageHandlerFactory: envelopeBusOuterMessageHandlerFactory,
         iframeTemplateRelativePath: props.iframeTemplateRelativePath,
-        file: undefined
+        file: file
       }}
     >
-      <Router history={history}>
+      <HashRouter>
         <Switch>
           <Route path={routes.editor.url({ type: ":type" })}>
-            <EditorPage />
+            <EditorPage onFileNameChanged={onFileNameChanged} />
           </Route>
           <Route exact={true} path={routes.home.url({})}>
-            <HomePage />
+            <HomePage onFileOpened={onFileOpened} />
           </Route>
           <Route component={NoMatchPage} />
         </Switch>
-      </Router>
+      </HashRouter>
     </GlobalContext.Provider>
   );
 }

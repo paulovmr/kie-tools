@@ -18,3 +18,8 @@ export interface File {
   fileName: string;
   getFileContents: () => Promise<string | undefined>;
 }
+
+export const emptyFile = {
+  fileName: "new-file",
+  getFileContents: () => Promise.resolve("")
+};

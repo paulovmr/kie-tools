@@ -24,19 +24,27 @@ import { useContext } from "react";
 import { GlobalContext } from "../common/GlobalContext";
 import { useRef } from "react";
 import { useCallback } from "react";
-import { Page, Stack, StackItem, PageSection } from "@patternfly/react-core";
+import { Page, Stack, StackItem, PageSection, PopoverPosition } from "@patternfly/react-core";
 import "@patternfly/patternfly/patternfly.css";
 import { useEffect } from "react";
+import { useMemo } from "react";
+import { useLocation } from "react-router";
 
-export function EditorPage() {
+interface Props {
+  onFileNameChanged: (fileName: string) => void;
+}
+
+export function EditorPage(props: Props) {
   const context = useContext(GlobalContext);
+  const location = useLocation();
   const history = useHistory();
   const editorRef = useRef<EditorRef>(null);
+  const downloadRef = useRef<HTMLAnchorElement>(null);
 
   const [fullscreen, setFullscreen] = useState(false);
 
   const close = useCallback(() => history.replace(context.routes.home.url({})), []);
-  const save = useCallback(() => editorRef.current!.requestSave(), []);
+  const requestSave = useCallback(() => editorRef.current!.requestSave(), [context.file.fileName]);
 
   const enterFullscreen = useCallback(() => {
     const page = document.documentElement;
@@ -52,6 +60,22 @@ export function EditorPage() {
   }, []);
 
   const toggleFullScreen = useCallback(() => setFullscreen(!fullscreen), [fullscreen]);
+
+  const editorType = useMemo(() => context.routes.editor.args(location.pathname).type, [location.pathname]);
+
+  const fileName = useMemo(() => context.file.fileName, [context.file.fileName]);
+
+  const save = useCallback(
+    (content: string) => {
+      if (downloadRef.current) {
+        const fileBlob = new Blob([content], { type: "text/plain" });
+        downloadRef.current.href = URL.createObjectURL(fileBlob);
+        downloadRef.current.download = fileName + "." + editorType;
+        downloadRef.current.click();
+      }
+    },
+    [fileName, editorType]
+  );
 
   useEffect(() => {
     document.addEventListener("fullscreenchange", toggleFullScreen);
@@ -72,15 +96,23 @@ export function EditorPage() {
       <PageSection variant="light" noPadding>
         <Stack>
           <StackItem>
-            {!fullscreen && <EditorToolbar onFullScreen={enterFullscreen} onSave={save} onClose={close} />}
+            {!fullscreen && (
+              <EditorToolbar
+                onFullScreen={enterFullscreen}
+                onSave={requestSave}
+                onClose={close}
+                onFileNameChanged={props.onFileNameChanged}
+              />
+            )}
 
             {fullscreen && <FullScreenToolbar onExitFullScreen={exitFullscreen} />}
           </StackItem>
 
           <StackItem className="pf-m-fill">
-            <Editor ref={editorRef} fullscreen={fullscreen} />
+            <Editor ref={editorRef} fullscreen={fullscreen} onSave={save} />
           </StackItem>
         </Stack>
+        <a ref={downloadRef} />
       </PageSection>
     </Page>
   );

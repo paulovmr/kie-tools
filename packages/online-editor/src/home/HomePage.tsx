@@ -19,6 +19,7 @@ import { RefObject } from "react";
 import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { GlobalContext } from "../common/GlobalContext";
+import { File as UploadFile, emptyFile } from "../common/File";
 import {
   Title,
   Button,
@@ -34,7 +35,11 @@ import {
   Toolbar,
   ToolbarItem} from "@patternfly/react-core";
 
-export function HomePage() {
+interface Props {
+  onFileOpened: (file: UploadFile) => void
+}
+
+export function HomePage(props: Props) {
   const context = useContext(GlobalContext);
   const history = useHistory();
 
@@ -97,10 +102,10 @@ export function HomePage() {
           reader.readAsText(file);
         });
 
-      context.file = {
-        fileName: fileName,
+      props.onFileOpened({
+        fileName: removeFileExtension(fileName),
         getFileContents: getFileContents
-      };
+      });
       history.replace(context.routes.editor.url({ type: extractFileExtension(fileName)! }));
     },
     [context, history]
@@ -136,7 +141,7 @@ export function HomePage() {
   const createFile = useCallback(
     () => {
       if (fileTypeSelect && fileTypeSelect.value) {
-        context.file = undefined;
+        props.onFileOpened(emptyFile);
         history.replace(context.routes.editor.url({ type: fileTypeSelect.value!.toLowerCase() }));
       }
     },
@@ -198,7 +203,7 @@ export function HomePage() {
                     onDragLeave={uploadBoxOnDragLeave}
                     onDrop={uploadBoxOnDrop}
                   >
-                    <Bullseye>Drag &amp; drop BPMN or DMN file here</Bullseye>
+                    <Bullseye>Drop a BPMN or DMN file here</Bullseye>
                   </div>
                 </StackItem>
                 <StackItem className="kogito--upload-btn-container">
@@ -236,4 +241,14 @@ function extractFileExtension(fileName: string) {
   }
 
   return openFileExtension;
+}
+
+function removeFileExtension(fileName: string) {
+  const fileExtension = extractFileExtension(fileName);
+
+  if (!fileExtension) {
+    return fileName;
+  }
+
+  return fileName.substr(0, fileName.length - fileExtension.length - 1);
 }

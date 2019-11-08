@@ -25,7 +25,7 @@ export interface GlobalContextType {
   routes: Routes;
   envelopeBusOuterMessageHandlerFactory: EnvelopeBusOuterMessageHandlerFactory;
   iframeTemplateRelativePath: string,
-  file?: File;
+  file: File;
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
@@ -33,5 +33,5 @@ export const GlobalContext = React.createContext<GlobalContextType>({
   routes: undefined as any,
   envelopeBusOuterMessageHandlerFactory: undefined as any,
   iframeTemplateRelativePath: undefined as any,
-  file: undefined
+  file: undefined as any
 });

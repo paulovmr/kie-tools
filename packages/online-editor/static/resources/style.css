@@ -70,3 +70,8 @@
   opacity: 0;
   cursor: pointer;
 }
+
+.kogito--right {
+  margin-left: auto;
+  margin-right: 0;
+}
