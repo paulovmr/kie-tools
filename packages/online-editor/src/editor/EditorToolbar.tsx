@@ -17,8 +17,8 @@
 import * as React from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../common/GlobalContext";
-import { Button, Toolbar, ToolbarGroup, ToolbarItem, PageSection, Title, TextInput } from '@patternfly/react-core';
-import { TimesIcon, PlusCircleIcon, EditIcon, EditAltIcon, SaveAltIcon, OkIcon, SaveIcon, CheckIcon, CloseIcon } from '@patternfly/react-icons';
+import { Button, Toolbar, ToolbarGroup, ToolbarItem, PageSection, Title, TextInput } from "@patternfly/react-core";
+import { EditAltIcon, CheckIcon, CloseIcon } from "@patternfly/react-icons";
 import { useState } from "react";
 import { useMemo } from "react";
 import { useCallback } from "react";
@@ -38,61 +38,102 @@ export function EditorToolbar(props: Props) {
   const [editingName, setEditingName] = useState(false);
   const [name, setName] = useState(context.file.fileName);
 
-  const updateTempName = useCallback((newName) => {
-    setName(newName);
-  }, [name]);
+  const updateTempName = useCallback(
+    newName => {
+      setName(newName);
+    },
+    [name]
+  );
 
-  const saveNameEdit = useCallback(() => {
-    props.onFileNameChanged(name);
-    setEditingName(false);
+  const saveNewName = useCallback(
+    () => {
+      props.onFileNameChanged(name);
+      setEditingName(false);
+    },
+    [name, editingName]
+  );
+
+  const cancelNewName = useCallback(
+    () => {
+      setEditingName(false);
+      setName(context.file.fileName);
+    },
+    [name, editingName]
+  );
+
+  const editName = useCallback(
+    () => {
+      setEditingName(true);
+    },
+    [name, editingName]
+  );
+
+  const onNameInputKeyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 13) {
+      // Enter
+      saveNewName();
+    } else if (e.keyCode === 27) {
+      // ESC
+      cancelNewName();
+    }
   }, [name, editingName]);
 
-  const cancelNameEdit = useCallback(() => {
-    setEditingName(false);
-    setName(context.file.fileName);
-  }, [name, editingName]);
-
-  const editName = useCallback(() => {
-    setEditingName(true);
-  }, [name, editingName]);
-  
   return (
     <PageSection type="nav" className="kogito--editor__toolbar-section">
       <Toolbar>
         {!editingName && (
           <ToolbarGroup>
-            <ToolbarItem>            
-              <Title headingLevel="h3" size="xl">
+            <ToolbarItem>
+              <Title headingLevel="h3" size="xl" onDoubleClick={editName}>
                 {context.file.fileName + "." + editorType}
               </Title>
             </ToolbarItem>
-            <ToolbarItem>   
+            <ToolbarItem>
               <Button variant="link" icon={<EditAltIcon />} onClick={editName} />
             </ToolbarItem>
           </ToolbarGroup>
         )}
         {editingName && (
           <ToolbarGroup>
-            <ToolbarItem>            
-              <TextInput value={name} type="text" onChange={updateTempName} aria-label="fileName" className="pf-c-title pf-m-xl" />
+            <ToolbarItem>
+              <div className="kogito--editor__toolbar-name-container">
+                <Title headingLevel="h3" size="xl" onDoubleClick={editName}>
+                  {name + "." + editorType}
+                </Title>
+                <TextInput
+                  autoFocus
+                  value={name}
+                  type="text"
+                  aria-label="fileName"
+                  className="pf-c-title pf-m-xl"
+                  onChange={updateTempName}
+                  onKeyUp={onNameInputKeyUp}
+                />
+              </div>
             </ToolbarItem>
             <ToolbarItem>
-              <Button variant="link" icon={<CheckIcon />} onClick={saveNameEdit} />
-              <Button variant="link" icon={<CloseIcon />} onClick={cancelNameEdit} />
+              <Button variant="link" icon={<CheckIcon />} onClick={saveNewName} />
+              <Button variant="link" icon={<CloseIcon />} onClick={cancelNewName} />
             </ToolbarItem>
           </ToolbarGroup>
         )}
         <ToolbarGroup className="kogito--right">
           <ToolbarItem>
-            <Button variant="link" onClick={props.onFullScreen}>Full Screen</Button>
+            <Button variant="link" onClick={props.onFullScreen}>
+              Full Screen
+            </Button>
           </ToolbarItem>
         </ToolbarGroup>
         <ToolbarGroup>
           <ToolbarItem className="pf-u-mr-sm">
-            <Button variant="primary" onClick={props.onSave}>Save</Button>
+            <Button variant="primary" onClick={props.onSave}>
+              Save
+            </Button>
           </ToolbarItem>
           <ToolbarItem>
-            <Button variant="secondary" onClick={props.onClose}>Close</Button>
+            <Button variant="secondary" onClick={props.onClose}>
+              Close
+            </Button>
           </ToolbarItem>
         </ToolbarGroup>
       </Toolbar>
