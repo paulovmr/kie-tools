@@ -54,10 +54,10 @@ export function App(props: Props) {
 
   const [file, setFile] = useState(emptyFile);
   const onFileOpened = useCallback(
-    file => {
-      setFile(file);
+    fileOpened => {
+      setFile(fileOpened);
     },
-    [file]
+    []
   );
   const onFileNameChanged = useCallback(
     fileName => {
