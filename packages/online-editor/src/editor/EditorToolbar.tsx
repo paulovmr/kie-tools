@@ -74,7 +74,7 @@ export function EditorToolbar(props: Props) {
         {editingName && (
           <ToolbarGroup>
             <ToolbarItem>            
-              <TextInput value={name} type="text" onChange={updateTempName} aria-label="fileName" />
+              <TextInput value={name} type="text" onChange={updateTempName} aria-label="fileName" className="pf-c-title pf-m-xl" />
             </ToolbarItem>
             <ToolbarItem>
               <Button variant="link" icon={<CheckIcon />} onClick={saveNameEdit} />

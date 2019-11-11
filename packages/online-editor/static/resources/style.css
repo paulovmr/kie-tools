@@ -39,6 +39,12 @@
   --pf-c-page__main-nav--PaddingBottom: var(--pf-global--spacer--sm);
 }
 
+.kogito--editor__toolbar-section input {
+  background-color: var(--pf-global--BackgroundColor--300);
+  padding-left: 0;
+  border-left: 0;
+}
+
 .kogito--full-screen__toolbar {
   position: absolute;
   display: flex;

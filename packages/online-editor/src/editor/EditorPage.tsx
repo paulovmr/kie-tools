@@ -70,12 +70,17 @@ export function EditorPage(props: Props) {
       if (downloadRef.current) {
         const fileBlob = new Blob([content], { type: "text/plain" });
         downloadRef.current.href = URL.createObjectURL(fileBlob);
-        downloadRef.current.download = fileName + "." + editorType;
         downloadRef.current.click();
       }
     },
-    [fileName, editorType]
+    [downloadRef.current]
   );
+
+  useEffect(() => {
+    if (downloadRef.current) {
+      downloadRef.current.download = fileName + "." + editorType;
+    }
+  }, [fileName, editorType]);
 
   useEffect(() => {
     document.addEventListener("fullscreenchange", toggleFullScreen);
@@ -109,7 +114,7 @@ export function EditorPage(props: Props) {
           </StackItem>
 
           <StackItem className="pf-m-fill">
-            <Editor ref={editorRef} fullscreen={fullscreen} onSave={save} />
+            <Editor ref={editorRef} fullscreen={fullscreen} onSave={(content) => save(content)} />
           </StackItem>
         </Stack>
         <a ref={downloadRef} />
