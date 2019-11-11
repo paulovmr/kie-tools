@@ -43,6 +43,11 @@
   padding: 0.15em 0.35em;
 }
 
+.kogito--editor__toolbar-section button,
+.kogito--editor__toolbar-section input {
+  outline: none;
+}
+
 .kogito--editor__toolbar-name-container {
   display: inline-block;
   position: relative;
