@@ -18,7 +18,6 @@ import * as React from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../common/GlobalContext";
 import { Button, Toolbar, ToolbarGroup, ToolbarItem, PageSection, Title, TextInput } from "@patternfly/react-core";
-import { EditAltIcon, CheckIcon, CloseIcon } from "@patternfly/react-icons";
 import { useState } from "react";
 import { useMemo } from "react";
 import { useCallback } from "react";
@@ -68,15 +67,18 @@ export function EditorToolbar(props: Props) {
     [name, editingName]
   );
 
-  const onNameInputKeyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.keyCode === 13) {
-      // Enter
-      saveNewName();
-    } else if (e.keyCode === 27) {
-      // ESC
-      cancelNewName();
-    }
-  }, [name, editingName]);
+  const onNameInputKeyUp = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.keyCode === 13) {
+        // Enter
+        saveNewName();
+      } else if (e.keyCode === 27) {
+        // ESC
+        cancelNewName();
+      }
+    },
+    [name, editingName]
+  );
 
   return (
     <PageSection type="nav" className="kogito--editor__toolbar-section">
@@ -84,12 +86,9 @@ export function EditorToolbar(props: Props) {
         {!editingName && (
           <ToolbarGroup>
             <ToolbarItem>
-              <Title headingLevel="h3" size="xl" onDoubleClick={editName}>
+              <Title headingLevel="h3" size="xl" onClick={editName} title="Rename">
                 {context.file.fileName + "." + editorType}
               </Title>
-            </ToolbarItem>
-            <ToolbarItem>
-              <Button variant="link" icon={<EditAltIcon />} onClick={editName} />
             </ToolbarItem>
           </ToolbarGroup>
         )}
@@ -97,7 +96,7 @@ export function EditorToolbar(props: Props) {
           <ToolbarGroup>
             <ToolbarItem>
               <div className="kogito--editor__toolbar-name-container">
-                <Title headingLevel="h3" size="xl" onDoubleClick={editName}>
+                <Title headingLevel="h3" size="xl">
                   {name + "." + editorType}
                 </Title>
                 <TextInput
@@ -108,12 +107,9 @@ export function EditorToolbar(props: Props) {
                   className="pf-c-title pf-m-xl"
                   onChange={updateTempName}
                   onKeyUp={onNameInputKeyUp}
+                  onBlur={saveNewName}
                 />
               </div>
-            </ToolbarItem>
-            <ToolbarItem>
-              <Button variant="link" icon={<CheckIcon />} onClick={saveNewName} />
-              <Button variant="link" icon={<CloseIcon />} onClick={cancelNewName} />
             </ToolbarItem>
           </ToolbarGroup>
         )}
