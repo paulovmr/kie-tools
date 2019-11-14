@@ -23,7 +23,7 @@ import { HomePage } from "./home/HomePage";
 import { EditorPage } from "./editor/EditorPage";
 import { NoMatchPage } from "./NoMatchPage";
 import { OnlineEditorRouter } from "./common/OnlineEditorRouter";
-import { GwtEditorRoutes } from "@kogito-tooling/gwt-editors";
+import { GwtEditorRoutes } from "@kogito-tooling/kie-bc-editors";
 import { GlobalContext } from "./common/GlobalContext";
 import { EnvelopeBusOuterMessageHandlerFactory } from "./editor/EnvelopeBusOuterMessageHandlerFactory";
 import "@patternfly/patternfly/patternfly-variables.css";
