@@ -78,8 +78,11 @@ const RefForwardingEditor: React.RefForwardingComponent<EditorRef, Props> = (pro
     return () => {
       envelopeBusOuterMessageHandler.stopInitPolling();
       window.removeEventListener("message", listener);
+      iframeRef.current!.contentWindow!.onunload = () => {};
+      iframeRef.current!.contentWindow!.onbeforeunload = () => {};
+      iframeRef.current!.contentDocument!.location.reload();
     };
-  }, []);
+  }, [envelopeBusOuterMessageHandler]);
 
   useImperativeHandle(
     forwardedRef,

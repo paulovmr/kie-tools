@@ -18,6 +18,7 @@ import * as React from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../common/GlobalContext";
 import { Button, Toolbar, ToolbarGroup, ToolbarItem, PageSection, Title, TextInput } from "@patternfly/react-core";
+import { EditIcon } from "@patternfly/react-icons";
 import { useState } from "react";
 import { useMemo } from "react";
 import { useCallback } from "react";
@@ -89,6 +90,11 @@ export function EditorToolbar(props: Props) {
               <Title headingLevel="h3" size="xl" onClick={editName} title="Rename">
                 {context.file.fileName + "." + editorType}
               </Title>
+            </ToolbarItem>
+            <ToolbarItem>
+              <Button variant="plain" aria-label="Edit the file name" onClick={editName}>
+                <EditIcon />
+              </Button>
             </ToolbarItem>
           </ToolbarGroup>
         )}

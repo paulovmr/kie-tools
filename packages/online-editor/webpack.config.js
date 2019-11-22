@@ -35,7 +35,7 @@ module.exports = {
       { from: "./static/envelope", to: "./envelope" },
       { from: "./static/images", to: "./images" },
       { from: "./static/index.html", to: "./index.html" },
-      { from: "../unpacked-gwt-editors", to: "./gwt-editors" }
+      { from: "../kie-bc-editors-unpacked", to: "./gwt-editors" }
     ]),
   ],
   module: {
