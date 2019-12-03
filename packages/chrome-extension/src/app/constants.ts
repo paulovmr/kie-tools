@@ -20,6 +20,7 @@ export const KOGITO_MAIN_CONTAINER_ID = "kogito-container";
 export const KOGITO_TOOLBAR_CONTAINER_ID = "kogito-toolbar-container";
 export const KOGITO_IFRAME_CONTAINER_ID = "kogito-iframe-container";
 export const KOGITO_IFRAME_FULLSCREEN_CONTAINER_ID = "kogito-iframe-fullscreen-container";
+export const KOGITO_OPEN_WITH_ONLINE_EDITOR_LINK_CONTAINER_PR_CLASS = "kogito-open-with-online-editor-link-container-pr";
 export const KOGITO_VIEW_ORIGINAL_LINK_CONTAINER_PR_CLASS = "kogito-view-original-link-container-pr";
 export const KOGITO_TOOLBAR_CONTAINER_PR_CLASS = "kogito-toolbar-container-pr";
 export const KOGITO_IFRAME_CONTAINER_PR_CLASS = "kogito-iframe-container-pr";

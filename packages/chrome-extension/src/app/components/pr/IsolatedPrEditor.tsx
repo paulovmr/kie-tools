@@ -32,6 +32,7 @@ import {
   GITHUB_RENAMED_FILE_ARROW,
   KOGITO_IFRAME_CONTAINER_PR_CLASS,
   KOGITO_TOOLBAR_CONTAINER_PR_CLASS,
+  KOGITO_OPEN_WITH_ONLINE_EDITOR_LINK_CONTAINER_PR_CLASS,
   KOGITO_VIEW_ORIGINAL_LINK_CONTAINER_PR_CLASS
 } from "../../constants";
 import { GlobalContext } from "../common/GlobalContext";
@@ -84,6 +85,8 @@ export function IsolatedPrEditor(props: {
     setEditorReady(false);
   }, []);
 
+  const filePath = showOriginal || fileStatusOnPr === FileStatusOnPr.DELETED ? originalFilePath : modifiedFilePath;
+
   const getFileContents =
     showOriginal || fileStatusOnPr === FileStatusOnPr.DELETED
       ? () => getOriginalFileContents(globalContext.octokit, props.prInfo, originalFilePath)
@@ -93,6 +96,21 @@ export function IsolatedPrEditor(props: {
     fileStatusOnPr === FileStatusOnPr.CHANGED || fileStatusOnPr === FileStatusOnPr.DELETED;
 
   const globalContext = useContext(GlobalContext);
+
+  const openOnlineEditor = () => {
+    const editorExtensionId = "ahkognidihindkfnpajjmahbifdfafoi";
+    getFileContents().then(fileContent => {
+      chrome.runtime.sendMessage(
+        editorExtensionId,
+        { messageId: "OPEN_ONLINE_EDITOR", filePath: filePath, fileContent: fileContent, modifiable: false },
+        function(response) {
+          if (response && !response.success) {
+            alert("Error during online editor opening.");
+          }
+        }
+      );
+    });
+  };
 
   return (
     <IsolatedEditorContext.Provider
@@ -108,6 +126,16 @@ export function IsolatedPrEditor(props: {
             dependencies__.all.pr__viewOriginalFileLinkContainer(props.prFileContainer)!
           )
         )}
+
+      {ReactDOM.createPortal(
+        <a className={"pl-5 dropdown-item btn-link"} onClick={openOnlineEditor}>
+          Open in Online Editor
+        </a>,
+        openWithOnlineEditorLinkContainer(
+          props.prFileContainer,
+          dependencies__.all.pr__openWithOnlineEditorLinkContainer(props.prFileContainer)!
+        )
+      )}
 
       {ReactDOM.createPortal(
         <PrToolbar
@@ -185,6 +213,17 @@ function viewOriginalFileLinkContainer(prFileContainer: HTMLElement, container: 
 
   if (!element()) {
     container.insertAdjacentHTML("afterend", div);
+  }
+
+  return element()!;
+}
+
+function openWithOnlineEditorLinkContainer(prFileContainer: HTMLElement, container: HTMLElement) {
+  const div = `<div class="${KOGITO_OPEN_WITH_ONLINE_EDITOR_LINK_CONTAINER_PR_CLASS}"></div>`;
+  const element = () => prFileContainer.querySelector(`.${KOGITO_OPEN_WITH_ONLINE_EDITOR_LINK_CONTAINER_PR_CLASS}`);
+
+  if (!element()) {
+    container.insertAdjacentHTML("beforebegin", div);
   }
 
   return element()!;

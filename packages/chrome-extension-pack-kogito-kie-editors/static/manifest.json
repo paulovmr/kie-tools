@@ -6,8 +6,14 @@
   "content_scripts": [
     {
       "run_at": "document_idle",
-      "js": ["contentscript.js"],
+      "js": ["content_scripts/github.js"],
       "matches": ["https://github.com/*"],
+      "all_frames": true
+    },
+    {
+      "run_at": "document_idle",
+      "js": ["content_scripts/online-editor.js"],
+      "matches": ["*://paulovmr.github.io/*", "*://localhost/*"],
       "all_frames": true
     }
   ],
@@ -22,5 +28,9 @@
     "declarativeContent",
     "background"
   ],
-  "content_security_policy": "script-src 'self' https://raw.githubusercontent.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://raw.githubusercontent.com; object-src 'self'",
+  "externally_connectable": {
+    "matches": ["*://*.github.com/*", "*://paulovmr.github.io/*", "*://localhost/*"]
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqHDtCoFKJQdJ4LtzC32UlM8+kCoGBjc/hIet6FtXD+CNKFtXfxN72D3iHpqvFQvgEaCW8+C4MJ+5VX/EBfiT/YMaKsuWaZZtgV7yyWZRt1oXjzpy4nGgaOoR3Ur8uA3DCgJ3G3rQPnO08wCwk2uz6XeNUXjjrhelnInMH5t8SNpE8Vy2Yj9BEGqphjVLcME1SSdNGowHvae+3dum3MZKpTeqmknRq6pdddgriG0cDq4VDbbnA4G91pSwub5jQV/NEVbA4uvT8y6JeuKIrdoIPk2Wo5V+SywmHxU0KHZPgA44UqMGOCy4Jq5sTceV1bu8HqiDQZ5F3bwyCmaBSwwTVQIDAQAB"
 }

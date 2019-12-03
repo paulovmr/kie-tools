@@ -65,6 +65,9 @@ export const all = {
   pr__mutationObserverTarget: () => {
     return document.getElementById("files") as HTMLElement | null;
   },
+  pr__openWithOnlineEditorLinkContainer: (container: HTMLElement) => {
+    return container.querySelectorAll("details-menu a")[0] as HTMLAnchorElement | null;
+  },
   pr__viewOriginalFileLinkContainer: (container: HTMLElement) => {
     return container.querySelectorAll("details-menu a")[0] as HTMLAnchorElement | null;
   },

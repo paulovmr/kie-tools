@@ -53,7 +53,8 @@ module.exports = async (env, argv) => {
     mode: "development",
     devtool: "inline-source-map",
     entry: {
-      contentscript: "./src/contentscript.ts",
+      "content_scripts/github": "./src/github-content-script.ts",
+      "content_scripts/online-editor": "./src/online-editor-content-script.ts",
       background: "./src/background.ts",
       "envelope/index": "./src/envelope/index.ts"
     },
