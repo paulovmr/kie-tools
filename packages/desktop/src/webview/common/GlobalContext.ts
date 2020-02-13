@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-export enum ChannelType {
-    VSCODE = "VSCODE",
-    ONLINE = "ONLINE",
-    GITHUB = "GITHUB",
-    DESKTOP = "DESKTOP"
+import * as React from "react";
+import { File } from "../../common/File";
+import { EnvelopeBusOuterMessageHandlerFactory } from "../editor/EnvelopeBusOuterMessageHandlerFactory";
+import { Router } from "@kogito-tooling/core-api";
+
+export interface GlobalContextType {
+  router: Router;
+  envelopeBusOuterMessageHandlerFactory: EnvelopeBusOuterMessageHandlerFactory;
+  iframeTemplateRelativePath: string;
+  file?: File;
 }
+
+export const GlobalContext = React.createContext<GlobalContextType>({} as any);
