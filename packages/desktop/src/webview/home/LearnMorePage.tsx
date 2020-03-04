@@ -15,17 +15,18 @@
  */
 
 import * as React from "react";
-import { File } from "../../common/File";
-import { EnvelopeBusOuterMessageHandlerFactory } from "../editor/EnvelopeBusOuterMessageHandlerFactory";
-import { Router } from "@kogito-tooling/core-api";
-import { FileActions } from "./FileActions";
+import { PageSection } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core/dist/js/components/Button/Button";
+import { useContext } from "react";
+import { GlobalContext } from "../common/GlobalContext";
 
-export interface GlobalContextType {
-  router: Router;
-  envelopeBusOuterMessageHandlerFactory: EnvelopeBusOuterMessageHandlerFactory;
-  iframeTemplateRelativePath: string;
-  fileActions: FileActions;
-  file?: File;
+export function LearnMorePage() {
+  const context = useContext(GlobalContext);
+
+  return (
+    <PageSection>
+      <Button onClick={() => context.fileActions.createNewFile("bpmn")}>Create BPMN</Button>
+      <Button onClick={() => context.fileActions.createNewFile("dmn")}>Create DMN</Button>
+    </PageSection>
+  );
 }
-
-export const GlobalContext = React.createContext<GlobalContextType>({} as any);

@@ -15,62 +15,56 @@
  */
 
 import * as React from "react";
-import { Bullseye, Card, CardBody, CardFooter, Grid, GridItem, Page, PageSection, Title } from "@patternfly/react-core";
-import { useCallback, useEffect, useState } from "react";
+import { Brand, Nav, NavItem, NavList, Page, PageHeader, PageSidebar } from "@patternfly/react-core";
+import { useCallback, useState } from "react";
 import { useMemo } from "react";
-import * as electron from "electron";
-import { extractFileExtension, removeDirectories } from "../../common/utils";
-import IpcRendererEvent = Electron.IpcRendererEvent;
+import { FilesPage } from "./FilesPage";
+import { LearnMorePage } from "./LearnMorePage";
+import { File } from "../../common/File";
 
-export function HomePage() {
-  const [lastOpenedFiles, setLastOpenedFiles] = useState<string[]>([]);
+interface Props {
+  openFile: (file: File) => void;
+}
 
-  const ipc = useMemo(() => electron.ipcRenderer, [electron.ipcRenderer]);
+enum NavItems {
+  FILES,
+  LEARN_MORE
+}
 
-  const openFile = useCallback((filePath: string) => {
-    ipc.send("openFile", { filePath: filePath });
+export function HomePage(props: Props) {
+  const [activeNavItem, setActiveNavItem] = useState<NavItems>(NavItems.FILES);
+
+  const onNavSelect = useCallback(selectedItem => {
+    setActiveNavItem(selectedItem.itemId);
   }, []);
 
-  useEffect(() => {
-    ipc.on("returnLastOpenedFiles", (event: IpcRendererEvent, data: { lastOpenedFiles: string[] }) => {
-      setLastOpenedFiles(data.lastOpenedFiles);
-    });
+  const logoProps = useMemo(() => {
+    return { href: "/" };
+  }, []);
 
-    ipc.send("requestLastOpenedFiles");
+  const header = (
+    <PageHeader logo={<Brand src={"images/IntelliApp_Logo_342x76.svg"} alt="Kogito Logo" />} logoProps={logoProps} />
+  );
 
-    return () => {
-      ipc.removeAllListeners("returnLastOpenedFiles");
-    };
-  }, [ipc, lastOpenedFiles]);
+  const navigation = (
+    <Nav onSelect={onNavSelect} className={"pf-m-dark"}>
+      <NavList>
+        <NavItem itemId={NavItems.FILES} isActive={activeNavItem === NavItems.FILES}>
+          Files
+        </NavItem>
+        <NavItem itemId={NavItems.LEARN_MORE} isActive={activeNavItem === NavItems.LEARN_MORE}>
+          Learn more
+        </NavItem>
+      </NavList>
+    </Nav>
+  );
+
+  const sidebar = <PageSidebar nav={navigation} isNavOpen={true} className={"pf-m-dark"} />;
 
   return (
-    <Page>
-      <PageSection variant="light">
-        {lastOpenedFiles.length === 0 && (
-          <Bullseye>
-            <img src={"images/kogito_logo.png"} alt="Kogito Logo" />
-          </Bullseye>
-        )}
-
-        {lastOpenedFiles.length > 0 && (
-          <Grid gutter="lg" className="pf-m-all-12-col pf-m-all-6-col-on-md">
-            {lastOpenedFiles.map(filePath => (
-              <GridItem className="pf-m-3-col" key={filePath}>
-                <Card className={"kogito--card"} onClick={() => openFile(filePath)}>
-                  <CardBody>
-                    <img title={filePath} src={"images/" + extractFileExtension(filePath) + "_thumbnail.png"} />
-                  </CardBody>
-                  <CardFooter>
-                    <Title headingLevel="h3" size="md">
-                      {removeDirectories(filePath)}
-                    </Title>
-                  </CardFooter>
-                </Card>
-              </GridItem>
-            ))}
-          </Grid>
-        )}
-      </PageSection>
+    <Page header={header} sidebar={sidebar} className={"kogito--editor-landing"}>
+      {activeNavItem === NavItems.FILES && <FilesPage openFile={props.openFile} />}
+      {activeNavItem === NavItems.LEARN_MORE && <LearnMorePage />}
     </Page>
   );
 }

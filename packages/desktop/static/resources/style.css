@@ -19,6 +19,11 @@
   height: 100%;
 }
 
+.kogito--editor-landing {
+  /* this adjusts the max specifically for our logo */
+  --pf-c-page__header-brand-link--c-brand--MaxHeight: 39px;
+}
+
 .kogito--editor-page main {
   overflow-y: hidden;
 }

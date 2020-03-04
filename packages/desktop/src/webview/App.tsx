@@ -28,7 +28,7 @@ import "../../static/resources/style.css";
 import { File } from "../common/File";
 import { DesktopRouter } from "./common/DesktopRouter";
 import * as electron from "electron";
-import { OpenByURLPage } from "./openbyurl/OpenByURLPage";
+import {FileActions} from "./common/FileActions";
 
 interface Props {
   file?: File;
@@ -36,8 +36,7 @@ interface Props {
 
 enum Pages {
   HOME,
-  EDITOR,
-  OPEN_BY_URL
+  EDITOR
 }
 
 export function App(props: Props) {
@@ -57,6 +56,8 @@ export function App(props: Props) {
   );
 
   const ipc = useMemo(() => electron.ipcRenderer, [electron.ipcRenderer]);
+
+  const fileActions = useMemo(() => new FileActions(ipc), [ipc]);
 
   const openFile = useCallback(
     (fileToOpen: File) => {
@@ -87,23 +88,10 @@ export function App(props: Props) {
     };
   }, [ipc, page, file]);
 
-  useEffect(() => {
-    ipc.on("goToOpenFileByURL", (event: any, data: any) => {
-      setPage(Pages.OPEN_BY_URL);
-      setFile(undefined);
-    });
-
-    return () => {
-      ipc.removeAllListeners("goToOpenFileByURL");
-    };
-  }, [ipc, page, file]);
-
   const Router = () => {
     switch (page) {
       case Pages.HOME:
-        return <HomePage />;
-      case Pages.OPEN_BY_URL:
-        return <OpenByURLPage openFile={openFile} />;
+        return <HomePage openFile={openFile} />;
       case Pages.EDITOR:
         return <EditorPage editorType={file!.fileType} />;
       default:
@@ -117,6 +105,7 @@ export function App(props: Props) {
         router: desktopRouter,
         envelopeBusOuterMessageHandlerFactory: envelopeBusOuterMessageHandlerFactory,
         iframeTemplateRelativePath: "envelope/index.html",
+        fileActions: fileActions,
         file: file
       }}
     >

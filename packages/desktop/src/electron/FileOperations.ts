@@ -22,6 +22,7 @@ import { extractFileExtension } from "../common/utils";
 import { DesktopUserData } from "./DesktopUserData";
 import IpcMainEvent = Electron.IpcMainEvent;
 import { Menu } from "./Menu";
+import * as path from "path";
 
 export enum Actions {
   SAVE,
@@ -81,12 +82,16 @@ export class FileOperations {
       });
     });
 
-    ipcMain.on("openFile", (event: IpcMainEvent, data: { filePath: string }) => {
+    ipcMain.on("openFileByPath", (event: IpcMainEvent, data: { filePath: string }) => {
       this.open(data.filePath);
     });
 
-    ipcMain.on("enableFileMenus", () => {
-      this.menu.setFileMenusEnabled(true);
+    ipcMain.on("createNewFile", (event: IpcMainEvent, data: { type: string }) => {
+      this.new(data.type);
+    });
+
+    ipcMain.on("openSample", (event: IpcMainEvent, data: { type: string }) => {
+      this.openSample(path.join(__dirname, "samples/sample." + data.type));
     });
   }
 

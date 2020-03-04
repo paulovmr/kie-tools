@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import * as React from "react";
-import { File } from "../../common/File";
-import { EnvelopeBusOuterMessageHandlerFactory } from "../editor/EnvelopeBusOuterMessageHandlerFactory";
-import { Router } from "@kogito-tooling/core-api";
-import { FileActions } from "./FileActions";
+import IpcRenderer = Electron.IpcRenderer;
 
-export interface GlobalContextType {
-  router: Router;
-  envelopeBusOuterMessageHandlerFactory: EnvelopeBusOuterMessageHandlerFactory;
-  iframeTemplateRelativePath: string;
-  fileActions: FileActions;
-  file?: File;
+export class FileActions {
+  private readonly ipc: IpcRenderer;
+
+  constructor(ipc: IpcRenderer) {
+    this.ipc = ipc;
+  }
+
+  public createNewFile(type: string) {
+    this.ipc.send("createNewFile", { type: type });
+  }
+
+  public openSample(type: string) {
+    this.ipc.send("openSample", { type: type });
+  }
 }
-
-export const GlobalContext = React.createContext<GlobalContextType>({} as any);
