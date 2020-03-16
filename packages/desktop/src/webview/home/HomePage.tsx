@@ -43,7 +43,7 @@ export function HomePage(props: Props) {
   }, []);
 
   const header = (
-    <PageHeader logo={<Brand src={"images/IntelliApp_Logo_342x76.svg"} alt="Kogito Logo" />} logoProps={logoProps} />
+    <PageHeader logo={<Brand src={"images/BusinessModeler_Logo.svg"} alt="Business Modeler Logo" />} logoProps={logoProps} />
   );
 
   const navigation = (
