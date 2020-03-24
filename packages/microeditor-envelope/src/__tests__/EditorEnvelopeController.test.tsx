@@ -148,7 +148,7 @@ describe("EditorEnvelopeController", () => {
     await incomingMessage({ type: EnvelopeBusMessageType.RETURN_CONTENT, data: { content: "test content" } });
     await delay(EditorEnvelopeController.ESTIMATED_TIME_TO_WAIT_AFTER_EMPTY_SET_CONTENT);
 
-    expect(sentMessages).toEqual([]);
+    expect(sentMessages).toEqual([{ type: EnvelopeBusMessageType.NOTIFY_READY, data: undefined }]);
     expect(render.update()).toMatchSnapshot();
   });
 

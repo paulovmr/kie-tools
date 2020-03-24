@@ -60,7 +60,8 @@ export class EditorEnvelopeController {
           editor
             .setContent("", "")
             .finally(() => this.waitForEmptySetContentThenSetLoadingFinished())
-            .then(() => editor.setContent(contentPath, editorContent.content));
+            .then(() => editor.setContent(contentPath, editorContent.content))
+            .then(() => self.notify_ready());
         }
       },
       receive_contentRequest: () => {
