@@ -26,7 +26,6 @@ jobs:
       - name: Checkout upstream
         uses: actions/checkout@v1
         with:
-          repository: kiegroup/kogito-tooling
           ref: master
 
       - name: Checkout to PRs base branch -> ${{ github.base_ref }} (PR only)
