@@ -146,11 +146,11 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: hub-app-macos
-          path: "packages/desktop/out/Business Modeler Hub Preview-darwin-x64.zip"
+          path: "packages/hub/out/Business Modeler Hub Preview-darwin-x64.zip"
 
       - name: Upload Hub App - Windows (Windows only)
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v1
         with:
           name: hub-app-windows
-          path: "packages/desktop/out/Business Modeler Hub Preview-win32-x64"
+          path: "packages/hub/out/Business Modeler Hub Preview-win32-x64"
