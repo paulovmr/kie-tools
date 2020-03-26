@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         node: [12.13.0]
         yarn: [1.19.0]
 
@@ -86,6 +86,7 @@ jobs:
         run: npx lerna run pack-extension --stream
 
       - name: Upload DMN editor
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v1
         with:
           name: dmn-editor
@@ -110,3 +111,9 @@ jobs:
         with:
           name: chrome-extension
           path: packages/chrome-extension-pack-kogito-kie-editors/dist/chrome_extension_kogito_kie_editors_${{ steps.version.outputs.version }}.zip
+
+      - name: Upload Desktop App
+        uses: actions/upload-artifact@v1
+        with:
+          name: desktop-app
+          path: packages/desktop/out/business_modeler_preview_windows_${{ steps.version.outputs.version }}.zip
