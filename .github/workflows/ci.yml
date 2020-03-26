@@ -82,7 +82,7 @@ jobs:
         continue-on-error: true
 
       - name: Pack artifacts
-        run: npx lerna run pack-extension --stream
+        run: npx lerna run package:prod --stream
 
       - name: Upload DMN editor
         if: matrix.os == 'ubuntu-latest'
