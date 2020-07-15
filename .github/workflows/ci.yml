@@ -1,8 +1,6 @@
-name: CI
+name: Pull Request CI
 
 on:
-  schedule:
-    - cron: "0 1 * * *"
   push:
     branches: [master]
   pull_request:
@@ -22,11 +20,60 @@ jobs:
       - uses: actions/checkout@v2
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
+      - name: Extract source user name
+        id: extract_user
+        shell: bash
+        run: |
+          echo ::set-output name=user::$(git ls-remote --get-url origin | cut -d/ -f4)"
+
+      - name: Extract source branch name
+        id: extract_branch
+        shell: bash
+        run: |
+          echo ::set-output name=branch::${GITHUB_REF#refs/heads/}"
+
+      - name: Build editors
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd ..
+          pwd
+          echo "Source user: ${{ steps.extract_user.outputs.user }}"
+          echo "Source branch: ${{ steps.extract_branch.outputs.branch }}"
+          git clone https://github.com/kiegroup/droolsjbpm-build-bootstrap.git
+          git clone https://github.com/kiegroup/kie-soup.git
+          git clone https://github.com/kiegroup/appformer.git
+          git clone https://github.com/paulovmr/kie-wb-common.git
+          cd droolsjbpm-build-bootstrap
+          mvn clean install -DskipTests=true -Dgwt.compiler.skip=true -Denforcer.skip=true
+          cd ../kie-soup
+          mvn clean install -DskipTests=true -Dgwt.compiler.skip=true -Denforcer.skip=true
+          cd ../appformer
+          mvn clean install -DskipTests=true -Dgwt.compiler.skip=true -Denforcer.skip=true
+          cd ../kie-wb-common
+          mvn clean install -DskipTests=true -Denforcer.skip=true -pl kie-wb-common-stunner/kie-wb-common-stunner-sets/kie-wb-common-stunner-bpmn/kie-wb-common-stunner-bpmn-kogito-runtime -am
+          mvn clean install -DskipTests=true -Denforcer.skip=true -pl kie-wb-common-dmn/kie-wb-common-dmn-webapp-kogito-runtime -am
+          cd ..
+
+      - name: Upload DMN editor (Ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v1
+        with:
+          name: dmn-editor
+          path: kie-wb-common/kie-wb-common-dmn/kie-wb-common-dmn-webapp-kogito-runtime/target/kie-wb-common-dmn-webapp-kogito-runtime
+
+      - name: Upload BPMN editor (Ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v1
+        with:
+          name: bpmn-editor
+          path: kie-wb-common/kie-wb-common-stunner/kie-wb-common-stunner-sets/kie-wb-common-stunner-bpmn/kie-wb-common-stunner-bpmn-kogito-runtime/target/kie-wb-common-stunner-bpmn-kogito-runtime
+
       # This bash script will set an output version for this step. It can be used with steps.version.outputs.version
       - name: Output version
         id: version
         run: |
           echo ::set-output name=version::$(node -e "console.log(require('./lerna.json').version);")
+	  cd kogito-tooling
         shell: bash
 
       - name: Setup Node
@@ -56,20 +103,6 @@ jobs:
         run: yarn run build:prod
         env:
           DISPLAY: ":99.0"
-
-      - name: Upload DMN editor (Ubuntu only)
-        if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v1
-        with:
-          name: dmn-editor
-          path: packages/kie-bc-editors-unpacked/dmn
-
-      - name: Upload BPMN editor (Ubuntu only)
-        if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v1
-        with:
-          name: bpmn-editor
-          path: packages/kie-bc-editors-unpacked/bpmn
 
       - name: Upload VSCode Extension (Ubuntu only)
         if: matrix.os == 'ubuntu-latest'
