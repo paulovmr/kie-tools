@@ -44,6 +44,7 @@ interface Props {
   onExportGist: () => void;
   onClose: () => void;
   onCopyContentToClipboard: () => void;
+  onTestDeploy: () => void;
   isPageFullscreen: boolean;
   isEdited: boolean;
 }
@@ -182,6 +183,21 @@ export function EditorToolbar(props: Props) {
         >
           <Button data-testid="save-button" variant={"tertiary"} onClick={props.onDownload} aria-label={"Save button"}>
             {i18n.terms.save}
+          </Button>
+        </PageHeaderToolsItem>
+      </PageHeaderToolsGroup><PageHeaderToolsGroup>
+        <PageHeaderToolsItem
+          visibility={{
+            default: "hidden",
+            "2xl": "visible",
+            xl: "visible",
+            lg: "hidden",
+            md: "hidden",
+            sm: "hidden"
+          }}
+        >
+          <Button data-testid="test-deploy" variant={"tertiary"} onClick={props.onTestDeploy} aria-label={"Test&Deploy button"}>
+            Test & Deploy
           </Button>
         </PageHeaderToolsItem>
       </PageHeaderToolsGroup>

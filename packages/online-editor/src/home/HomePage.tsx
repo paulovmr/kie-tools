@@ -239,9 +239,9 @@ export function HomePage(props: Props) {
     [context, history]
   );
 
-  const createEmptyBpmnFile = useCallback(() => {
-    createEmptyFile("bpmn");
-  }, [createEmptyFile]);
+  // const createEmptyBpmnFile = useCallback(() => {
+  //   createEmptyFile("bpmn");
+  // }, [createEmptyFile]);
 
   const createEmptyDmnFile = useCallback(() => {
     createEmptyFile("dmn");
@@ -262,9 +262,9 @@ export function HomePage(props: Props) {
     [context, history]
   );
 
-  const tryBpmnSample = useCallback(() => {
-    trySample("bpmn");
-  }, [trySample]);
+  // const tryBpmnSample = useCallback(() => {
+  //   trySample("bpmn");
+  // }, [trySample]);
 
   const tryDmnSample = useCallback(() => {
     trySample("dmn");
@@ -542,24 +542,6 @@ export function HomePage(props: Props) {
           <Card>
             <CardHeader>
               <Title headingLevel="h2" size="2xl">
-                {i18n.homePage.bpmnCard.title}
-              </Title>
-            </CardHeader>
-            <CardBody isFilled={false}>{i18n.homePage.bpmnCard.explanation}</CardBody>
-            <CardBody isFilled={true}>
-              <Button variant="link" isInline={true} onClick={tryBpmnSample}>
-                {i18n.homePage.trySample}
-              </Button>
-            </CardBody>
-            <CardFooter>
-              <Button variant="secondary" onClick={createEmptyBpmnFile}>
-                {i18n.homePage.bpmnCard.createNew}
-              </Button>
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <Title headingLevel="h2" size="2xl">
                 {i18n.homePage.dmnCard.title}
               </Title>
             </CardHeader>
@@ -599,7 +581,7 @@ export function HomePage(props: Props) {
                 {i18n.homePage.chooseLocalFile}
                 {/* Transparent file input overlays the button */}
                 <input
-                  accept={".dmn, .bpmn, .bpmn2"}
+                  accept={".dmn"}
                   className="pf-c-button"
                   type="file"
                   aria-label="File selection"

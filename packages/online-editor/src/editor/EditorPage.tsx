@@ -26,12 +26,17 @@ import { FullScreenToolbar } from "./EditorFullScreenToolbar";
 import { EditorToolbar } from "./EditorToolbar";
 import { useDmnTour } from "../tour";
 import { useOnlineI18n } from "../common/i18n";
+import TestAndDeploy from "./TestAndDeploy";
 
 interface Props {
   onFileNameChanged: (fileName: string, fileExtension: string) => void;
 }
 
 const ALERT_AUTO_CLOSE_TIMEOUT = 3000;
+
+// const logger = (msg: string) => {
+//   console.log("%c " + msg, "background: #222; color: #fff");
+// };
 
 export function EditorPage(props: Props) {
   const context = useContext(GlobalContext);
@@ -47,6 +52,8 @@ export function EditorPage(props: Props) {
   const [showUnsavedAlert, setShowUnsavedAlert] = useState(false);
   const isDirty = useDirtyState(editorRef);
   const { locale, i18n } = useOnlineI18n();
+
+  const [showTestPanel, setShowTestPanel] = useState(false);
 
   const close = useCallback(() => {
     if (!isDirty) {
@@ -74,6 +81,10 @@ export function EditorPage(props: Props) {
       );
     });
   }, [context.file.fileName]);
+
+  const testDeployToggle = useCallback(() => {
+    setShowTestPanel(!showTestPanel);
+  }, [showTestPanel]);
 
   const requestDownload = useCallback(() => {
     editorRef.current?.getStateControl().setSavedCommand();
@@ -159,7 +170,13 @@ export function EditorPage(props: Props) {
     requestExportGist();
   }, [closeGithubTokenModal, requestExportGist]);
 
-  const onReady = useCallback(() => setIsEditorReady(true), []);
+  const onReady = useCallback(() => {
+    setIsEditorReady(true);
+    // logger(context.file.fileName);
+    // editorRef.current?.getContent().then(content => {
+    //   logger(content);
+    // });
+  }, []);
 
   useEffect(() => {
     if (closeCopySuccessAlert) {
@@ -212,6 +229,7 @@ export function EditorPage(props: Props) {
         <EditorToolbar
           onFullScreen={enterFullscreen}
           onSave={requestSave}
+          onTestDeploy={testDeployToggle}
           onDownload={requestDownload}
           onClose={close}
           onFileNameChanged={props.onFileNameChanged}
@@ -223,6 +241,9 @@ export function EditorPage(props: Props) {
         />
       }
     >
+      <PageSection isFilled={true} style={{ padding: 0 }}>
+        <TestAndDeploy showPanel={showTestPanel} />
+      </PageSection>
       <PageSection isFilled={true} padding={{ default: "noPadding" }} style={{ flexBasis: "100%" }}>
         {!fullscreen && copySuccessAlertVisible && (
           <div className={"kogito--alert-container"}>
