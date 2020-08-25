@@ -26,7 +26,7 @@ import { FullScreenToolbar } from "./EditorFullScreenToolbar";
 import { EditorToolbar } from "./EditorToolbar";
 import { useDmnTour } from "../tour";
 import { useOnlineI18n } from "../common/i18n";
-import TestAndDeploy from "./TestAndDeploy";
+import TestAndDeploy from "./TestAndDeploy/TestAndDeploy";
 
 interface Props {
   onFileNameChanged: (fileName: string, fileExtension: string) => void;
