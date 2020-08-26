@@ -1,0 +1,36 @@
+{
+  "name": "online-editor-backend",
+  "version": "0.7.0",
+  "description": "",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kiegroup/kogito-tooling.git"
+  },
+  "dependencies": {
+    "@types/express": "4.17.1",
+    "@types/nodegit": "0.26.5",
+    "express": "4.17.1",
+    "nodegit": "0.26.5"
+  },
+  "scripts": {
+    "lint": "tslint -c ../../tslint.json 'src/**/*.{ts,tsx,js,jsx}'",
+    "test": "jest",
+    "init": "yarn -f",
+    "build:fast": "rm -rf dist && webpack",
+    "build": "yarn run lint && yarn test && yarn run build:fast",
+    "build:prod": "yarn run build --mode production --devtool none",
+    "start": "nodemon dist/index.js"
+  },
+  "babel": {
+    "presets": [
+      "@babel/env",
+      "@babel/react"
+    ]
+  },
+  "devDependencies": {
+    "nodemon": "2.0.4"
+  }
+}
