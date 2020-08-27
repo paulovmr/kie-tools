@@ -39,9 +39,14 @@ import {
   Title,
   PageHeaderTools,
   PageHeaderToolsGroup,
-  PageHeaderToolsItem
+  PageHeaderToolsItem,
+  AlertActionCloseButton,
+  Alert
 } from "@patternfly/react-core";
 import { ExternalLinkAltIcon, OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import { Table, TableHeader, TableBody, IRowData, IExtraData, IRow, ICell } from "@patternfly/react-table";
+
+import { CodeBranchIcon, CodeIcon, CubeIcon } from "@patternfly/react-icons";
 import * as React from "react";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router";
@@ -50,10 +55,13 @@ import { AnimatedTripleDotLabel } from "../common/AnimatedTripleDotLabel";
 import { GlobalContext } from "../common/GlobalContext";
 import { extractFileExtension, removeFileExtension } from "../common/utils";
 import { useOnlineI18n } from "../common/i18n";
+import { config } from "../config";
 
 interface Props {
   onFileOpened: (file: UploadFile) => void;
 }
+
+const ALERT_AUTO_CLOSE_TIMEOUT = 3000;
 
 enum InputFileUrlState {
   INITIAL,
@@ -98,13 +106,14 @@ export function HomePage(props: Props) {
   const [uploadFileDndState, setUploadFileDndState] = useState(UploadFileDndState.INITIAL);
   const [uploadFileInputState, setUploadFileInputState] = useState(UploadFileInputState.INITIAL);
 
+  const [deleteSuccessAlertVisible, setDeleteSuccessAlertVisible] = useState(false);
+
   const uploadDndOnDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     setUploadFileDndState(UploadFileDndState.HOVER);
     e.stopPropagation();
     e.preventDefault();
     return false;
   }, []);
-
   const uploadDndOnDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     setUploadFileDndState(UploadFileDndState.INITIAL);
     e.stopPropagation();
@@ -469,6 +478,113 @@ export function HomePage(props: Props) {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isLinkDropdownOpen, setIsLinkDropdownOpen] = useState(false);
 
+  const openSavedFile = useCallback((fileName: string, filePath: string) => {
+    fetch(`${config.development.server.backendUrl}/projects/${config.development.server.projectName}/file?path=${filePath}`)
+      .then(response => {
+        if (response.ok) {
+          response.text().then((content: string) => {
+            const fileExtension = extractFileExtension(filePath)!;
+            props.onFileOpened({
+              isReadOnly: false,
+              fileExtension: fileExtension,
+              filePath: filePath,
+              fileName: removeFileExtension(fileName),
+              getFileContents: () => Promise.resolve(content)
+            });
+            history.replace(context.routes.editor.url({ type: fileExtension }));
+          });
+        } else {
+          console.error(response.status, response.statusText);
+        }
+      })
+      .catch(error => {
+        console.error(error.toString());
+      });
+  }, []);
+
+  const [filesColumns, setFilesColumns] = useState(["File", "Path"]);
+  const [filesRows, setFilesRows] = useState<Array<{ cells: Array<string | ICell> }>>([]);
+  const [filesActions, setFilesActions] = useState<
+    Array<{
+      title: string;
+      onClick: (event: React.MouseEvent, rowIndex: number, rowData: IRowData, extraData: IExtraData) => void;
+    }>
+  >([
+    {
+      title: "Edit",
+      onClick: (event, rowId, rowData, extra) => {
+        openSavedFile(rowData.cells![1]!.toString().split("/").pop()!, rowData.cells![1]!.toString());
+      }
+    },
+    {
+      title: "Delete",
+      onClick: (event, rowId, rowData, extra) => {
+        fetch(
+          `${config.development.server.backendUrl}/projects/${config.development.server.projectName}/file?path=${
+            rowData.cells![1]
+          }`,
+          {
+            method: "DELETE"
+          }
+        )
+          .then(response => {
+            if (response.ok) {
+              refreshFiles();
+              setDeleteSuccessAlertVisible(true);
+            } else {
+              console.error(response.status, response.statusText);
+            }
+          })
+          .catch(error => {
+            console.error(error.toString());
+          });
+      }
+    }
+  ]);
+
+  const refreshFiles = useCallback(() => {
+    fetch(`${config.development.server.backendUrl}/projects/${config.development.server.projectName}/files`)
+      .then(response => {
+        if (response.ok) {
+          response.json().then((files: string[]) => {
+            setFilesRows(
+              files.map(file => {
+                return { cells: [fileNameCell(file.split("/").pop()!, file), file] };
+              })
+            );
+          });
+        } else {
+          console.error(response.status, response.statusText);
+        }
+      })
+      .catch(error => {
+        console.error(error.toString());
+      });
+  }, []);
+
+  const fileNameCell = (fileName: string, filePath: string) => (
+    <a onClick={() => openSavedFile(fileName, filePath)}>
+      {fileName}
+    </a>
+  );
+
+  useEffect(() => {
+    refreshFiles();
+  }, []);
+
+  const closeDeleteSuccessAlert = useCallback(() => setDeleteSuccessAlertVisible(false), []);
+
+  useEffect(() => {
+    if (closeDeleteSuccessAlert) {
+      const autoCloseCopySuccessAlert = setTimeout(closeDeleteSuccessAlert, ALERT_AUTO_CLOSE_TIMEOUT);
+      return () => clearInterval(autoCloseCopySuccessAlert);
+    }
+
+    return () => {
+      /* Do nothing */
+    };
+  }, [deleteSuccessAlertVisible]);
+
   const headerToolbar = (
     <PageHeaderTools>
       <PageHeaderToolsGroup>
@@ -522,6 +638,15 @@ export function HomePage(props: Props) {
   return (
     <Page header={Header} className="kogito--editor-landing">
       <PageSection variant="dark" className="kogito--editor-landing__title-section pf-u-p-2xl-on-lg">
+        {deleteSuccessAlertVisible && (
+          <div className={"kogito--alert-container"}>
+            <Alert
+              variant="success"
+              title={"File deleted successfully!"}
+              actionClose={<AlertActionCloseButton onClose={closeDeleteSuccessAlert} />}
+            />
+          </div>
+        )}
         <TextContent>
           <Title size="3xl" headingLevel="h1">
             {i18n.homePage.header.title}
@@ -639,6 +764,12 @@ export function HomePage(props: Props) {
             </CardFooter>
           </Card>
         </Gallery>
+      </PageSection>
+      <PageSection className="pf-u-px-2xl-on-lg">
+        <Table aria-label="Saved Files" cells={filesColumns} rows={filesRows} actions={filesActions}>
+          <TableHeader />
+          <TableBody />
+        </Table>
       </PageSection>
     </Page>
   );

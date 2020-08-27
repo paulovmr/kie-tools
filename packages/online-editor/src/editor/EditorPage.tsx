@@ -27,6 +27,7 @@ import { EditorToolbar } from "./EditorToolbar";
 import { useDmnTour } from "../tour";
 import { useOnlineI18n } from "../common/i18n";
 import TestAndDeploy from "./TestAndDeploy/TestAndDeploy";
+import { config } from "../config";
 
 interface Props {
   onFileNameChanged: (fileName: string, fileExtension: string) => void;
@@ -48,6 +49,7 @@ export function EditorPage(props: Props) {
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [copySuccessAlertVisible, setCopySuccessAlertVisible] = useState(false);
+  const [saveSuccessAlertVisible, setSaveSuccessAlertVisible] = useState(false);
   const [githubTokenModalVisible, setGithubTokenModalVisible] = useState(false);
   const [showUnsavedAlert, setShowUnsavedAlert] = useState(false);
   const isDirty = useDirtyState(editorRef);
@@ -90,13 +92,31 @@ export function EditorPage(props: Props) {
     editorRef.current?.getStateControl().setSavedCommand();
     setShowUnsavedAlert(false);
     editorRef.current?.getContent().then(content => {
-      if (downloadRef.current) {
-        const fileBlob = new Blob([content], { type: "text/plain" });
-        downloadRef.current.href = URL.createObjectURL(fileBlob);
-        downloadRef.current.click();
-      }
+      console.log(content);
+      fetch(
+        `${config.development.server.backendUrl}/projects/${config.development.server.projectName}/file?path=${
+          context.file.filePath
+            ? context.file.filePath
+            : `${config.development.server.saveDirectory}/${context.file.fileName}.${context.file.fileExtension}`
+        }`,
+        {
+          method: "PUT",
+          body: content,
+          headers: new Headers({ "Content-Type": "text/plain" })
+        }
+      )
+        .then(response => {
+          if (response.ok) {
+            setSaveSuccessAlertVisible(true);
+          } else {
+            console.error(response.status, response.statusText);
+          }
+        })
+        .catch(error => {
+          console.error(error.toString());
+        });
     });
-  }, []);
+  }, [context.file]);
 
   const requestPreview = useCallback(() => {
     editorRef.current?.getPreview().then(previewSvg => {
@@ -161,6 +181,8 @@ export function EditorPage(props: Props) {
     return context.routes.editor.args(location.pathname).type;
   }, [location.pathname]);
 
+  const closeSaveSuccessAlert = useCallback(() => setSaveSuccessAlertVisible(false), []);
+
   const closeCopySuccessAlert = useCallback(() => setCopySuccessAlertVisible(false), []);
 
   const closeGithubTokenModal = useCallback(() => setGithubTokenModalVisible(false), []);
@@ -177,6 +199,17 @@ export function EditorPage(props: Props) {
     //   logger(content);
     // });
   }, []);
+
+  useEffect(() => {
+    if (closeSaveSuccessAlert) {
+      const autoCloseSaveSuccessAlert = setTimeout(closeSaveSuccessAlert, ALERT_AUTO_CLOSE_TIMEOUT);
+      return () => clearInterval(autoCloseSaveSuccessAlert);
+    }
+
+    return () => {
+      /* Do nothing */
+    };
+  }, [saveSuccessAlertVisible]);
 
   useEffect(() => {
     if (closeCopySuccessAlert) {
@@ -245,6 +278,15 @@ export function EditorPage(props: Props) {
         <TestAndDeploy showPanel={showTestPanel} />
       </PageSection>
       <PageSection isFilled={true} padding={{ default: "noPadding" }} style={{ flexBasis: "100%" }}>
+        {!fullscreen && saveSuccessAlertVisible && (
+          <div className={"kogito--alert-container"}>
+            <Alert
+              variant="success"
+              title={"File saved successfully!"}
+              actionClose={<AlertActionCloseButton onClose={closeSaveSuccessAlert} />}
+            />
+          </div>
+        )}
         {!fullscreen && copySuccessAlertVisible && (
           <div className={"kogito--alert-container"}>
             <Alert
