@@ -22,6 +22,7 @@ export interface File {
   fileExtension: string;
   getFileContents: () => Promise<string | undefined>;
   isReadOnly: boolean;
+  filePath?: string;
 }
 
 /**
