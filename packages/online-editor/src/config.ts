@@ -20,6 +20,7 @@ export const config = {
       backendUrl: "http://localhost:9002",
       projectName: "my-project",
       saveDirectory: "src/main/resources"
-    }
+    },
+    openApiUrl: "http://localhost:8080"
   }
 };
