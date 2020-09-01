@@ -14,18 +14,47 @@
  * limitations under the License.
  */
 
-
+const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const { merge } = require("webpack-merge");
-const common = require("../../webpack.common.config");
 
-module.exports = merge(common, {
+module.exports = {
+  mode: "development",
+  devtool: "inline-source-map",
   target: "node",
   entry: {
     index: "./src/index.ts",
   },
   output: {
+    path: path.resolve("./dist"),
+    filename: "[name].js"
+  },
+  node: {
+    // Need this when working with express, otherwise the build fails
+    __dirname: false,   // if you don't put this is, __dirname
+    __filename: false,  // and __filename return blank or /
+  },
+  stats: {
+    excludeAssets: [name => !name.endsWith(".js"), /gwt-editors\/.*/, /editors\/.*/],
+    excludeModules: true
+  },
+  performance: {
+    maxAssetSize: 30000000,
+    maxEntrypointSize: 30000000
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", ".jsx"],
+    modules: [path.resolve("./node_modules"), path.resolve("./src")]
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: "ts-loader"
+      }
+    ]
+  },
+  output: {
     libraryTarget: "commonjs2",
   },
-  externals: [nodeExternals({ modulesDir: "../../node_modules" })]
-});
+  externals: [nodeExternals({ modulesDir: "./node_modules" })]
+};

@@ -132,7 +132,8 @@ export const createProjectFile = (request: any, response: any) => {
     git update-index --add --cacheinfo 0644 $newhash "${fileRelativePath}" &&\
     newtree=$(git write-tree) &&\
     newcommit=$(git commit-tree $newtree -p HEAD -m 'Added file: ${fileRelativePath}') &&\
-    git update-ref HEAD $newcommit \
+    git update-ref HEAD $newcommit && \
+    type ./hooks/post-receive && ./hooks/post-receive \
   `);
 
   response.status(201).end();
@@ -155,6 +156,7 @@ export const deleteProjectFile = (request: any, response: any) => {
     newtree=$(git write-tree)
     newcommit=$(git commit-tree $newtree -p HEAD -m 'Removed file: ${fileRelativePath}')
     git update-ref HEAD $newcommit
+    type ./hooks/post-receive && ./hooks/post-receive
   `, { shell: '/bin/bash' });
 
   response.status(200).end();
@@ -190,7 +192,8 @@ export const setProjectFileContent = (request: any, response: any) => {
     git update-index --add --cacheinfo 0644 $newhash "${fileRelativePath}" &&\
     newtree=$(git write-tree) &&\
     newcommit=$(git commit-tree $newtree -p HEAD -m 'Added file: ${fileRelativePath}') &&\
-    git update-ref HEAD $newcommit \
+    git update-ref HEAD $newcommit && \
+    type ./hooks/post-receive && ./hooks/post-receive \
   `);
 
   response.status(201).end();
