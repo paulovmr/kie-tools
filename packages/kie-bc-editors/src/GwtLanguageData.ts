@@ -19,6 +19,7 @@ export interface GwtLanguageData {
   editorId: string;
   gwtModuleName: string;
   resources: Resource[];
+  allResources?: Resource[]; // Includes the resources loaded dynamically by the editor itself
 }
 
 export interface Resource {

@@ -21,7 +21,7 @@
   "scripts": {
     "lint": "tslint -c ../../tslint.json 'src/**/*.{ts,tsx,js,jsx}'",
     "test": "jest --silent --verbose --passWithNoTests",
-    "build:fast": "rm -rf dist && webpack --config webpack.pre-processing.config.js && node dist/lib-offline/index.js && webpack --config webpack.post-processing.config.js",
+    "build:fast": "rm -rf dist && webpack --config webpack.build-resources.config.js && node dist/lib-offline/index.js && webpack --config webpack.package-resources.config.js",
     "build": "yarn run lint && yarn test && yarn run build:fast",
     "build:prod": "yarn run build --mode production --devtool none"
   },

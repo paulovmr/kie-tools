@@ -40,7 +40,7 @@ function main() {
 
   fs.writeFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.html", dmnEnvelopeIndex);
   fs.writeFileSync(
-    "dist/resources/lib-offline/dmnEnvelopeIndex.html.b64",
+    "dist/resources/lib-offline/dmnEnvelopeIndex.html.base64",
     Buffer.from(dmnEnvelopeIndex).toString("base64")
   );
 }
