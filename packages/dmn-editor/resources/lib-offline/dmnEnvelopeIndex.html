@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        html, body, div#envelope-app {
+            margin: 0;
+            border: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+        .panel-heading.uf-listbar-panel-header span {
+            color: white !important;
+        }
+        body {
+            background-color: #fff !important
+        }
+    </style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <%
+      _.map(cssResources, function(cssResource) {
+        print('<link type="text/css" rel="stylesheet" href="' + cssResource + '" />\n');
+      });
+    %>
+
+    <%
+      _.map(jsResources, function(jsResource) {
+        print('<script src="' + jsResource + '"></script>\n');
+      });
+    %>
+</head>
+<body>
+
+</body>
+</html>

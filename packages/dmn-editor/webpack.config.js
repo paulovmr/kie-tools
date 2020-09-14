@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-export * from "./GwtEditorWrapper";
-export * from "./GwtEditorWrapperFactory";
-export * from "./XmlFormatter";
-export * from "./GwtEditorMapping";
-export * from "./GwtLanguageData";
+const nodeExternals = require("webpack-node-externals");
+const { merge } = require("webpack-merge");
+const common = require("../../webpack.common.config");
+const CopyPlugin = require("copy-webpack-plugin");
+const path = require("path");
+
+module.exports = merge(common, {
+  entry: {
+    "lib-offline/index": "./src/lib-offline/index.ts",
+  },
+  plugins: [
+    new CopyPlugin([
+      { from: "./resources", to: "./resources" }
+    ])
+  ],
+  target: "node"
+});
