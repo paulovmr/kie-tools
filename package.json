@@ -74,6 +74,7 @@
     "webpack-node-externals": "1.7.2",
     "zip-webpack-plugin": "3.0.0",
     "react-test-renderer": "^16.13.1",
-    "underscore": "1.11.0"
+    "underscore": "1.11.0",
+    "raw-loader": "^4.0.1"
   }
 }

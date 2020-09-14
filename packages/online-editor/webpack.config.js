@@ -59,7 +59,8 @@ module.exports = async (env, argv) => {
 
   return merge(common, {
     entry: {
-      index: "./src/index.tsx"
+      index: "./src/index.tsx",
+      "tiago/index": "./src/tiago/index.ts"
     },
     plugins: [
       new CopyPlugin([
@@ -70,11 +71,17 @@ module.exports = async (env, argv) => {
         { from: "./static/favicon.ico", to: "./favicon.ico" },
         { from: "../../node_modules/@kogito-tooling/kie-bc-editors/dist/envelope-dist", to: "./envelope" },
         { from: "../kie-bc-editors-unpacked/dmn", to: "./gwt-editors/dmn" },
-        { from: "../kie-bc-editors-unpacked/bpmn", to: "./gwt-editors/bpmn" }
+        { from: "../kie-bc-editors-unpacked/bpmn", to: "./gwt-editors/bpmn" },
+        { from: "./static/tiago/index.html", to: "./gwt-editors/dmn/org.kie.workbench.common.dmn.showcase.DMNKogitoRuntimeWebapp/index.html" },
+        { from: "./static/tiago/dmnEnvelopeIndex.html", to: "./gwt-editors/dmn/org.kie.workbench.common.dmn.showcase.DMNKogitoRuntimeWebapp/dmnEnvelopeIndex.html" }
       ])
     ],
     module: {
       rules: [
+        {
+          test: /\.b64$/i,
+          use: 'raw-loader'
+        },
         {
           test: /DownloadHubModal\.tsx$/,
           loader: "string-replace-loader",
