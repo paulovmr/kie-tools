@@ -79,28 +79,6 @@ export class GwtEditorMapping {
             `${editorInitArgs.resourcesPathPrefix}/${editors.dmn.name}/${editors.dmn.name}.nocache.js`
           ]
         }
-      ],
-      allResources: [
-        {
-          type: "css",
-          paths: [`${editorInitArgs.resourcesPathPrefix}/${editors.dmn.name}/css/patternfly.min.css`]
-        },
-        {
-          type: "js",
-          paths: [
-            `${editorInitArgs.resourcesPathPrefix}/model/Jsonix-all.js`,
-            `${editorInitArgs.resourcesPathPrefix}/model/DC.js`,
-            `${editorInitArgs.resourcesPathPrefix}/model/DI.js`,
-            `${editorInitArgs.resourcesPathPrefix}/model/DMNDI12.js`,
-            `${editorInitArgs.resourcesPathPrefix}/model/DMN12.js`,
-            `${editorInitArgs.resourcesPathPrefix}/model/KIE.js`,
-            `${editorInitArgs.resourcesPathPrefix}/model/MainJs.js`,
-            `${editorInitArgs.resourcesPathPrefix}/${editors.dmn.name}/ace/ace.js`,
-            `${editorInitArgs.resourcesPathPrefix}/${editors.dmn.name}/ace/mode-xml.js`,
-            `${editorInitArgs.resourcesPathPrefix}/${editors.dmn.name}/ace/theme-chrome.js`,
-            `${editorInitArgs.resourcesPathPrefix}/${editors.dmn.name}/${editors.dmn.name}.nocache.js`
-          ]
-        }
       ]
     };
     const scesimLanguageData: GwtLanguageData = {
