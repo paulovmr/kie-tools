@@ -17,13 +17,11 @@
 import { GwtEditorMapping } from "@kogito-tooling/kie-bc-editors";
 import * as _ from "underscore";
 import * as fs from "fs";
+import { DMNEditorResources } from "../editor/DMNEditorResources";
 
 function main() {
-  const languageData = new GwtEditorMapping().getLanguageData({
-    resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn",
-    fileExtension: "dmn",
-    initialLocale: "",
-    isReadOnly: false
+  const languageData = new DMNEditorResources().get({
+    resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn"
   });
 
   const template = _.template(fs.readFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.html").toString());
@@ -31,11 +29,17 @@ function main() {
     cssResources: languageData?.resources
       .filter(r => r.type === "css")
       .pop()
-      ?.paths.map(path => fs.readFileSync(path)),
+      ?.paths.map(path => {
+        console.log(path);
+        return fs.readFileSync(path);
+      }),
     jsResources: languageData?.resources
       .filter(r => r.type === "js")
       .pop()
-      ?.paths.map(path => fs.readFileSync(path))
+      ?.paths.map(path => {
+        console.log(path);
+        return fs.readFileSync(path);
+      })
   });
 
   fs.writeFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.html", dmnEnvelopeIndex);
