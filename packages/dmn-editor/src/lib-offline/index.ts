@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-import { GwtEditorMapping } from "@kogito-tooling/kie-bc-editors";
 import * as _ from "underscore";
 import * as fs from "fs";
 import { DMNEditorResources } from "../editor/DMNEditorResources";
+import { GwtEditorMapping } from "@kogito-tooling/kie-bc-editors";
 
 function main() {
-  const languageData = new DMNEditorResources().get({
+  const languageData = new GwtEditorMapping().getLanguageData({
+    resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn",
+    fileExtension: "dmn",
+    initialLocale: "",
+    isReadOnly: false
+  });
+
+  const postInitialLoadingLanguageData = new DMNEditorResources().get({
     resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn"
   });
 
@@ -31,14 +38,40 @@ function main() {
       .pop()
       ?.paths.map(path => {
         console.log(path);
-        return fs.readFileSync(path);
+        return {
+          path: path,
+          content: fs.readFileSync(path)
+        };
       }),
     jsResources: languageData?.resources
       .filter(r => r.type === "js")
       .pop()
       ?.paths.map(path => {
         console.log(path);
-        return fs.readFileSync(path);
+        return {
+          path: path,
+          content: fs.readFileSync(path)
+        };
+      }),
+    postInitialLoadingCssResources: postInitialLoadingLanguageData?.resources
+      .filter(r => r.type === "css")
+      .pop()
+      ?.paths.map(path => {
+        console.log(path);
+        return {
+          path: path,
+          content: fs.readFileSync(path)
+        };
+      }),
+    postInitialLoadingJsResources: postInitialLoadingLanguageData?.resources
+      .filter(r => r.type === "js")
+      .pop()
+      ?.paths.map(path => {
+        console.log(path);
+        return {
+          path: path,
+          content: fs.readFileSync(path)
+        };
       })
   });
 

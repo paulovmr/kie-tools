@@ -27,14 +27,26 @@
 
     <%
       _.map(cssResources, function(cssResource) {
-        print('\n<style>\n' + cssResource + '\n</style>\n');
+        print('\n<style data-src="'+ cssResource.path +'">\n' + cssResource.content + '\n</style>\n');
       });
     %>
 
     <%
       _.map(jsResources, function(jsResource) {
-        print('\n<script>\n' + jsResource + '\n</script>\n');
+        print('\n<script data-src="'+ jsResource.path +'">\n' + jsResource.content + '\n</script>\n');
       });
+    %>
+
+    <%
+    _.map(postInitialLoadingCssResources, function(cssResource) {
+    print('\n<style data-src="'+ cssResource.path +'">\n' + cssResource.content + '\n</style>\n');
+    });
+    %>
+
+    <%
+    _.map(postInitialLoadingJsResources, function(jsResource) {
+    print('\n<script data-src="'+ jsResource.path +'">\n' + jsResource.content + '\n</script>\n');
+    });
     %>
 </head>
 <body>

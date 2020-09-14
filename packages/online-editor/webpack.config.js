@@ -72,7 +72,7 @@ module.exports = async (env, argv) => {
         { from: "../../node_modules/@kogito-tooling/kie-bc-editors/dist/envelope-dist", to: "./envelope" },
         { from: "../kie-bc-editors-unpacked/dmn", to: "./gwt-editors/dmn" },
         { from: "../kie-bc-editors-unpacked/bpmn", to: "./gwt-editors/bpmn" },
-        { from: "./static/tiago/index.html", to: "./gwt-editors/dmn/org.kie.workbench.common.dmn.showcase.DMNKogitoRuntimeWebapp/index.html" },
+        { from: "./static/tiago/index.html", to: "./tiago/index.html" },
       ])
     ],
     module: {
