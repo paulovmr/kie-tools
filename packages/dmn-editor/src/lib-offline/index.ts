@@ -20,19 +20,29 @@ import * as fs from "fs";
 
 function main() {
   const languageData = new GwtEditorMapping().getLanguageData({
-    resourcesPathPrefix: "../../../kie-bc-editors-unpacked",
+    resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn",
     fileExtension: "dmn",
     initialLocale: "",
     isReadOnly: false
   });
 
   const template = _.template(fs.readFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.html").toString());
-  const result = template({
-    cssResources: languageData?.resources.filter(r => r.type === "css").pop()?.paths,
-    jsResources: languageData?.resources.filter(r => r.type === "js").pop()?.paths
+  const dmnEnvelopeIndex = template({
+    cssResources: languageData?.resources
+      .filter(r => r.type === "css")
+      .pop()
+      ?.paths.map(path => fs.readFileSync(path)),
+    jsResources: languageData?.resources
+      .filter(r => r.type === "js")
+      .pop()
+      ?.paths.map(path => fs.readFileSync(path))
   });
 
-  console.log(result);
+  fs.writeFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.html", dmnEnvelopeIndex);
+  fs.writeFileSync(
+    "dist/resources/lib-offline/dmnEnvelopeIndex.html.b64",
+    Buffer.from(dmnEnvelopeIndex).toString("base64")
+  );
 }
 
 main();

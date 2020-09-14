@@ -58,8 +58,10 @@ declare global {
   }
 }
 
+
 export class GwtEditorWrapperFactory implements EditorFactory {
   constructor(
+    private readonly args = { shouldLoadResourcesDynamically: true },
     private readonly xmlFormatter: XmlFormatter = new DefaultXmlFormatter(),
     private readonly gwtAppFormerApi = new GwtAppFormerApi(),
     private readonly gwtStateControlService = new GwtStateControlService(),
