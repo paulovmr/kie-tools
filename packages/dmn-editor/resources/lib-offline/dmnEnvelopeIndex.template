@@ -38,15 +38,30 @@
     %>
 
     <%
-    _.map(postInitialLoadingCssResources, function(cssResource) {
-    print('\n<style data-src="'+ cssResource.path +'">\n' + cssResource.content + '\n</style>\n');
-    });
+      _.map(postInitialLoadingCssResources, function(cssResource) {
+        print('\n<style data-src="'+ cssResource.path +'">\n' + cssResource.content + '\n</style>\n');
+      });
     %>
 
     <%
-    _.map(postInitialLoadingJsResources, function(jsResource) {
-    print('\n<script data-src="'+ jsResource.path +'">\n' + jsResource.content + '\n</script>\n');
-    });
+      _.map(postInitialLoadingJsResources, function(jsResource) {
+        print('\n<script data-src="'+ jsResource.path +'">\n' + jsResource.content + '\n</script>\n');
+      });
+    %>
+
+    <%
+      print('\n<style>\n');
+      _.map(fontResources, function(fontResource) {
+        print('\n@font-face { font-family:\'' + fontResource.family + '\'; src: ');
+        _.map(fontResource.sources, function(source, index, list) {
+          print(' url(data:' + source.mimeType + ';base64,' + source.content + ') format(\'' + source.format + '\')');
+          if (index < list.length - 1) {
+            print(', ');
+          }
+        });
+        print('; ' + fontResource.additionalStyle + ' }');
+      });
+      print('\n</style>\n');
     %>
 </head>
 <body>
