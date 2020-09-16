@@ -14,375 +14,91 @@
  * limitations under the License.
  */
 
-import * as _ from "underscore";
-import * as fs from "fs";
-import { DMNEditorResources } from "../editor/DMNEditorResources";
-import { GwtEditorMapping } from "@kogito-tooling/kie-bc-editors";
+import dmnEnvelopeIndex from "!!raw-loader!../../dist/resources/lib-offline/dmnEnvelopeIndex.html";
+import { EnvelopeServer } from "@kogito-tooling/envelope-bus/dist/channel";
+import {
+  EditorContent,
+  KogitoEditorChannelApi,
+  KogitoEditorEnvelopeApi,
+  StateControlCommand
+} from "@kogito-tooling/editor/dist/api";
+import { Tutorial, UserInteraction } from "@kogito-tooling/guided-tour/dist/api";
+import { KogitoEdit } from "@kogito-tooling/channel-common-api/dist/KogitoEdit";
+import {
+  ResourceContentRequest,
+  ResourceContent,
+  ResourcesList,
+  ResourceListRequest
+} from "@kogito-tooling/channel-common-api";
 
-function getBase64FromFile(path: string) {
-  return new Buffer(fs.readFileSync(path)).toString("base64");
-}
+export function printAsd() {
+  const iframe = document.createElement("iframe");
+  iframe.srcdoc = dmnEnvelopeIndex;
 
-function main() {
-  const languageData = new GwtEditorMapping().getLanguageData({
-    resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn",
-    fileExtension: "dmn",
-    initialLocale: "",
-    isReadOnly: false
-  });
-
-  const additionalLanguageData = new DMNEditorResources().get({
-    resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn"
-  });
-
-  const template = _.template(fs.readFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.template").toString());
-  const dmnEnvelopeIndex = template({
-    fontResources: [
-      {
-        family: "codicon",
-        sources: [
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/monaco-editor/dev/vs/base/browser/ui/codiconLabel/codicon/codicon.ttf`
-            ),
-            format: "truetype"
-          }
-        ]
-      },
-      {
-        family: "FontAwesome",
-        additionalStyle: "font-weight:normal;font-style:normal;",
-        sources: [
-          {
-            mimeType: "application/vnd.ms-fontobject",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/fontawesome-webfont.eot`
-            ),
-            format: "embedded-opentype"
-          },
-          {
-            mimeType: "font/woff2",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/fontawesome-webfont.woff2`
-            ),
-            format: "woff2"
-          },
-          {
-            mimeType: "font/woff",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/fontawesome-webfont.woff`
-            ),
-            format: "woff"
-          },
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/fontawesome-webfont.ttf`
-            ),
-            format: "truetype"
-          },
-          {
-            mimeType: "image/svg+xml",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/fontawesome-webfont.svg`
-            ),
-            format: "svg"
-          }
-        ]
-      },
-      {
-        family: "PatternFlyIcons-webfont",
-        additionalStyle: "font-weight:normal;font-style:normal;",
-        sources: [
-          {
-            mimeType: "application/vnd.ms-fontobject",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/PatternFlyIcons-webfont.eot`
-            ),
-            format: "embedded-opentype"
-          },
-          {
-            mimeType: "font/woff",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/PatternFlyIcons-webfont.woff`
-            ),
-            format: "woff"
-          },
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/PatternFlyIcons-webfont.ttf`
-            ),
-            format: "truetype"
-          },
-          {
-            mimeType: "image/svg+xml",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/PatternFlyIcons-webfont.svg`
-            ),
-            format: "svg"
-          }
-        ]
-      },
-      {
-        family: "Glyphicons Halflings",
-        sources: [
-          {
-            mimeType: "application/vnd.ms-fontobject",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/glyphicons-halflings-regular.eot`
-            ),
-            format: "embedded-opentype"
-          },
-          {
-            mimeType: "font/woff",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/glyphicons-halflings-regular.woff`
-            ),
-            format: "woff"
-          },
-          {
-            mimeType: "font/woff2",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/glyphicons-halflings-regular.woff2`
-            ),
-            format: "woff2"
-          },
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/glyphicons-halflings-regular.ttf`
-            ),
-            format: "truetype"
-          },
-          {
-            mimeType: "image/svg+xml",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/glyphicons-halflings-regular.svg`
-            ),
-            format: "svg"
-          }
-        ]
-      },
-      {
-        family: "Open Sans",
-        additionalStyle: "font-weight:300;font-style:normal;",
-        sources: [
-          {
-            mimeType: "application/vnd.ms-fontobject",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Light-webfont.eot`
-            ),
-            format: "embedded-opentype"
-          },
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Light-webfont.ttf`
-            ),
-            format: "truetype"
-          },
-          {
-            mimeType: "font/woff",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Light-webfont.woff`
-            ),
-            format: "woff"
-          },
-          {
-            mimeType: "image/svg+xml",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Light-webfont.svg`
-            ),
-            format: "svg"
-          }
-        ]
-      },
-      {
-        family: "Open Sans",
-        additionalStyle: "font-weight:400;font-style:normal;",
-        sources: [
-          {
-            mimeType: "application/vnd.ms-fontobject",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Regular-webfont.eot`
-            ),
-            format: "embedded-opentype"
-          },
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Regular-webfont.ttf`
-            ),
-            format: "truetype"
-          },
-          {
-            mimeType: "font/woff",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Regular-webfont.woff`
-            ),
-            format: "woff"
-          },
-          {
-            mimeType: "image/svg+xml",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Regular-webfont.svg`
-            ),
-            format: "svg"
-          }
-        ]
-      },
-      {
-        family: "Open Sans",
-        additionalStyle: "font-weight:600;font-style:normal;",
-        sources: [
-          {
-            mimeType: "application/vnd.ms-fontobject",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Semibold-webfont.eot`
-            ),
-            format: "embedded-opentype"
-          },
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Semibold-webfont.ttf`
-            ),
-            format: "truetype"
-          },
-          {
-            mimeType: "font/woff",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Semibold-webfont.woff`
-            ),
-            format: "woff"
-          },
-          {
-            mimeType: "image/svg+xml",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Semibold-webfont.svg`
-            ),
-            format: "svg"
-          }
-        ]
-      },
-      {
-        family: "Open Sans",
-        additionalStyle: "font-weight:700;font-style:normal;",
-        sources: [
-          {
-            mimeType: "application/vnd.ms-fontobject",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Bold-webfont.eot`
-            ),
-            format: "embedded-opentype"
-          },
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Bold-webfont.ttf`
-            ),
-            format: "truetype"
-          },
-          {
-            mimeType: "font/woff",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Bold-webfont.woff`
-            ),
-            format: "woff"
-          },
-          {
-            mimeType: "image/svg+xml",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-Bold-webfont.svg`
-            ),
-            format: "svg"
-          }
-        ]
-      },
-      {
-        family: "Open Sans",
-        additionalStyle: "font-weight:800;font-style:normal;",
-        sources: [
-          {
-            mimeType: "application/vnd.ms-fontobject",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-ExtraBold-webfont.eot`
-            ),
-            format: "embedded-opentype"
-          },
-          {
-            mimeType: "font/ttf",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-ExtraBold-webfont.ttf`
-            ),
-            format: "truetype"
-          },
-          {
-            mimeType: "font/woff",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-ExtraBold-webfont.woff`
-            ),
-            format: "woff"
-          },
-          {
-            mimeType: "image/svg+xml",
-            content: getBase64FromFile(
-              `../kie-bc-editors-unpacked/dmn/${languageData?.gwtModuleName}/fonts/OpenSans-ExtraBold-webfont.svg`
-            ),
-            format: "svg"
-          }
-        ]
-      }
-    ],
-    cssResources: languageData?.resources
-      .filter(r => r.type === "css")
-      .pop()
-      ?.paths.map(path => {
-        console.log(path);
-        return {
-          path: path,
-          content: fs.readFileSync(path)
-        };
-      }),
-    jsResources: languageData?.resources
-      .filter(r => r.type === "js")
-      .pop()
-      ?.paths.map(path => {
-        console.log(path);
-        return {
-          path: path,
-          content: fs.readFileSync(path)
-        };
-      }),
-    postInitialLoadingCssResources: additionalLanguageData?.resources
-      .filter(r => r.type === "css")
-      .pop()
-      ?.paths.map(path => {
-        console.log(path);
-        return {
-          path: path,
-          content: fs.readFileSync(path)
-        };
-      }),
-    postInitialLoadingJsResources: additionalLanguageData?.resources
-      .filter(r => r.type === "js")
-      .pop()
-      ?.paths.map(path => {
-        console.log(path);
-        return {
-          path: path,
-          content: fs.readFileSync(path)
-        };
-      })
-  });
-
-  fs.writeFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.html", dmnEnvelopeIndex);
-  fs.writeFileSync(
-    "dist/resources/lib-offline/dmnEnvelopeIndex.html.base64",
-    Buffer.from(dmnEnvelopeIndex).toString("base64")
+  const envelopeServer = new EnvelopeServer<KogitoEditorChannelApi, KogitoEditorEnvelopeApi>(
+    { postMessage: message => iframe.contentWindow?.postMessage(message, "*") },
+    "http://localhost:9001",
+    self => {
+      return self.envelopeApi.requests.receive_initRequest(
+        {
+          origin: self.origin,
+          envelopeServerId: self.id
+        },
+        {
+          resourcesPathPrefix: "",
+          fileExtension: "dmn",
+          initialLocale: "en-US",
+          isReadOnly: false
+        }
+      );
+    }
   );
+  console.log(envelopeServer.id);
+
+  window.addEventListener("message", message => {
+    console.log(message.data.type);
+    if (message.data.type === "receive_contentRequest") {
+      console.log(message);
+    }
+    envelopeServer.receive(message.data, {
+      receive_contentRequest: async () => {
+        return { content: "", path: "" };
+      },
+      async receive_getLocale(): Promise<string> {
+        return "en-US";
+      },
+      receive_guidedTourRegisterTutorial(tutorial: Tutorial): void {
+        /* */
+      },
+      receive_guidedTourUserInteraction(userInteraction: UserInteraction): void {
+        /* */
+      },
+      receive_newEdit(edit: KogitoEdit): void {
+        /* */
+      },
+      receive_openFile(path: string): void {
+        /* */
+      },
+      receive_ready(): void {
+        /* */
+      },
+      async receive_resourceContentRequest(request: ResourceContentRequest): Promise<ResourceContent | undefined> {
+        return undefined;
+      },
+      async receive_resourceListRequest(request: ResourceListRequest): Promise<ResourcesList> {
+        return { paths: [], pattern: request.pattern };
+      },
+      receive_setContentError(errorMessage: string): void {
+        /* */
+      },
+      receive_stateControlCommandUpdate(command: StateControlCommand): void {
+        /* */
+      }
+    });
+  });
+
+  document.body.appendChild(iframe);
+  envelopeServer.startInitPolling();
 }
 
-main();
+printAsd();

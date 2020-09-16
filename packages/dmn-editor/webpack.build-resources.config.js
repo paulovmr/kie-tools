@@ -17,15 +17,22 @@
 const { merge } = require("webpack-merge");
 const common = require("../../webpack.common.config");
 const CopyPlugin = require("copy-webpack-plugin");
+const pfWebpackOptions = require("@kogito-tooling/patternfly-base/patternflyWebpackOptions");
 
-module.exports = merge(common, {
-  entry: {
-    "lib-offline/index": "./src/lib-offline/index.ts",
-  },
-  plugins: [
-    new CopyPlugin([
-      { from: "./resources", to: "./resources" }
-    ])
-  ],
-  target: "node"
-});
+module.exports = [
+  merge(common, {
+    entry: {
+      "lib-offline/preprocessor": "./src/lib-offline/preprocessor.ts"
+    },
+    plugins: [new CopyPlugin([{ from: "./resources", to: "./resources" }])],
+    target: "node"
+  }),
+  merge(common, {
+    entry: {
+      "envelope/index": "./src/envelope/index.ts"
+    },
+    module: {
+      rules: [...pfWebpackOptions.patternflyRules]
+    }
+  })
+];

@@ -14,13 +14,4 @@
  * limitations under the License.
  */
 
-import dmnEnvelopeIndexB64 from "!!raw-loader!./dmnEnvelopeIndex.html.b64";
-import dmnEnvelopeIndex from "!!raw-loader!./dmnEnvelopeIndex.html";
-
-export function printAsd() {
-  const iframe = document.createElement("iframe");
-  iframe.srcdoc = dmnEnvelopeIndex;
-  document.body.appendChild(iframe);
-}
-
-printAsd();
+declare module '*.html'

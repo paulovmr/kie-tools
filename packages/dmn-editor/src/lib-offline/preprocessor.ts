@@ -14,5 +14,19 @@
  * limitations under the License.
  */
 
-declare module '*.b64'
-declare module '*.html'
+import * as _ from "underscore";
+import * as fs from "fs";
+import { DMNEditorResources } from "../editor/DMNEditorResources";
+
+function main() {
+  const dmnEditorResources = new DMNEditorResources().get({
+    resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn"
+  });
+
+  const template = _.template(fs.readFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.template").toString());
+  const dmnEnvelopeIndex = template({ editorResources: dmnEditorResources });
+
+  fs.writeFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.html", dmnEnvelopeIndex);
+}
+
+main();

@@ -104,6 +104,10 @@ export class GwtEditorWrapperFactory implements EditorFactory {
       });
     });
 
+    if (!this.args.shouldLoadResourcesDynamically) {
+      return gwtFinishedLoading;
+    }
+
     return Promise.all(languageData.resources.map(resource => this.loadResource(resource))).then(() => {
       return gwtFinishedLoading;
     });

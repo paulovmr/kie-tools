@@ -16,9 +16,18 @@
 
 const { merge } = require("webpack-merge");
 const common = require("../../webpack.common.config");
+const path = require("path");
 
 module.exports = merge(common, {
   entry: {
-    "editor/index": "./src/editor/index.ts",
+    "lib-offline/index": "./src/lib-offline/index.ts",
+  },
+  devServer: {
+    historyApiFallback: false,
+    disableHostCheck: true,
+    watchContentBase: true,
+    contentBase: [path.join(__dirname, "./dist"), path.join(__dirname, "./static")],
+    compress: true,
+    port: 9001
   }
 });

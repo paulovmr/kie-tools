@@ -59,8 +59,7 @@ module.exports = async (env, argv) => {
 
   return merge(common, {
     entry: {
-      index: "./src/index.tsx",
-      "tiago/index": "./src/tiago/index.ts"
+      index: "./src/index.tsx"
     },
     plugins: [
       new CopyPlugin([
@@ -77,10 +76,6 @@ module.exports = async (env, argv) => {
     ],
     module: {
       rules: [
-        {
-          test: /\.b64$/i,
-          use: 'raw-loader'
-        },
         {
           test: /DownloadHubModal\.tsx$/,
           loader: "string-replace-loader",
