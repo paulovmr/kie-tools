@@ -19,13 +19,15 @@ import { GwtEditorWrapperFactory } from "@kogito-tooling/kie-bc-editors";
 import { EnvelopeBusMessage } from "@kogito-tooling/envelope-bus/dist/api";
 import { ChannelType, getOperatingSystem } from "@kogito-tooling/channel-common-api";
 
-EditorEnvelope.init({
-  container: document.getElementById("envelope-app")!,
-  bus: {
-    postMessage<D, Type>(message: EnvelopeBusMessage<D, Type>, targetOrigin?: string, _?: any) {
-      window.parent.postMessage(message, targetOrigin!, _);
-    }
-  },
-  editorFactory: new GwtEditorWrapperFactory({ shouldLoadResourcesDynamically: false }),
-  editorContext: { channel: ChannelType.EMBEDDED, operatingSystem: getOperatingSystem() }
+document.addEventListener("DOMContentLoaded", () => {
+  EditorEnvelope.init({
+    container: document.getElementById("envelope-app")!,
+    bus: {
+      postMessage<D, Type>(message: EnvelopeBusMessage<D, Type>, targetOrigin?: string, _?: any) {
+        window.parent.postMessage(message, targetOrigin!, _);
+      }
+    },
+    editorFactory: new GwtEditorWrapperFactory({ shouldLoadResourcesDynamically: false }),
+    editorContext: { channel: ChannelType.EMBEDDED, operatingSystem: getOperatingSystem() }
+  });
 });

@@ -30,14 +30,28 @@ import {
   ResourcesList,
   ResourceListRequest
 } from "@kogito-tooling/channel-common-api";
+import { MessageBusClientApi } from "../../../envelope-bus/src/api";
 
-export function printAsd() {
+declare global {
+  interface Window {
+    DmnEditor: {
+      open: (args: {
+        container: Element;
+        initialContent: string;
+        readOnly: boolean;
+        origin?: string;
+      }) => { envelopeApi: MessageBusClientApi<KogitoEditorEnvelopeApi>; close: () => void };
+    };
+  }
+}
+
+export function open(args: { container: Element; initialContent: string; readOnly?: boolean; origin?: string }) {
   const iframe = document.createElement("iframe");
   iframe.srcdoc = dmnEnvelopeIndex;
 
   const envelopeServer = new EnvelopeServer<KogitoEditorChannelApi, KogitoEditorEnvelopeApi>(
     { postMessage: message => iframe.contentWindow?.postMessage(message, "*") },
-    "http://localhost:9001",
+    args.origin ?? window.location.origin,
     self => {
       return self.envelopeApi.requests.receive_initRequest(
         {
@@ -48,21 +62,16 @@ export function printAsd() {
           resourcesPathPrefix: "",
           fileExtension: "dmn",
           initialLocale: "en-US",
-          isReadOnly: false
+          isReadOnly: args.readOnly ?? true
         }
       );
     }
   );
-  console.log(envelopeServer.id);
 
-  window.addEventListener("message", message => {
-    console.log(message.data.type);
-    if (message.data.type === "receive_contentRequest") {
-      console.log(message);
-    }
+  const listener = (message: MessageEvent) => {
     envelopeServer.receive(message.data, {
       receive_contentRequest: async () => {
-        return { content: "", path: "" };
+        return { content: args.initialContent, path: "" };
       },
       async receive_getLocale(): Promise<string> {
         return "en-US";
@@ -95,10 +104,19 @@ export function printAsd() {
         /* */
       }
     });
-  });
+  };
+  window.addEventListener("message", listener);
 
-  document.body.appendChild(iframe);
+  args.container.appendChild(iframe);
   envelopeServer.startInitPolling();
+
+  return {
+    envelopeApi: envelopeServer.envelopeApi,
+    close: () => {
+      window.removeEventListener("message", listener);
+      iframe.remove();
+    }
+  };
 }
 
-printAsd();
+window.DmnEditor = { open };

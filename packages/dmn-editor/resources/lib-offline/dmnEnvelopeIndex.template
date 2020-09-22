@@ -22,6 +22,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <%
+      print('\n<script data-src="'+ editorResources.envelopeJSResource.path +'">\n' + editorResources.envelopeJSResource.content + '\n</script>\n');
+    %>
+
+    <%
       _.map(editorResources.baseCSSResources, function(cssResource) {
         print('\n<style data-src="'+ cssResource.path +'">\n' + cssResource.content + '\n</style>\n');
       });
@@ -32,12 +36,20 @@
         print('\n<style data-src="'+ cssResource.path +'">\n' + cssResource.content + '\n</style>\n');
       });
     %>
-</head>
-<body>
-    <div id="envelope-app" />
 
     <%
-      print('\n<script data-src="'+ editorResources.envelopeJSResource.path +'">\n' + editorResources.envelopeJSResource.content + '\n</script>\n');
+      print('\n<style data-src="fonts">\n');
+      _.map(editorResources.fontResources, function(fontResource) {
+        print('\n@font-face { font-family:\'' + fontResource.family + '\'; src: ');
+        _.map(fontResource.sources, function(source, index, list) {
+          print(' url(data:' + source.mimeType + ';base64,' + source.content + ') format(\'' + source.format + '\')');
+          if (index < list.length - 1) {
+            print(', ');
+          }
+        });
+        print('; ' + fontResource.additionalStyle + ' }');
+      });
+      print('\n</style>\n');
     %>
 
     <%
@@ -51,26 +63,8 @@
         print('\n<script data-src="'+ jsResource.path +'">\n' + jsResource.content + '\n</script>\n');
       });
     %>
-
-    <script>
-      setTimeout(function() {
-        const style = document.createElement("style");
-        style.appendChild(document.createTextNode(`
-        <%
-          _.map(editorResources.fontResources, function(fontResource) {
-            print('\n@font-face { font-family:\'' + fontResource.family + '\'; src: ');
-            _.map(fontResource.sources, function(source, index, list) {
-              print(' url(data:' + source.mimeType + ';base64,' + source.content + ') format(\'' + source.format + '\')');
-              if (index < list.length - 1) {
-                print(', ');
-              }
-            });
-            print('; ' + fontResource.additionalStyle + ' }');
-          });
-        %>
-        `));
-        document.head.appendChild(style);
-      }, 5000);
-    </script>
+</head>
+<body>
+    <div id="envelope-app" />
 </body>
 </html>

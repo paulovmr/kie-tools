@@ -20,7 +20,7 @@
     <style>
       html,
       body,
-      iframe {
+      iframe, div#my-editor-container {
         margin: 0;
         border: 0;
         padding: 0;
@@ -28,14 +28,45 @@
         height: 100%;
         width: 100%;
       }
+
+      .toolbar {
+        height: 50px;
+      }
+
+      .hidden {
+        display: none;
+      }
     </style>
 
     <title></title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="../../lib-offline/index.js"></script>
   </head>
   <body>
-    <script src="../../lib-offline/index.js"></script>
+    <div class="toolbar">
+      <span id="unsavedChanges" class="hidden">File contains unsaved changes.</span>
+      <button id="undo">< Undo</button>
+      <button id="redo">Redo ></button>
+      <button id="download">Download</button>
+    </div>
+    <div id="dmn-editor-container" />
+
+    <script>
+      const editor = DmnEditor.open({ container: document.getElementById("dmn-editor-container"), initialContent: "", readOnly: false });
+
+      document.getElementById("undo").addEventListener("click", () => {
+        console.log('undo');
+      });
+
+      document.getElementById("redo").addEventListener("click", () => {
+        console.log('redo');
+      });
+
+      document.getElementById("download").addEventListener("click", () => {
+        console.log('download');
+      });
+    </script>
   </body>
 </html>

@@ -23,7 +23,7 @@
     "test": "jest --silent --verbose --passWithNoTests",
     "build:fast": "rm -rf dist && webpack --config webpack.build-resources.config.js && node dist/lib-offline/preprocessor.js && webpack --config webpack.package-resources.config.js",
     "build": "yarn run lint && yarn test && yarn run build:fast",
-    "build:prod": "yarn run build --mode production --devtool none",
+    "build:prod": "yarn run lint && yarn test && rm -rf dist && webpack --config webpack.build-resources.config.js --mode production --devtool none && node dist/lib-offline/preprocessor.js && webpack --config webpack.package-resources.config.js --mode production --devtool none",
     "start": "webpack-dev-server -d --host 0.0.0.0"
   },
   "babel": {
