@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-export * from "./customEffects";
+export { File, EMPTY_FILE_DMN, EMPTY_FILE_BPMN, newFile } from "./File";
+export { StateControl } from "./StateControl";

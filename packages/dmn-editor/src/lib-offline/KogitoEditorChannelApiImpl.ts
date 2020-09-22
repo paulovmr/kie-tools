@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import { StateControl } from "../../channel";
-import { KogitoGuidedTour } from "@kogito-tooling/guided-tour/dist/channel";
-import { Tutorial, UserInteraction } from "@kogito-tooling/guided-tour/dist/api";
-import { KogitoEditorChannelApi, StateControlCommand } from "../../api";
 import {
   KogitoEdit,
   ResourceContent,
@@ -25,7 +21,9 @@ import {
   ResourceListRequest,
   ResourcesList
 } from "@kogito-tooling/channel-common-api";
-import { File } from "../../channel";
+import { KogitoEditorChannelApi, StateControlCommand } from "@kogito-tooling/editor/dist/api";
+import { Tutorial, UserInteraction } from "@kogito-tooling/guided-tour/dist/api";
+import { File, StateControl } from "@kogito-tooling/editor/dist/channel";
 
 export class KogitoEditorChannelApiImpl implements KogitoEditorChannelApi {
   constructor(
@@ -56,11 +54,11 @@ export class KogitoEditorChannelApiImpl implements KogitoEditorChannelApi {
   }
 
   public receive_guidedTourUserInteraction(userInteraction: UserInteraction) {
-    KogitoGuidedTour.getInstance().onUserInteraction(userInteraction);
+    /* unsupported */
   }
 
   public receive_guidedTourRegisterTutorial(tutorial: Tutorial) {
-    KogitoGuidedTour.getInstance().registerTutorial(tutorial);
+    /* unsupported */
   }
 
   public async receive_contentRequest() {

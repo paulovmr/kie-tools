@@ -16,21 +16,10 @@
 
 import dmnEnvelopeIndex from "!!raw-loader!../../dist/resources/lib-offline/dmnEnvelopeIndex.html";
 import { EnvelopeServer } from "@kogito-tooling/envelope-bus/dist/channel";
-import {
-  EditorContent,
-  KogitoEditorChannelApi,
-  KogitoEditorEnvelopeApi,
-  StateControlCommand
-} from "@kogito-tooling/editor/dist/api";
-import { Tutorial, UserInteraction } from "@kogito-tooling/guided-tour/dist/api";
-import { KogitoEdit } from "@kogito-tooling/channel-common-api/dist/KogitoEdit";
-import {
-  ResourceContentRequest,
-  ResourceContent,
-  ResourcesList,
-  ResourceListRequest
-} from "@kogito-tooling/channel-common-api";
+import { EditorApi, KogitoEditorChannelApi, KogitoEditorEnvelopeApi } from "@kogito-tooling/editor/dist/api";
 import { MessageBusClientApi } from "../../../envelope-bus/src/api";
+import { KogitoEditorChannelApiImpl } from "./KogitoEditorChannelApiImpl";
+import { StateControl } from "@kogito-tooling/editor/dist/channel";
 
 declare global {
   interface Window {
@@ -40,7 +29,11 @@ declare global {
         initialContent: string;
         readOnly: boolean;
         origin?: string;
-      }) => { envelopeApi: MessageBusClientApi<KogitoEditorEnvelopeApi>; close: () => void };
+      }) => EditorApi & {
+        stateControl: StateControl;
+        envelopeApi: MessageBusClientApi<KogitoEditorEnvelopeApi>;
+        close: () => void;
+      };
     };
   }
 }
@@ -68,42 +61,23 @@ export function open(args: { container: Element; initialContent: string; readOnl
     }
   );
 
+  const stateControl = new StateControl();
+
   const listener = (message: MessageEvent) => {
-    envelopeServer.receive(message.data, {
-      receive_contentRequest: async () => {
-        return { content: args.initialContent, path: "" };
-      },
-      async receive_getLocale(): Promise<string> {
-        return "en-US";
-      },
-      receive_guidedTourRegisterTutorial(tutorial: Tutorial): void {
-        /* */
-      },
-      receive_guidedTourUserInteraction(userInteraction: UserInteraction): void {
-        /* */
-      },
-      receive_newEdit(edit: KogitoEdit): void {
-        /* */
-      },
-      receive_openFile(path: string): void {
-        /* */
-      },
-      receive_ready(): void {
-        /* */
-      },
-      async receive_resourceContentRequest(request: ResourceContentRequest): Promise<ResourceContent | undefined> {
-        return undefined;
-      },
-      async receive_resourceListRequest(request: ResourceListRequest): Promise<ResourcesList> {
-        return { paths: [], pattern: request.pattern };
-      },
-      receive_setContentError(errorMessage: string): void {
-        /* */
-      },
-      receive_stateControlCommandUpdate(command: StateControlCommand): void {
-        /* */
-      }
-    });
+    envelopeServer.receive(
+      message.data,
+      new KogitoEditorChannelApiImpl(
+        stateControl,
+        {
+          fileName: "",
+          fileExtension: "dmn",
+          getFileContents: () => Promise.resolve(args.initialContent),
+          isReadOnly: args.readOnly ?? false
+        },
+        "en-US",
+        {}
+      )
+    );
   };
   window.addEventListener("message", listener);
 
@@ -111,6 +85,15 @@ export function open(args: { container: Element; initialContent: string; readOnl
   envelopeServer.startInitPolling();
 
   return {
+    getElementPosition: (selector: string) =>
+      envelopeServer.envelopeApi.requests.receive_guidedTourElementPositionRequest(selector),
+    undo: () => Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorUndo()),
+    redo: () => Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorRedo()),
+    getContent: () => envelopeServer.envelopeApi.requests.receive_contentRequest().then(c => c.content),
+    getPreview: () => envelopeServer.envelopeApi.requests.receive_previewRequest(),
+    setContent: async (content: string) =>
+      envelopeServer.envelopeApi.notifications.receive_contentChanged({ content: content }),
+    stateControl: stateControl,
     envelopeApi: envelopeServer.envelopeApi,
     close: () => {
       window.removeEventListener("message", listener);
