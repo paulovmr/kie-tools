@@ -104,10 +104,7 @@ export class KogitoEditorEnvelopeApiImpl implements KogitoEditorEnvelopeApi {
 
     await this.editor
       .setContent(content.path ?? "", content.content)
-      .finally(() => {
-        console.log('OOOOIII');
-        this.args.view.setLoadingFinished()
-      });
+      .finally(() => this.args.view.setLoadingFinished());
 
     this.args.envelopeContext.channelApi.notifications.receive_ready();
   };
