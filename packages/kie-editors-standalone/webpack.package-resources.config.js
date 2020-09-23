@@ -16,23 +16,18 @@
 
 const { merge } = require("webpack-merge");
 const common = require("../../webpack.common.config");
-const CopyPlugin = require("copy-webpack-plugin");
-const pfWebpackOptions = require("@kogito-tooling/patternfly-base/patternflyWebpackOptions");
+const path = require("path");
 
-module.exports = [
-  merge(common, {
-    entry: {
-      "lib-offline/preprocessor": "./src/lib-offline/preprocessor.ts"
-    },
-    plugins: [new CopyPlugin([{ from: "./resources", to: "./resources" }])],
-    target: "node"
-  }),
-  merge(common, {
-    entry: {
-      "envelope/index": "./src/envelope/index.ts"
-    },
-    module: {
-      rules: [...pfWebpackOptions.patternflyRules]
-    }
-  })
-];
+module.exports = merge(common, {
+  entry: {
+    "dmn/index": "./src/dmn/index.ts",
+  },
+  devServer: {
+    historyApiFallback: false,
+    disableHostCheck: true,
+    watchContentBase: true,
+    contentBase: [path.join(__dirname, "./dist"), path.join(__dirname, "./static")],
+    compress: true,
+    port: 9001
+  }
+});

@@ -61,7 +61,7 @@ export const FONT_ATTRIBUTES = new Map<string, FontSourceTypeAttributes>([
   ["svg", { mimeType: "image/svg+xml", format: "svg" }]
 ]);
 
-export class DMNEditorResources {
+export class DmnEditorResources {
   public get(args: { resourcesPathPrefix: string }) {
     const dmnLanguageData = new GwtEditorMapping().getLanguageData({
       resourcesPathPrefix: args.resourcesPathPrefix,
@@ -75,9 +75,9 @@ export class DMNEditorResources {
       baseJSResources: dmnLanguageData?.resources
         .filter(r => r.type === "js")
         .pop()
-        ?.paths.map(p => this.createResource(p))!,
+        ?.paths.map(p => this.createResource(p, ["\\", "`", "$"]))!,
       referencedJSResources: this.getReferencedJSPaths(args.resourcesPathPrefix, dmnLanguageData.gwtModuleName).map(p =>
-        this.createResource(p)
+        this.createResource(p, ["\\", "`", "$"])
       ),
       baseCSSResources: dmnLanguageData?.resources
         .filter(r => r.type === "css")
@@ -93,8 +93,15 @@ export class DMNEditorResources {
     return dmnEditorResources;
   }
 
-  private createResource(path: string) {
-    return { path: path, content: fs.readFileSync(path).toString() };
+  private createResource(path: string, escapeCharacters?: string[]) {
+    let content = fs.readFileSync(path).toString();
+    if (escapeCharacters) {
+      escapeCharacters.forEach(character => {
+        content = content.replace(new RegExp("[" + character.replace(/[\\]/g, "\\\\") + "]", "gi"), "\\" + character);
+      })
+    }
+
+    return { path: path, content: content };
   }
 
   private getReferencedJSPaths(resourcesPathPrefix: string, gwtModuleName: string) {

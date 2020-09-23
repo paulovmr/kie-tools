@@ -16,17 +16,22 @@
 
 import * as _ from "underscore";
 import * as fs from "fs";
-import { DMNEditorResources } from "../editor/DMNEditorResources";
+import { DmnEditorResources } from "../dmn/DmnEditorResources";
 
 function main() {
-  const dmnEditorResources = new DMNEditorResources().get({
-    resourcesPathPrefix: "../kie-bc-editors-unpacked/dmn"
+  const editorResourcesPath = process.argv[2];
+  const resourcesPathPrefix = process.argv[3];
+  const templatePath = process.argv[4];
+  const outputPath = process.argv[5];
+
+  const dmnEditorResources = new DmnEditorResources().get({
+    resourcesPathPrefix: resourcesPathPrefix
   });
 
-  const template = _.template(fs.readFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.template").toString());
+  const template = _.template(fs.readFileSync(templatePath).toString());
   const dmnEnvelopeIndex = template({ editorResources: dmnEditorResources });
 
-  fs.writeFileSync("dist/resources/lib-offline/dmnEnvelopeIndex.html", dmnEnvelopeIndex);
+  fs.writeFileSync(outputPath, dmnEnvelopeIndex);
 }
 
 main();

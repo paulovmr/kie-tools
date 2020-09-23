@@ -21,6 +21,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+    <script>
+        erraiBusRemoteCommunicationEnabled = false;
+    </script>
+
     <%
       print('\n<script data-src="'+ editorResources.envelopeJSResource.path +'">\n' + editorResources.envelopeJSResource.content + '\n</script>\n');
     %>
@@ -52,17 +56,19 @@
       print('\n</style>\n');
     %>
 
-    <%
-      _.map(editorResources.baseJSResources, function(jsResource) {
-        print('\n<script data-src="'+ jsResource.path +'">\n' + jsResource.content + '\n</script>\n');
-      });
-    %>
+    <script>
+        <%
+          _.map(editorResources.baseJSResources, function(jsResource) {
+            print('\ndocument.addEventListener("DOMContentLoaded", () => { setTimeout(() => { const jsResource = document.createElement("script"); jsResource.appendChild(document.createTextNode(`' + jsResource.content + '`)); document.head.append(jsResource); }, 0); })');
+          });
+        %>
 
-    <%
-      _.map(editorResources.referencedJSResources, function(jsResource) {
-        print('\n<script data-src="'+ jsResource.path +'">\n' + jsResource.content + '\n</script>\n');
-      });
-    %>
+        <%
+          _.map(editorResources.referencedJSResources, function(jsResource) {
+            print('\ndocument.addEventListener("DOMContentLoaded", () => { setTimeout(() => { const jsResource = document.createElement("script"); jsResource.appendChild(document.createTextNode(`' + jsResource.content + '`)); document.head.append(jsResource); }, 0); })');
+          });
+        %>
+    </script>
 </head>
 <body>
     <div id="envelope-app" />

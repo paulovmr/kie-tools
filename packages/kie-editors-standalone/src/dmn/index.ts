@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import dmnEnvelopeIndex from "!!raw-loader!../../dist/resources/lib-offline/dmnEnvelopeIndex.html";
+import dmnEnvelopeIndex from "!!raw-loader!../../dist/resources/dmn/dmnEnvelopeIndex.html";
 import { EnvelopeServer } from "@kogito-tooling/envelope-bus/dist/channel";
 import { EditorApi, KogitoEditorChannelApi, KogitoEditorEnvelopeApi } from "@kogito-tooling/editor/dist/api";
 import { MessageBusClientApi } from "../../../envelope-bus/src/api";
-import { KogitoEditorChannelApiImpl } from "./KogitoEditorChannelApiImpl";
+import { KogitoEditorChannelApiImpl } from "../envelope/KogitoEditorChannelApiImpl";
 import { StateControl } from "@kogito-tooling/editor/dist/channel";
 
 declare global {
