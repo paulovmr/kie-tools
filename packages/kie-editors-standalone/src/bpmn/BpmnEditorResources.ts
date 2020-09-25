@@ -18,36 +18,37 @@ import { GwtEditorMapping } from "@kogito-tooling/kie-bc-editors";
 import * as fs from "fs";
 import { BaseEditorResources, EditorResources } from "../common/EditorResources";
 
-export class DmnEditorResources extends BaseEditorResources {
+export class BpmnEditorResources extends BaseEditorResources {
   public get(args: { resourcesPathPrefix: string }) {
-    const dmnLanguageData = new GwtEditorMapping().getLanguageData({
+    const bpmnLanguageData = new GwtEditorMapping().getLanguageData({
       resourcesPathPrefix: args.resourcesPathPrefix,
-      fileExtension: "dmn",
+      fileExtension: "bpmn",
       initialLocale: "",
       isReadOnly: false
     })!;
 
-    const dmnEditorResources: EditorResources = {
+    const bpmnEditorResources: EditorResources = {
       envelopeJSResource: this.createResource(`dist/envelope/index.js`),
-      baseJSResources: dmnLanguageData?.resources
+      baseJSResources: bpmnLanguageData?.resources
         .filter(r => r.type === "js")
         .pop()
         ?.paths.map(p => this.createResource(p, ["\\", "`", "$"]))!,
-      referencedJSResources: this.getReferencedJSPaths(args.resourcesPathPrefix, dmnLanguageData.gwtModuleName).map(p =>
-        this.createResource(p, ["\\", "`", "$"])
-      ),
-      baseCSSResources: dmnLanguageData?.resources
+      referencedJSResources: this.getReferencedJSPaths(
+        args.resourcesPathPrefix,
+        bpmnLanguageData.gwtModuleName
+      ).map(p => this.createResource(p, ["\\", "`", "$"])),
+      baseCSSResources: bpmnLanguageData?.resources
         .filter(r => r.type === "css")
         .pop()
         ?.paths.map(p => this.createResource(p))!,
       referencedCSSResources: this.getReferencedCSSPaths(
         args.resourcesPathPrefix,
-        dmnLanguageData.gwtModuleName
+        bpmnLanguageData.gwtModuleName
       ).map(p => this.createResource(p)),
-      fontResources: this.getFontResources(args.resourcesPathPrefix, dmnLanguageData.gwtModuleName)
+      fontResources: this.getFontResources(args.resourcesPathPrefix, bpmnLanguageData.gwtModuleName)
     };
 
-    return dmnEditorResources;
+    return bpmnEditorResources;
   }
 
   public getReferencedJSPaths(resourcesPathPrefix: string, gwtModuleName: string) {
@@ -139,14 +140,14 @@ export class DmnEditorResources extends BaseEditorResources {
   }
 
   public getEditorResourcesPath() {
-    return "../kie-bc-editors-unpacked/dmn";
+    return "../kie-bc-editors-unpacked/bpmn";
   }
 
   public getTemplatePath() {
-    return "dist/resources/dmn/dmnEnvelopeIndex.template";
+    return "dist/resources/bpmn/bpmnEnvelopeIndex.template";
   }
 
   public getHtmlOutputPath() {
-    return "dist/resources/dmn/dmnEnvelopeIndex.html";
+    return "dist/resources/bpmn/bpmnEnvelopeIndex.html";
   }
 }

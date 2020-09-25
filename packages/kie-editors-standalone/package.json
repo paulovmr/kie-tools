@@ -21,8 +21,7 @@
   "scripts": {
     "lint": "tslint -c ../../tslint.json 'src/**/*.{ts,tsx,js,jsx}'",
     "test": "jest --silent --verbose --passWithNoTests",
-    "build:preprocessor:dmn": "node dist/preprocessor/preprocessor.js dist/dmn/DmnEditorResources ../kie-bc-editors-unpacked/dmn dist/resources/dmn/dmnEnvelopeIndex.template dist/resources/dmn/dmnEnvelopeIndex.html",
-    "build:preprocessor": "yarn run build:preprocessor:dmn",
+    "build:preprocessor": "node dist/preprocessor/preprocessor.js",
     "build:fast": "rm -rf dist && webpack --config webpack.build-resources.config.js && yarn run build:preprocessor && webpack --config webpack.package-resources.config.js",
     "build": "yarn run lint && yarn test && yarn run build:fast",
     "build:prod": "yarn run lint && yarn test && rm -rf dist && webpack --config webpack.build-resources.config.js --mode production --devtool none && yarn run build:preprocessor && webpack --config webpack.package-resources.config.js --mode production --devtool none",

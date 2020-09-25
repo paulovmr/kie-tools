@@ -17,21 +17,22 @@
 import * as _ from "underscore";
 import * as fs from "fs";
 import { DmnEditorResources } from "../dmn/DmnEditorResources";
+import { BpmnEditorResources } from "../bpmn/BpmnEditorResources";
+import { BaseEditorResources } from "../common/EditorResources";
 
 function main() {
-  const editorResourcesPath = process.argv[2];
-  const resourcesPathPrefix = process.argv[3];
-  const templatePath = process.argv[4];
-  const outputPath = process.argv[5];
+  const editorsResources: BaseEditorResources[] = [new DmnEditorResources(), new BpmnEditorResources()];
 
-  const dmnEditorResources = new DmnEditorResources().get({
-    resourcesPathPrefix: resourcesPathPrefix
+  editorsResources.forEach(editorResources => {
+    const template = _.template(fs.readFileSync(editorResources.getTemplatePath()).toString());
+    const result = template({
+      editorResources: editorResources.get({
+        resourcesPathPrefix: editorResources.getEditorResourcesPath()
+      })
+    });
+
+    fs.writeFileSync(editorResources.getHtmlOutputPath(), result);
   });
-
-  const template = _.template(fs.readFileSync(templatePath).toString());
-  const dmnEnvelopeIndex = template({ editorResources: dmnEditorResources });
-
-  fs.writeFileSync(outputPath, dmnEnvelopeIndex);
 }
 
 main();

@@ -21,6 +21,7 @@ const path = require("path");
 module.exports = merge(common, {
   entry: {
     "dmn/index": "./src/dmn/index.ts",
+    "bpmn/index": "./src/bpmn/index.ts"
   },
   devServer: {
     historyApiFallback: false,

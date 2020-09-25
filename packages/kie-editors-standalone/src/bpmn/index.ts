@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import dmnEnvelopeIndex from "!!raw-loader!../../dist/resources/dmn/dmnEnvelopeIndex.html";
+import bpmnEnvelopeIndex from "!!raw-loader!../../dist/resources/bpmn/bpmnEnvelopeIndex.html";
 import { EnvelopeServer } from "@kogito-tooling/envelope-bus/dist/channel";
 import { EditorApi, KogitoEditorChannelApi, KogitoEditorEnvelopeApi } from "@kogito-tooling/editor/dist/api";
+import { MessageBusClientApi } from "../../../envelope-bus/src/api";
 import { KogitoEditorChannelApiImpl } from "../envelope/KogitoEditorChannelApiImpl";
 import { StateControl } from "@kogito-tooling/editor/dist/channel";
-import { MessageBusClientApi } from "@kogito-tooling/envelope-bus/dist/api";
 
 declare global {
   interface Window {
-    DmnEditor: {
+    BpmnEditor: {
       open: (args: {
         container: Element;
         initialContent: string;
@@ -40,7 +40,7 @@ declare global {
 
 export function open(args: { container: Element; initialContent: string; readOnly?: boolean; origin?: string }) {
   const iframe = document.createElement("iframe");
-  iframe.srcdoc = dmnEnvelopeIndex;
+  iframe.srcdoc = bpmnEnvelopeIndex;
 
   const envelopeServer = new EnvelopeServer<KogitoEditorChannelApi, KogitoEditorEnvelopeApi>(
     { postMessage: message => iframe.contentWindow?.postMessage(message, "*") },
@@ -53,7 +53,7 @@ export function open(args: { container: Element; initialContent: string; readOnl
         },
         {
           resourcesPathPrefix: "",
-          fileExtension: "dmn",
+          fileExtension: "bpmn",
           initialLocale: "en-US",
           isReadOnly: args.readOnly ?? true
         }
@@ -70,7 +70,7 @@ export function open(args: { container: Element; initialContent: string; readOnl
         stateControl,
         {
           fileName: "",
-          fileExtension: "dmn",
+          fileExtension: "bpmn",
           getFileContents: () => Promise.resolve(args.initialContent),
           isReadOnly: args.readOnly ?? false
         },
@@ -102,4 +102,4 @@ export function open(args: { container: Element; initialContent: string; readOnl
   };
 }
 
-window.DmnEditor = { open };
+window.BpmnEditor = { open };
