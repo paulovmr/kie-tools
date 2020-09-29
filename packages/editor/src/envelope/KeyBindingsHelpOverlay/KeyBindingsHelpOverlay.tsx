@@ -92,6 +92,7 @@ export function KeyBindingsHelpOverlay() {
       </div>
 
       <Modal
+        appendTo={document.body}
         title={"Keyboard shortcuts"}
         isOpen={showing}
         width={"60%"}

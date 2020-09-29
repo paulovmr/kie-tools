@@ -79,6 +79,7 @@ describe("GwtEditorWrapperFactory", () => {
     };
 
     const gwtEditorWrapperFactory: GwtEditorWrapperFactory = new GwtEditorWrapperFactory(
+      {shouldLoadResourcesDynamically: true},
       xmlFormatter,
       gwtAppFormerApi,
       new GwtStateControlService(),
@@ -117,6 +118,7 @@ describe("GwtEditorWrapperFactory", () => {
 
   test("Supported/Unsupported LanguageData type", () => {
     const gwtEditorWrapperFactory: GwtEditorWrapperFactory = new GwtEditorWrapperFactory(
+      { shouldLoadResourcesDynamically: true },
       xmlFormatter,
       gwtAppFormerApi,
       new GwtStateControlService(),
