@@ -15,6 +15,7 @@
  */
 
 import {
+  ContentType,
   KogitoEdit,
   ResourceContent,
   ResourceContentRequest,
@@ -24,13 +25,15 @@ import {
 import { KogitoEditorChannelApi, StateControlCommand } from "@kogito-tooling/editor/dist/api";
 import { Tutorial, UserInteraction } from "@kogito-tooling/guided-tour/dist/api";
 import { File, StateControl } from "@kogito-tooling/editor/dist/channel";
+import * as globToRegExp from "glob-to-regexp";
 
 export class KogitoEditorChannelApiImpl implements KogitoEditorChannelApi {
   constructor(
     private readonly stateControl: StateControl,
     private readonly file: File,
     private readonly locale: string,
-    private readonly overrides: Partial<KogitoEditorChannelApi>
+    private readonly overrides: Partial<KogitoEditorChannelApi>,
+    private readonly resources?: Map<string, { contentType: ContentType; content: Promise<string> }>
   ) {}
 
   public receive_newEdit(edit: KogitoEdit) {
@@ -67,11 +70,35 @@ export class KogitoEditorChannelApiImpl implements KogitoEditorChannelApi {
   }
 
   public async receive_resourceContentRequest(request: ResourceContentRequest) {
-    return this.overrides.receive_resourceContentRequest?.(request) ?? new ResourceContent(request.path, undefined);
+    const resource = this.resources?.get(request.path);
+
+    if (!resource) {
+      console.warn("The editor requested an unspecified resource: " + request.path);
+      return new ResourceContent(request.path, undefined);
+    }
+
+    const requestedContentType = request.opts?.type ?? resource.contentType;
+    if (requestedContentType !== resource.contentType) {
+      console.warn(
+        "The editor requested a resource with a different content type from the one specified: " +
+          request.path +
+          ". Content type requested: " +
+          requestedContentType
+      );
+      return new ResourceContent(request.path, undefined);
+    }
+
+    return new ResourceContent(request.path, await resource.content, resource.contentType);
   }
 
   public async receive_resourceListRequest(request: ResourceListRequest) {
-    return this.overrides.receive_resourceListRequest?.(request) ?? new ResourcesList(request.pattern, []);
+    if (!this.resources) {
+      return new ResourcesList(request.pattern, []);
+    }
+
+    const matcher = globToRegExp(request.pattern);
+    const matches = Array.from(this.resources.keys()).filter(path => matcher.test(path));
+    return new ResourcesList(request.pattern, matches);
   }
 
   public receive_openFile(path: string): void {

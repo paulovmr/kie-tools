@@ -16,35 +16,22 @@
 
 import bpmnEnvelopeIndex from "!!raw-loader!../../dist/resources/bpmn/bpmnEnvelopeIndex.html";
 import { EnvelopeServer } from "@kogito-tooling/envelope-bus/dist/channel";
-import { EditorApi, KogitoEditorChannelApi, KogitoEditorEnvelopeApi } from "@kogito-tooling/editor/dist/api";
-import { MessageBusClientApi } from "../../../envelope-bus/src/api";
+import { KogitoEditorChannelApi, KogitoEditorEnvelopeApi } from "@kogito-tooling/editor/dist/api";
 import { KogitoEditorChannelApiImpl } from "../envelope/KogitoEditorChannelApiImpl";
 import { StateControl } from "@kogito-tooling/editor/dist/channel";
+import { ContentType } from "@kogito-tooling/channel-common-api/dist";
+import { createEditor, Editor } from "../common/Editor";
 
 declare global {
   interface Window {
-    BpmnEditor: {
-      open: (args: {
-        container: Element;
-        initialContent: string;
-        readOnly: boolean;
-        origin?: string;
-      }) => EditorApi & {
-        stateControl: StateControl;
-        envelopeApi: MessageBusClientApi<KogitoEditorEnvelopeApi>;
-        close: () => void;
-      };
-    };
+    BpmnEditor: Editor;
   }
 }
 
-export function open(args: { container: Element; initialContent: string; readOnly?: boolean; origin?: string }) {
-  const iframe = document.createElement("iframe");
-  iframe.srcdoc = bpmnEnvelopeIndex;
-
-  const envelopeServer = new EnvelopeServer<KogitoEditorChannelApi, KogitoEditorEnvelopeApi>(
+const createEnvelopeServer = (iframe: HTMLIFrameElement, readOnly?: boolean, origin?: string) => {
+  return new EnvelopeServer<KogitoEditorChannelApi, KogitoEditorEnvelopeApi>(
     { postMessage: message => iframe.contentWindow?.postMessage(message, "*") },
-    args.origin ?? window.location.origin,
+    origin ?? window.location.origin,
     self => {
       return self.envelopeApi.requests.receive_initRequest(
         {
@@ -55,11 +42,24 @@ export function open(args: { container: Element; initialContent: string; readOnl
           resourcesPathPrefix: "",
           fileExtension: "bpmn",
           initialLocale: "en-US",
-          isReadOnly: args.readOnly ?? true
+          isReadOnly: readOnly ?? true
         }
       );
     }
   );
+};
+
+export function open(args: {
+  container: Element;
+  initialContent: Promise<string>;
+  readOnly?: boolean;
+  origin?: string;
+  resources?: Map<string, { contentType: ContentType; content: Promise<string> }>;
+}) {
+  const iframe = document.createElement("iframe");
+  iframe.srcdoc = bpmnEnvelopeIndex;
+
+  const envelopeServer = createEnvelopeServer(iframe, args.readOnly, args.origin);
 
   const stateControl = new StateControl();
 
@@ -75,7 +75,8 @@ export function open(args: { container: Element; initialContent: string; readOnl
           isReadOnly: args.readOnly ?? false
         },
         "en-US",
-        {}
+        {},
+        args.resources
       )
     );
   };
@@ -84,22 +85,7 @@ export function open(args: { container: Element; initialContent: string; readOnl
   args.container.appendChild(iframe);
   envelopeServer.startInitPolling();
 
-  return {
-    getElementPosition: (selector: string) =>
-      envelopeServer.envelopeApi.requests.receive_guidedTourElementPositionRequest(selector),
-    undo: () => Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorUndo()),
-    redo: () => Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorRedo()),
-    getContent: () => envelopeServer.envelopeApi.requests.receive_contentRequest().then(c => c.content),
-    getPreview: () => envelopeServer.envelopeApi.requests.receive_previewRequest(),
-    setContent: async (content: string) =>
-      envelopeServer.envelopeApi.notifications.receive_contentChanged({ content: content }),
-    stateControl: stateControl,
-    envelopeApi: envelopeServer.envelopeApi,
-    close: () => {
-      window.removeEventListener("message", listener);
-      iframe.remove();
-    }
-  };
+  return createEditor(envelopeServer, stateControl, listener, iframe);
 }
 
 window.BpmnEditor = { open };
