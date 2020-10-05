@@ -69,6 +69,17 @@
           });
         %>
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const interval = setInterval(() => {
+                if (define.amd) {
+                    define.amd = undefined;
+                    clearInterval(interval);
+                }
+            }, 1000);
+        });
+    </script>
 </head>
 <body>
     <div id="envelope-app" />
