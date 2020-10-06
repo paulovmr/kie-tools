@@ -20,8 +20,29 @@ import { EnvelopeBusMessage } from "@kogito-tooling/envelope-bus/dist/api";
 import { ChannelType, getOperatingSystem } from "@kogito-tooling/channel-common-api";
 
 const initEnvelope = () => {
+  const container = document.getElementById("envelope-app")!;
+
+  const removeHrefIfNecessary = (link: HTMLAnchorElement) => {
+    if (link.getAttribute("href")?.startsWith("#")) {
+      link.removeAttribute("href");
+    }
+  };
+
+  const mutationObserver = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        if (node instanceof HTMLAnchorElement) {
+          removeHrefIfNecessary(node);
+        } else if (node instanceof Element) {
+          Array.from(node.getElementsByTagName("a")).forEach(removeHrefIfNecessary);
+        }
+      });
+    });
+  });
+  mutationObserver.observe(document.body, { childList: true, subtree: true });
+
   EditorEnvelope.init({
-    container: document.getElementById("envelope-app")!,
+    container: container,
     bus: {
       postMessage<D, Type>(message: EnvelopeBusMessage<D, Type>, targetOrigin?: string, _?: any) {
         window.parent.postMessage(message, targetOrigin!, _);

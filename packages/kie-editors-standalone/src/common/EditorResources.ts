@@ -38,6 +38,12 @@ export interface FontResource {
   additionalStyle?: string;
 }
 
+export interface ReferencedResource {
+  path: string,
+  prefix?: string,
+  suffix?: string
+}
+
 export interface EditorResources {
   envelopeJSResource: JSResource;
   baseJSResources: JSResource[];
@@ -62,22 +68,22 @@ export const FONT_ATTRIBUTES = new Map<string, FontSourceTypeAttributes>([
 
 export abstract class BaseEditorResources {
   public abstract get(args: { resourcesPathPrefix: string }): EditorResources;
-  public abstract getReferencedJSPaths(resourcesPathPrefix: string, gwtModuleName: string): string[];
-  public abstract getReferencedCSSPaths(resourcesPathPrefix: string, gwtModuleName: string): string[];
+  public abstract getReferencedJSPaths(resourcesPathPrefix: string, gwtModuleName: string): ReferencedResource[];
+  public abstract getReferencedCSSPaths(resourcesPathPrefix: string, gwtModuleName: string): ReferencedResource[];
   public abstract getFontResources(resourcesPathPrefix: string, gwtModuleName: string): FontResource[];
   public abstract getEditorResourcesPath(): string;
   public abstract getTemplatePath(): string;
   public abstract getHtmlOutputPath(): string;
 
-  public createResource(path: string, escapeCharacters?: string[]) {
-    let content = fs.readFileSync(path).toString();
+  public createResource(resource: ReferencedResource, escapeCharacters?: string[]) {
+    let content = fs.readFileSync(resource.path).toString();
     if (escapeCharacters) {
       escapeCharacters.forEach(character => {
         content = content.replace(new RegExp("[" + character.replace(/[\\]/g, "\\\\") + "]", "gi"), "\\" + character);
       })
     }
 
-    return { path: path, content: content };
+    return { path: resource.path, content: (resource.prefix ?? "") + content + (resource.suffix ?? "") };
   }
 
   public createFontSource(path: string) {

@@ -28,22 +28,22 @@ export class DmnEditorResources extends BaseEditorResources {
     })!;
 
     const dmnEditorResources: EditorResources = {
-      envelopeJSResource: this.createResource(`dist/envelope/index.js`),
+      envelopeJSResource: this.createResource({ path: `dist/envelope/index.js` }),
       baseJSResources: dmnLanguageData?.resources
         .filter(r => r.type === "js")
         .pop()
-        ?.paths.map(p => this.createResource(p, ["\\", "`", "$"]))!,
-      referencedJSResources: this.getReferencedJSPaths(args.resourcesPathPrefix, dmnLanguageData.gwtModuleName).map(p =>
-        this.createResource(p, ["\\", "`", "$"])
+        ?.paths.map(p => this.createResource({ path: p }, ["\\", "`", "$"]))!,
+      referencedJSResources: this.getReferencedJSPaths(args.resourcesPathPrefix, dmnLanguageData.gwtModuleName).map(rp =>
+        this.createResource(rp, ["\\", "`", "$"])
       ),
       baseCSSResources: dmnLanguageData?.resources
         .filter(r => r.type === "css")
         .pop()
-        ?.paths.map(p => this.createResource(p))!,
+        ?.paths.map(p => this.createResource({ path: p }))!,
       referencedCSSResources: this.getReferencedCSSPaths(
         args.resourcesPathPrefix,
         dmnLanguageData.gwtModuleName
-      ).map(p => this.createResource(p)),
+      ).map(rp => this.createResource(rp)),
       fontResources: this.getFontResources(args.resourcesPathPrefix, dmnLanguageData.gwtModuleName)
     };
 
@@ -54,28 +54,32 @@ export class DmnEditorResources extends BaseEditorResources {
     const editorDir = fs.readdirSync(`${resourcesPathPrefix}/${gwtModuleName}`);
     const gwtJSFile = editorDir.filter(file => file.indexOf(".cache.js") >= 0).pop();
     return [
-      `${resourcesPathPrefix}/${gwtModuleName}/monaco-editor/dev/vs/editor/editor.main.js`,
-      `${resourcesPathPrefix}/${gwtModuleName}/${gwtJSFile?.split("/").pop()}`
+      {
+        path: `${resourcesPathPrefix}/${gwtModuleName}/monaco-editor/dev/vs/loader.js`,
+        prefix: "(new function() { this.require = { baseUrl: 'http://localhost:9001/resources/dmn/monaco-editor/dev/' }; ",
+        suffix: " window.__MONACO_AMD_LOADER__ = _amdLoaderGlobal });"
+      },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/${gwtJSFile?.split("/").pop()}` }
     ];
   }
 
   public getReferencedCSSPaths(resourcesPathPrefix: string, gwtModuleName: string) {
     return [
-      `${resourcesPathPrefix}/${gwtModuleName}/jquery-ui/jquery-ui.min.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/bootstrap-daterangepicker/daterangepicker.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/bootstrap-select/css/bootstrap-select.min.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/prettify/bin/prettify.min.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/uberfire-patternfly.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/monaco-editor/dev/vs/editor/editor.main.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/patternfly-additions.min.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-datepicker3-1.6.4.min.cache.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/animate-3.5.2.min.cache.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-notify-custom.min.cache.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/card-1.0.1.cache.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-slider-9.2.0.min.cache.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-switch-3.3.2.min.cache.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-datetimepicker-2.4.4.min.cache.css`,
-      `${resourcesPathPrefix}/${gwtModuleName}/css/typeahead-0.10.5.min.cache.css`
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/jquery-ui/jquery-ui.min.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/bootstrap-daterangepicker/daterangepicker.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/bootstrap-select/css/bootstrap-select.min.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/prettify/bin/prettify.min.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/uberfire-patternfly.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/monaco-editor/dev/vs/editor/editor.main.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/patternfly-additions.min.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-datepicker3-1.6.4.min.cache.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/animate-3.5.2.min.cache.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-notify-custom.min.cache.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/card-1.0.1.cache.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-slider-9.2.0.min.cache.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-switch-3.3.2.min.cache.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-datetimepicker-2.4.4.min.cache.css` },
+      { path: `${resourcesPathPrefix}/${gwtModuleName}/css/typeahead-0.10.5.min.cache.css` }
     ];
   }
 
