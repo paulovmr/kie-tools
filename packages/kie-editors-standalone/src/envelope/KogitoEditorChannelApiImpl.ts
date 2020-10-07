@@ -96,7 +96,7 @@ export class KogitoEditorChannelApiImpl implements KogitoEditorChannelApi {
       return new ResourcesList(request.pattern, []);
     }
 
-    const matcher = globToRegExp(request.pattern);
+    const matcher = globToRegExp(request.pattern, { extended: true });
     const matches = Array.from(this.resources.keys()).filter(path => matcher.test(path));
     return new ResourcesList(request.pattern, matches);
   }

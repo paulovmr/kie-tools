@@ -33,9 +33,10 @@ export class DmnEditorResources extends BaseEditorResources {
         .filter(r => r.type === "js")
         .pop()
         ?.paths.map(p => this.createResource({ path: p }, ["\\", "`", "$"]))!,
-      referencedJSResources: this.getReferencedJSPaths(args.resourcesPathPrefix, dmnLanguageData.gwtModuleName).map(rp =>
-        this.createResource(rp, ["\\", "`", "$"])
-      ),
+      referencedJSResources: this.getReferencedJSPaths(
+        args.resourcesPathPrefix,
+        dmnLanguageData.gwtModuleName
+      ).map(rp => this.createResource(rp, ["\\", "`", "$"])),
       baseCSSResources: dmnLanguageData?.resources
         .filter(r => r.type === "css")
         .pop()
