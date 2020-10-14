@@ -55,11 +55,6 @@ export class DmnEditorResources extends BaseEditorResources {
     const editorDir = fs.readdirSync(`${resourcesPathPrefix}/${gwtModuleName}`);
     const gwtJSFile = editorDir.filter(file => file.indexOf(".cache.js") >= 0).pop();
     return [
-      {
-        path: `${resourcesPathPrefix}/${gwtModuleName}/monaco-editor/dev/vs/loader.js`,
-        prefix: "(new function() { this.require = { baseUrl: 'http://localhost:9001/resources/dmn/monaco-editor/dev/' }; ",
-        suffix: " window.__MONACO_AMD_LOADER__ = _amdLoaderGlobal });"
-      },
       { path: `${resourcesPathPrefix}/${gwtModuleName}/${gwtJSFile?.split("/").pop()}` }
     ];
   }

@@ -25,7 +25,7 @@ import {
 import { KogitoEditorChannelApi, StateControlCommand } from "@kogito-tooling/editor/dist/api";
 import { Tutorial, UserInteraction } from "@kogito-tooling/guided-tour/dist/api";
 import { File, StateControl } from "@kogito-tooling/editor/dist/channel";
-import * as globToRegExp from "glob-to-regexp";
+import { Minimatch } from "minimatch";
 
 export class KogitoEditorChannelApiImpl implements KogitoEditorChannelApi {
   constructor(
@@ -96,8 +96,8 @@ export class KogitoEditorChannelApiImpl implements KogitoEditorChannelApi {
       return new ResourcesList(request.pattern, []);
     }
 
-    const matcher = globToRegExp(request.pattern, { extended: true });
-    const matches = Array.from(this.resources.keys()).filter(path => matcher.test(path));
+    const matcher = new Minimatch(request.pattern);
+    const matches = Array.from(this.resources.keys()).filter(path => matcher.match(path));
     return new ResourcesList(request.pattern, matches);
   }
 

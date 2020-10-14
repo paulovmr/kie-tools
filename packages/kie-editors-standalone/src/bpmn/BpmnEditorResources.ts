@@ -55,7 +55,6 @@ export class BpmnEditorResources extends BaseEditorResources {
     const editorDir = fs.readdirSync(`${resourcesPathPrefix}/${gwtModuleName}`);
     const gwtJSFile = editorDir.filter(file => file.indexOf(".cache.js") >= 0).pop();
     return [
-      { path: `${resourcesPathPrefix}/${gwtModuleName}/monaco-editor/dev/vs/editor/editor.main.js` },
       { path: `${resourcesPathPrefix}/${gwtModuleName}/${gwtJSFile?.split("/").pop()}` }
     ];
   }

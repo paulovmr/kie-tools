@@ -23,8 +23,8 @@ const initEnvelope = () => {
   const container = document.getElementById("envelope-app")!;
 
   const removeHrefIfNecessary = (link: HTMLAnchorElement) => {
-    if (link.getAttribute("href")?.startsWith("#")) {
-      link.removeAttribute("href");
+    if (link.getAttribute("href") === "#") {
+      link.setAttribute("href", "javascript:void(0);");
     }
   };
 
