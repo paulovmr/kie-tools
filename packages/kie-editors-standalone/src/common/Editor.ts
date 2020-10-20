@@ -20,6 +20,7 @@ import { StateControl } from "@kogito-tooling/editor/dist/channel";
 import { MessageBusClientApi } from "@kogito-tooling/envelope-bus/dist/api";
 import { EnvelopeServer } from "@kogito-tooling/envelope-bus/dist/channel";
 import { Rect } from "@kogito-tooling/guided-tour/dist/api";
+import { StateControlCommand } from "../../../editor/src/api";
 
 export interface StandaloneEditorApi extends EditorApi {
   stateControl: StateControl;
@@ -46,8 +47,14 @@ export const createEditor = (
   return {
     getElementPosition: (selector: string): Promise<Rect> =>
       envelopeServer.envelopeApi.requests.receive_guidedTourElementPositionRequest(selector),
-    undo: () => Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorUndo()),
-    redo: () => Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorRedo()),
+    undo: () => {
+      stateControl.undo();
+      return Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorUndo());
+    },
+    redo: () => {
+      stateControl.redo();
+      return Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorRedo());
+    },
     getContent: () => envelopeServer.envelopeApi.requests.receive_contentRequest().then(c => c.content),
     getPreview: () => envelopeServer.envelopeApi.requests.receive_previewRequest(),
     setContent: async (content: string) =>
