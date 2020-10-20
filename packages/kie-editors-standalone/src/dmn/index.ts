@@ -20,7 +20,7 @@ import { KogitoEditorChannelApi, KogitoEditorEnvelopeApi } from "@kogito-tooling
 import { KogitoEditorChannelApiImpl } from "../envelope/KogitoEditorChannelApiImpl";
 import { StateControl } from "@kogito-tooling/editor/dist/channel";
 import { ContentType } from "@kogito-tooling/channel-common-api/dist";
-import { createEditor, Editor } from "../common/Editor";
+import { createEditor, Editor, StandaloneEditorApi } from "../common/Editor";
 
 declare global {
   interface Window {
@@ -55,9 +55,12 @@ export function open(args: {
   readOnly?: boolean;
   origin?: string;
   resources?: Map<string, { contentType: ContentType; content: Promise<string> }>;
-}) {
+}): StandaloneEditorApi {
   const iframe = document.createElement("iframe");
   iframe.srcdoc = bpmnEnvelopeIndex;
+  iframe.style.width = "100%";
+  iframe.style.height = "100%";
+  iframe.style.border = "none";
 
   const envelopeServer = createEnvelopeServer(iframe, args.readOnly, args.origin);
 

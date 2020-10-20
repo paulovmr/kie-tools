@@ -8,6 +8,7 @@
             padding: 0;
             overflow: hidden;
             height: 100%;
+            width: 100%;
         }
         .panel-heading.uf-listbar-panel-header span {
             color: white !important;

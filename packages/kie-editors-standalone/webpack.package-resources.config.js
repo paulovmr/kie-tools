@@ -19,15 +19,21 @@ const common = require("../../webpack.common.config");
 const path = require("path");
 
 module.exports = merge(common, {
+  output: {
+    path: path.join(__dirname, "dist"),
+    filename: "[name]/index.js",
+    library: ["[name]", "Editor"],
+    libraryTarget: 'umd',
+  },
   entry: {
-    "dmn/index": "./src/dmn/index.ts",
-    "bpmn/index": "./src/bpmn/index.ts"
+    "dmn": "./src/dmn/index.ts",
+    "bpmn": "./src/bpmn/index.ts"
   },
   devServer: {
     historyApiFallback: false,
     disableHostCheck: true,
     watchContentBase: true,
-    contentBase: [path.join(__dirname, "./dist"), path.join(__dirname, "./static")],
+    contentBase: [path.join(__dirname, "./dist")],
     compress: true,
     port: 9001
   }

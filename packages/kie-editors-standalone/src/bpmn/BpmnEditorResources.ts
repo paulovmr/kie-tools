@@ -66,7 +66,6 @@ export class BpmnEditorResources extends BaseEditorResources {
       { path: `${resourcesPathPrefix}/${gwtModuleName}/bootstrap-select/css/bootstrap-select.min.css` },
       { path: `${resourcesPathPrefix}/${gwtModuleName}/prettify/bin/prettify.min.css` },
       { path: `${resourcesPathPrefix}/${gwtModuleName}/uberfire-patternfly.css` },
-      { path: `${resourcesPathPrefix}/${gwtModuleName}/monaco-editor/dev/vs/editor/editor.main.css` },
       { path: `${resourcesPathPrefix}/${gwtModuleName}/css/patternfly-additions.min.css` },
       { path: `${resourcesPathPrefix}/${gwtModuleName}/css/bootstrap-datepicker3-1.6.4.min.cache.css` },
       { path: `${resourcesPathPrefix}/${gwtModuleName}/css/animate-3.5.2.min.cache.css` },
@@ -81,14 +80,6 @@ export class BpmnEditorResources extends BaseEditorResources {
 
   public getFontResources(resourcesPathPrefix: string, gwtModuleName: string) {
     return [
-      {
-        family: "codicon",
-        sources: [
-          this.createFontSource(
-            `${resourcesPathPrefix}/${gwtModuleName}/monaco-editor/dev/vs/base/browser/ui/codiconLabel/codicon/codicon.ttf`
-          )
-        ]
-      },
       {
         family: "FontAwesome",
         additionalStyle: "font-weight:normal;font-style:normal;",

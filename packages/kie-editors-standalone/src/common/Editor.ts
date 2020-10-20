@@ -19,6 +19,13 @@ import { EditorApi, KogitoEditorChannelApi, KogitoEditorEnvelopeApi } from "@kog
 import { StateControl } from "@kogito-tooling/editor/dist/channel";
 import { MessageBusClientApi } from "@kogito-tooling/envelope-bus/dist/api";
 import { EnvelopeServer } from "@kogito-tooling/envelope-bus/dist/channel";
+import { Rect } from "@kogito-tooling/guided-tour/dist/api";
+
+export interface StandaloneEditorApi extends EditorApi {
+  stateControl: StateControl;
+  envelopeApi: MessageBusClientApi<KogitoEditorEnvelopeApi>;
+  close: () => void;
+}
 
 export interface Editor {
   open: (args: {
@@ -27,11 +34,7 @@ export interface Editor {
     readOnly: boolean;
     origin?: string;
     resources?: Map<string, { contentType: ContentType; content: Promise<string> }>;
-  }) => EditorApi & {
-    stateControl: StateControl;
-    envelopeApi: MessageBusClientApi<KogitoEditorEnvelopeApi>;
-    close: () => void;
-  };
+  }) => StandaloneEditorApi;
 }
 
 export const createEditor = (
@@ -41,7 +44,7 @@ export const createEditor = (
   iframe: HTMLIFrameElement
 ) => {
   return {
-    getElementPosition: (selector: string) =>
+    getElementPosition: (selector: string): Promise<Rect> =>
       envelopeServer.envelopeApi.requests.receive_guidedTourElementPositionRequest(selector),
     undo: () => Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorUndo()),
     redo: () => Promise.resolve(envelopeServer.envelopeApi.notifications.receive_editorRedo()),
