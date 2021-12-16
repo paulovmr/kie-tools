@@ -26,9 +26,9 @@ import { Notification } from "@kie-tooling-core/notifications/dist/api";
 import { Specification } from "@severlessworkflow/sdk-typescript";
 import { MermaidDiagram } from "../diagram";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
-import * as monaco from "@kie-tooling-core/monaco-editor";
 import svgPanZoom from "svg-pan-zoom";
 import mermaid from "mermaid";
+import { MonacoEditor, MonacoEditorRef } from "../monaco/MonacoEditor";
 
 interface Props {
   /**
@@ -66,7 +66,7 @@ const RefForwardingServerlessWorkflowEditor: React.ForwardRefRenderFunction<
   const [content, setContent] = useState("");
   const [diagramOutOfSync, setDiagramOutOfSync] = useState(false);
   const svgContainer = useRef<HTMLDivElement>(null);
-  const editorContainer = useRef<HTMLDivElement>(null);
+  const monacoEditorRef = useRef<MonacoEditorRef>(null);
 
   useImperativeHandle(
     forwardedRef,
@@ -86,12 +86,10 @@ const RefForwardingServerlessWorkflowEditor: React.ForwardRefRenderFunction<
           return content;
         },
         undo: (): Promise<void> => {
-          // Monaco undo is bugged
-          return Promise.resolve();
+          return monacoEditorRef.current?.undo() || Promise.resolve();
         },
         redo: (): Promise<void> => {
-          // Monaco redo is bugged
-          return Promise.resolve();
+          return monacoEditorRef.current?.redo() || Promise.resolve();
         },
         validate: (): Notification[] => {
           return [];
@@ -102,24 +100,7 @@ const RefForwardingServerlessWorkflowEditor: React.ForwardRefRenderFunction<
   );
 
   useEffect(() => {
-    const monacoInstance = monaco.editor.create(editorContainer.current!, {
-      value: originalContent,
-      language: "json",
-      scrollBeyondLastLine: false,
-      automaticLayout: true,
-    });
-
-    monacoInstance.getModel()?.onDidChangeContent((event: monaco.editor.IModelContentChangedEvent) => {
-      setContent(monacoInstance.getValue());
-    });
-
-    monacoInstance?.getModel()?.setValue(originalContent);
-
     props.ready();
-
-    return () => {
-      monacoInstance.dispose();
-    };
   }, [originalContent, props]);
 
   useEffect(() => {
@@ -156,7 +137,7 @@ const RefForwardingServerlessWorkflowEditor: React.ForwardRefRenderFunction<
     <Drawer isExpanded={true} isInline style={{ height: "100vh" }}>
       <DrawerContent panelContent={panelContent}>
         <DrawerContentBody>
-          <div style={{ height: "100%" }} ref={editorContainer} />
+          <MonacoEditor content={originalContent} onContentChange={setContent} ref={monacoEditorRef} />
         </DrawerContentBody>
       </DrawerContent>
     </Drawer>
