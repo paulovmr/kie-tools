@@ -15,30 +15,71 @@
  */
 
 import * as monaco from "monaco-editor";
+import { editor } from "monaco-editor";
 
+// Setting up the JSON language defaults
 export const SW_SPEC_SCHEMA =
   "https://raw.githubusercontent.com/serverlessworkflow/specification/0.6.x/schema/workflow.json";
 const SW_SCHEMA_URI = monaco.Uri.parse(SW_SPEC_SCHEMA);
 
-export function buildEditor(container: HTMLDivElement, content: string = "{}"): monaco.editor.IStandaloneCodeEditor {
-  monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-    validate: true,
-    allowComments: false,
-    schemas: [
-      {
-        uri: SW_SPEC_SCHEMA,
-        fileMatch: [SW_SCHEMA_URI.toString()],
-      },
-    ],
-    enableSchemaRequest: true,
-  });
+monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+  validate: true,
+  allowComments: false,
+  schemas: [
+    {
+      uri: SW_SPEC_SCHEMA,
+      fileMatch: ["*"],
+    },
+  ],
+  enableSchemaRequest: true,
+});
 
-  const model = monaco.editor.createModel(content, "json", SW_SCHEMA_URI);
+export interface IMonacoEditor {
+  show: (container: HTMLDivElement) => void;
+  dispose: () => void;
 
-  return monaco.editor.create(container, {
-    model: model,
-    language: "json",
-    scrollBeyondLastLine: false,
-    automaticLayout: true,
-  });
+  undo: () => void;
+  redo: () => void;
+}
+
+class DefaultMonacoEditor implements IMonacoEditor {
+  private readonly model: editor.ITextModel;
+  private readonly onContentChange: (content: string) => void;
+
+  private editor: editor.IStandaloneCodeEditor;
+
+  constructor(content: string, onContentChange: (content: string) => void) {
+    this.model = editor.createModel(content, "json");
+    this.model.onDidChangeContent((event) => onContentChange(this.model.getValue()));
+  }
+
+  redo(): void {
+    this.editor?.trigger("whatever...", "redo", null);
+  }
+
+  undo(): void {
+    this.editor?.trigger("whatever...", "undo", null);
+  }
+
+  show(container: HTMLDivElement): void {
+    if (!container) {
+      throw new Error("We need a container to show the editor!");
+    }
+
+    this.editor = editor.create(container, {
+      model: this.model,
+      language: "json",
+      scrollBeyondLastLine: false,
+      automaticLayout: true,
+    });
+  }
+
+  dispose(): void {
+    this.model?.dispose();
+    this.editor?.dispose();
+  }
+}
+
+export function buildEditor(content: string = "{}", onContentChange: (content: string) => void): IMonacoEditor {
+  return new DefaultMonacoEditor(content, onContentChange);
 }

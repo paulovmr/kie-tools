@@ -15,9 +15,8 @@
  */
 
 import * as React from "react";
-import { useEffect, useImperativeHandle, useRef, useState } from "react";
-import * as monaco from "monaco-editor";
-import { buildEditor } from "./augmentation";
+import { useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { buildEditor, IMonacoEditor } from "./augmentation";
 
 interface Props {
   content: string;
@@ -26,7 +25,6 @@ interface Props {
 
 export interface MonacoEditorRef {
   undo(): Promise<void>;
-
   redo(): Promise<void>;
 }
 
@@ -34,47 +32,39 @@ const RefForwardingMonacoEditor: React.ForwardRefRenderFunction<MonacoEditorRef 
   { content = "{}", onContentChange },
   forwardedRef
 ) => {
-  const [monacoInstance, setMonacoInstance] = useState<monaco.editor.IStandaloneCodeEditor>();
   const editorContainer = useRef<HTMLDivElement>(null);
+  const monacoInstance: IMonacoEditor = useMemo<IMonacoEditor>(() => {
+    return buildEditor(content === "" ? "{}" : content, onContentChange);
+  }, [content]);
+
+  useEffect(() => {
+    if (editorContainer.current) {
+      monacoInstance.show(editorContainer.current);
+    }
+
+    return () => {
+      if (monacoInstance) {
+        monacoInstance.dispose();
+      }
+    };
+  }, [content]);
 
   useImperativeHandle(
     forwardedRef,
     () => {
       return {
         redo: () => {
-          monacoInstance?.trigger("whatever...", "redo", null);
+          monacoInstance.redo();
           return Promise.resolve();
         },
         undo: () => {
-          monacoInstance?.trigger("whatever...", "undo", null);
+          monacoInstance.undo();
           return Promise.resolve();
         },
       };
     },
     [monacoInstance]
   );
-
-  useEffect(() => {
-    if (!content || content === "") {
-      return;
-    }
-
-    const instance = buildEditor(editorContainer.current!, content);
-
-    instance.getModel()?.onDidChangeContent((event: monaco.editor.IModelContentChangedEvent) => {
-      onContentChange(instance.getValue());
-    });
-
-    setMonacoInstance(instance);
-
-    return () => {
-      instance.dispose();
-    };
-  }, [content]);
-
-  if (!content) {
-    return <div />;
-  }
 
   return <div style={{ height: "100%" }} ref={editorContainer} />;
 };

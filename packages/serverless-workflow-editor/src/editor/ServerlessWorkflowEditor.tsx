@@ -62,9 +62,9 @@ const RefForwardingServerlessWorkflowEditor: React.ForwardRefRenderFunction<
   ServerlessWorkflowEditorRef | undefined,
   Props
 > = (props, forwardedRef) => {
-  const [originalContent, setOriginalContent] = useState("");
-  const [content, setContent] = useState("");
-  const [diagramOutOfSync, setDiagramOutOfSync] = useState(false);
+  const [originalContent, setOriginalContent] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [diagramOutOfSync, setDiagramOutOfSync] = useState<boolean>(false);
   const svgContainer = useRef<HTMLDivElement>(null);
   const monacoEditorRef = useRef<MonacoEditorRef>(null);
 
