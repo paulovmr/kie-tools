@@ -188,9 +188,7 @@ export function NewFileDropdownMenu(props: {
         })
       );
 
-      const fileToGoTo = uploadedFiles
-        .filter((file) => [...editorEnvelopeLocator.mapping.keys()].includes(file.extension))
-        .pop();
+      const fileToGoTo = uploadedFiles.filter((file) => editorEnvelopeLocator.hasMappingFor(file.relativePath)).pop();
 
       await props.onAddFile(fileToGoTo);
       successfullyUploadedAlert.show({ qtt: uploadedFiles.length });
@@ -248,11 +246,11 @@ export function NewFileDropdownMenu(props: {
           <MenuGroup label={" "}>
             <MenuItem
               itemId={"newServerlessWorkflowItemId"}
-              onClick={() => addEmptyFile("json")}
+              onClick={() => addEmptyFile("sw.json")}
               description="Serverless Workflow files are used to generate vendor-neutral and declarative workflow definitions"
             >
               <b>
-                <FileLabel style={{ marginBottom: "4px" }} extension={"json"} />
+                <FileLabel style={{ marginBottom: "4px" }} extension={"sw.json"} />
               </b>
             </MenuItem>
           </MenuGroup>
@@ -293,24 +291,24 @@ export function NewFileDropdownMenu(props: {
                   </Flex>
                 </MenuItem>
                 <MenuItem
-                  onClick={() => addSample("json")}
+                  onClick={() => addSample("sw.json")}
                   description="Serverless Workflow files are used to generate vendor-neutral and declarative workflow definitions."
                 >
                   <Flex>
                     <FlexItem>Sample</FlexItem>
                     <FlexItem>
-                      <FileLabel extension={"json"} />
+                      <FileLabel extension={"sw.json"} />
                     </FlexItem>
                   </Flex>
                 </MenuItem>
                 <MenuItem
-                  onClick={() => addSample("yml")}
+                  onClick={() => addSample("sw.yaml")}
                   description="Serverless Workflow files are used to generate vendor-neutral and declarative workflow definitions."
                 >
                   <Flex>
                     <FlexItem>Sample</FlexItem>
                     <FlexItem>
-                      <FileLabel extension={"yml"} />
+                      <FileLabel extension={"sw.yaml"} />
                     </FlexItem>
                   </Flex>
                 </MenuItem>

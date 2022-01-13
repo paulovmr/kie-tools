@@ -165,14 +165,14 @@ export function HomePage() {
                 />
                 <NewModelCard
                   title={"Serverless Workflow"}
-                  extension={"json"}
+                  extension={"sw.json"}
                   description={
                     "Serverless Workflow files are used to generate vendor-neutral and declarative workflow definitions."
                   }
                 />
                 <NewModelCard
                   title={"Serverless Workflow"}
-                  extension={"yml"}
+                  extension={"sw.yaml"}
                   description={
                     "Serverless Workflow files are used to generate vendor-neutral and declarative workflow definitions."
                   }
@@ -322,11 +322,7 @@ export function WorkspaceCard(props: { workspaceId: string; isSelected: boolean;
   const workspacePromise = useWorkspacePromise(props.workspaceId);
 
   const editableFiles = useMemo(() => {
-    return (
-      workspacePromise.data?.files.filter((file) =>
-        [...editorEnvelopeLocator.mapping.keys()].includes(file.extension)
-      ) ?? []
-    );
+    return workspacePromise.data?.files.filter((file) => editorEnvelopeLocator.hasMappingFor(file.relativePath)) ?? [];
   }, [editorEnvelopeLocator, workspacePromise.data?.files]);
 
   const workspaceName = useMemo(() => {
@@ -538,16 +534,16 @@ export function WorkspacesListDrawerPanelContent(props: { workspaceId: string | 
     () =>
       (workspacePromise.data?.files ?? [])
         .sort((a, b) => a.relativePath.localeCompare(b.relativePath))
-        .filter((file) => ![...editorEnvelopeLocator.mapping.keys()].includes(file.extension)),
-    [editorEnvelopeLocator.mapping, workspacePromise.data?.files]
+        .filter((file) => !editorEnvelopeLocator.hasMappingFor(file.relativePath)),
+    [editorEnvelopeLocator, workspacePromise.data?.files]
   );
 
   const models = useMemo(
     () =>
       (workspacePromise.data?.files ?? [])
         .sort((a, b) => a.relativePath.localeCompare(b.relativePath))
-        .filter((file) => [...editorEnvelopeLocator.mapping.keys()].includes(file.extension)),
-    [editorEnvelopeLocator.mapping, workspacePromise.data?.files]
+        .filter((file) => editorEnvelopeLocator.hasMappingFor(file.relativePath)),
+    [editorEnvelopeLocator, workspacePromise.data?.files]
   );
 
   const [isNewFileDropdownMenuOpen, setNewFileDropdownMenuOpen] = useState(false);

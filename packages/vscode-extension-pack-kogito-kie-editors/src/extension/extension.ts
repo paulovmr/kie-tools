@@ -95,6 +95,13 @@ export async function activate(context: vscode.ExtensionContext) {
           },
         ],
         [
+          "sw.yaml",
+          {
+            resourcesPathPrefix: "dist/webview/editors/serverless-workflow",
+            envelopePath: "dist/webview/ServerlessWorkflowEditorEnvelopeApp.js",
+          },
+        ],
+        [
           "sw.yml",
           {
             resourcesPathPrefix: "dist/webview/editors/serverless-workflow",
