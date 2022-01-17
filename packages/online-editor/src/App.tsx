@@ -56,11 +56,7 @@ function RoutesSwitch() {
   const routes = useRoutes();
   const editorEnvelopeLocator = useEditorEnvelopeLocator();
 
-  const supportedExtensions = useMemo(
-    // TODO temporary, change logic to not need that, rely on editorEnvelopeLocator
-    () => "bpmn|bpmn2|dmn|pmml|sw.json|sw.yaml|sw.yml",
-    [editorEnvelopeLocator]
-  );
+  const supportedExtensions = useMemo(() => "bpmn|bpmn2|dmn|pmml|sw.json|sw.yaml|sw.yml", [editorEnvelopeLocator]);
 
   return (
     <Switch>

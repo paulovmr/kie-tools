@@ -54,8 +54,8 @@ export function renderSingleEditorReadonlyApp(args: Globals & { fileInfo: FileIn
     return;
   }
 
-  if (!args.editorEnvelopeLocator.hasMappingFor(openFileExtension)) {
-    args.logger.log(`No enhanced editor available for "${openFileExtension}" format.`);
+  if (!args.editorEnvelopeLocator.hasMappingFor(openFilePath)) {
+    args.logger.log(`No enhanced editor available for "${openFilePath}" format.`);
     return;
   }
 

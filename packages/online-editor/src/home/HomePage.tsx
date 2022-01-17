@@ -163,20 +163,6 @@ export function HomePage() {
                   extension={"pmml"}
                   description={"PMML files are used to generate scorecards"}
                 />
-                <NewModelCard
-                  title={"Serverless Workflow"}
-                  extension={"sw.json"}
-                  description={
-                    "Serverless Workflow files are used to generate vendor-neutral and declarative workflow definitions."
-                  }
-                />
-                <NewModelCard
-                  title={"Serverless Workflow"}
-                  extension={"sw.yaml"}
-                  description={
-                    "Serverless Workflow files are used to generate vendor-neutral and declarative workflow definitions."
-                  }
-                />
               </Gallery>
             </PageSection>
           </SplitItem>

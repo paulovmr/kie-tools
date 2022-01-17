@@ -55,11 +55,6 @@ export async function activate(context: vscode.ExtensionContext) {
       new EnvelopeMapping("**/*.dmn", "dist/webview/editors/dmn", "dist/webview/DmnEditorEnvelopeApp.js"),
       new EnvelopeMapping("**/*.scesim", "dist/webview/editors/scesim", "dist/webview/SceSimEditorEnvelopeApp.js"),
       new EnvelopeMapping("**/*.pmml", "dist/webview/editors/pmml", "dist/webview/PMMLEditorEnvelopeApp.js"),
-      new EnvelopeMapping(
-        "**/*.sw.+(json|yml|yaml)",
-        "dist/webview/editors/serverless-workflow",
-        "dist/webview/ServerlessWorkflowEditorEnvelopeApp.js"
-      ),
     ]),
     backendProxy: backendProxy,
   });

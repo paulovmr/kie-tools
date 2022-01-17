@@ -100,7 +100,6 @@ module.exports = async (env, argv) => {
             to: "./gwt-editors/bpmn",
             globOptions: { ignore: ["WEB-INF/**/*"] },
           },
-          { from: "./static/envelope/serverless-workflow-envelope.html", to: "./serverless-workflow-envelope.html" },
           { from: "./static/envelope/pmml-envelope.html", to: "./pmml-envelope.html" },
           { from: "./static/envelope/bpmn-envelope.html", to: "./bpmn-envelope.html" },
           { from: "./static/envelope/dmn-envelope.html", to: "./dmn-envelope.html" },
