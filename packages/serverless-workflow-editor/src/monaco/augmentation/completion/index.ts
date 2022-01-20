@@ -81,11 +81,7 @@ export function initCompletion(augmentation: MonacoAugmentation): void {
       token: CancellationToken
     ): languages.ProviderResult<languages.CompletionList> {
       if (augmentation.language.languageId === "yaml") {
-<<<<<<< HEAD
-        return null;
-=======
         return getYAMLSuggestions(model, position, context, token);
->>>>>>> serverless-workflow-editor-experiments
       }
 
       return getSuggestions({

@@ -76,8 +76,6 @@ export function initYAMLLanguage(): MonacoLanguage {
     },
   };
 }
-<<<<<<< HEAD
-=======
 
 export function getYAMLSuggestions(
   model: editor.ITextModel,
@@ -102,4 +100,3 @@ export function getYAMLSuggestions(
 
   return null;
 }
->>>>>>> serverless-workflow-editor-experiments

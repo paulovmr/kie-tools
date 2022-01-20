@@ -58,11 +58,7 @@ export class DefaultMonacoEditor implements MonacoEditorApi {
       automaticLayout: true,
     });
 
-<<<<<<< HEAD
-    // this.editor.onMouseDown((event) => showWidget(event, this.editor));
-=======
     this.editor.onMouseDown((event) => showWidget(event, this.editor));
->>>>>>> serverless-workflow-editor-experiments
   }
 
   dispose(): void {
