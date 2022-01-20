@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import { MonacoLanguage } from "./language";
+import { lookupLanguage, MonacoLanguage } from "./language";
+import { DefaultMonacoEditor, MonacoEditorApi } from "./MonacoEditorApi";
+import { initCompletion } from "./completion";
 
 export class MonacoAugmentation {
   language: MonacoLanguage;

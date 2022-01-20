@@ -15,6 +15,7 @@
  */
 
 import { editor } from "monaco-editor";
+import { showWidget } from "./widgets";
 import { MonacoAugmentation } from "./MonacoAugmentation";
 
 export interface MonacoEditorApi {
@@ -57,7 +58,11 @@ export class DefaultMonacoEditor implements MonacoEditorApi {
       automaticLayout: true,
     });
 
+<<<<<<< HEAD
     // this.editor.onMouseDown((event) => showWidget(event, this.editor));
+=======
+    this.editor.onMouseDown((event) => showWidget(event, this.editor));
+>>>>>>> serverless-workflow-editor-experiments
   }
 
   dispose(): void {

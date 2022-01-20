@@ -16,6 +16,10 @@
 
 import { MonacoLanguage } from "../MonacoLanguage";
 import { setDiagnosticsOptions } from "monaco-yaml";
+import { CancellationToken, editor, languages, Position } from "monaco-editor";
+import * as yamlParser from "yaml-language-server/lib/esm/languageservice/parser/yamlParser07";
+import * as yaml from "yaml-language-server/lib/esm/languageservice/yamlLanguageService";
+import { TextDocument } from "vscode-languageserver-types";
 import {
   SW_SPEC_COMMON_SCHEMA,
   SW_SPEC_EVENTS_SCHEMA,
@@ -72,3 +76,30 @@ export function initYAMLLanguage(): MonacoLanguage {
     },
   };
 }
+<<<<<<< HEAD
+=======
+
+export function getYAMLSuggestions(
+  model: editor.ITextModel,
+  position: Position,
+  context: languages.CompletionContext,
+  token: CancellationToken
+) {
+  const doc = TextDocument.create("", "yaml", model.getVersionId(), model.getValue());
+  //yaml.getLanguageService()
+  const offset = doc.offsetAt({
+    line: position.lineNumber - 1,
+    character: position.column,
+  });
+
+  const yamlDocs = yamlParser.parse(model.getValue());
+
+  const yamlDoc = yamlDocs.documents[0];
+
+  const node = yamlDoc.getNodeFromOffset(offset, true);
+
+  console.log(node);
+
+  return null;
+}
+>>>>>>> serverless-workflow-editor-experiments
