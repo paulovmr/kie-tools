@@ -90,8 +90,17 @@ module.exports = (env) =>
     },
     devServer: {
       historyApiFallback: true,
-      static: [{ directory: path.join(__dirname) }],
+      allowedHosts: "all",
+      static: {
+        directory: path.join(__dirname),
+        watch: true,
+      },
       compress: true,
       port: buildEnv.serverlessWorkflowEditor.dev.port,
+      open: false,
+      hot: true,
+      client: {
+        overlay: true,
+      },
     },
   });
