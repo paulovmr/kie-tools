@@ -4427,8 +4427,8 @@ importers:
       "@types/react-dom": ^17.0.5
       "@types/react-router-dom": ^5.1.7
       "@types/underscore": ^1.11.2
-      copy-webpack-plugin: ^8.1.1
-      cypress: ^10.7.0
+      copy-webpack-plugin: ^11.0.0
+      cypress: ^11.0.1
       cypress-file-upload: ^5.0.8
       cypress-iframe: ^1.0.1
       cypress-log-to-output: ^1.1.2
@@ -4454,9 +4454,9 @@ importers:
       vscode-languageserver-textdocument: ^1.0.4
       vscode-languageserver-types: ^3.16.0
       webpack: ^5.36.2
-      webpack-cli: ^4.7.0
+      webpack-cli: ^4.10.0
       webpack-dev-server: ^4.7.3
-      webpack-merge: ^5.7.3
+      webpack-merge: ^5.8.0
       yaml-language-server-parser: ^0.1.3
     devDependencies:
       "@kie-tools-core/editor": link:../editor
@@ -4487,9 +4487,9 @@ importers:
       "@types/react-dom": 17.0.8
       "@types/react-router-dom": 5.1.7
       "@types/underscore": 1.11.2
-      copy-webpack-plugin: 8.1.1_webpack@5.70.0
-      cypress: 10.7.0
-      cypress-file-upload: 5.0.8_cypress@10.7.0
+      copy-webpack-plugin: 11.0.0_webpack@5.70.0
+      cypress: 11.0.1
+      cypress-file-upload: 5.0.8_cypress@11.0.1
       cypress-iframe: 1.0.1
       cypress-log-to-output: 1.1.2
       html-webpack-plugin: 5.3.2_webpack@5.70.0
@@ -18219,13 +18219,6 @@ packages:
     dependencies:
       debug: 4.3.1
 
-  /for-each/0.3.3:
-    resolution:
-      { integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw== }
-    dependencies:
-      is-callable: 1.2.7
-    dev: true
-
   /for-in/1.0.2:
     resolution:
       { integrity: sha512-7EwmXrOjyL+ChxMhmG5lnW9MPt1aIeZEwKhQzoBUdTV0N3zuwWDZYVJatDvZ2OyzPUvdIAZDsCetk3coyMfcnQ== }
@@ -21057,7 +21050,6 @@ packages:
       { integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg== }
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /jsonfile/6.1.0:
     resolution:
@@ -24996,17 +24988,6 @@ packages:
       http-errors: 1.8.1
       iconv-lite: 0.4.24
       unpipe: 1.0.0
-    dev: true
-
-  /raw-loader/4.0.2:
-    resolution:
-      { integrity: sha512-ZnScIV3ag9A4wPX/ZayxL/jZH+euYb6FcUinPcgiQW0+UBtEv0O6Q3lGd3cqJ+GHH+rksEv3Pj99oxJ3u3VIKA== }
-    engines: { node: ">= 10.13.0" }
-    peerDependencies:
-      webpack: ^4.0.0 || ^5.0.0
-    dependencies:
-      loader-utils: 2.0.2
-      schema-utils: 3.1.1
     dev: true
 
   /raw-loader/4.0.2_webpack@5.70.0:
