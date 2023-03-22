@@ -61,7 +61,7 @@ export class DummyEditor implements Editor {
     return Promise.resolve();
   }
 
-  public selectStateByName(_name: string): Promise<void> {
+  public selectStateByName(_name: string | null): Promise<void> {
     return Promise.resolve();
   }
 }

@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.core.JsRegExp;
 import elemental2.core.RegExpResult;
 import elemental2.promise.Promise;
+import org.appformer.kogito.bridge.client.diagramApi.DiagramApi;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -152,6 +153,9 @@ public class DiagramEditorTest {
     @Mock
     private SWDomainInitializer domainInitializer;
 
+    @Mock
+    private DiagramApi diagramApi;
+
     private DiagramEditor tested;
     private Promises promises;
     private DiagramImpl diagram;
@@ -225,7 +229,8 @@ public class DiagramEditorTest {
                                        diagramServices,
                                        incrementalMarshaller,
                                        canvasFileExport,
-                                       togglePreviewEvent));
+                                       togglePreviewEvent,
+                                       diagramApi));
         tested.jsRegExp = jsRegExp;
         tested.domainInitializer = domainInitializer;
         when(tested.getJsCanvas()).thenReturn(jsCanvas);
