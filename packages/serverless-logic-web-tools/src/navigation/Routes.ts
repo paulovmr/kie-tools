@@ -139,6 +139,7 @@ export const routes = {
 
   recentModels: new Route<{}>(() => `/recent-models`),
   sampleCatalog: new Route<{}>(() => `/sample-catalog`),
+  runtimeToolsWorkflows: new Route<{}>(() => `/runtime-tools/workflows`),
 
   settings: {
     home: new Route<{}>(() => SETTINGS_ROUTE),
@@ -147,6 +148,7 @@ export const routes = {
     service_account: new Route<{}>(() => `${SETTINGS_ROUTE}/service-account`),
     service_registry: new Route<{}>(() => `${SETTINGS_ROUTE}/service-registry`),
     storage: new Route<{}>(() => `${SETTINGS_ROUTE}/storage`),
+    runtime_tools: new Route<{}>(() => `${SETTINGS_ROUTE}/runtime-tools`),
   },
 
   static: {
