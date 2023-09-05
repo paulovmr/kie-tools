@@ -31,6 +31,7 @@ import { EditorPage } from "../../editor/EditorPage";
 import { NoMatchPage } from "../../navigation/NoMatchPage";
 import { SamplesCatalog } from "../../samples/SamplesCatalog";
 import { WorkspaceFiles } from "../recentModels/workspaceFiles/WorkspaceFiles";
+import { RuntimeToolsWorkflows } from "../../runtimeTools/workflows/RuntimeToolsWorkflows";
 
 export function HomePageRoutes(props: { isNavOpen: boolean }) {
   const routes = useRoutes();
@@ -73,6 +74,9 @@ export function HomePageRoutes(props: { isNavOpen: boolean }) {
       </Route>
       <Route path={routes.sampleCatalog.path({})}>
         <SamplesCatalog />
+      </Route>
+      <Route path={routes.runtimeToolsWorkflows.path({})}>
+        <RuntimeToolsWorkflows />
       </Route>
       <Route component={NoMatchPage} />
     </Switch>
