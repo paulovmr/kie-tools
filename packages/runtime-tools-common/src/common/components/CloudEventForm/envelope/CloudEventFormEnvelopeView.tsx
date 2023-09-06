@@ -23,7 +23,6 @@ import { componentOuiaProps, OUIAProps } from "../../../ouiaTools";
 import { KogitoSpinner } from "../../KogitoSpinner";
 import { MessageBusClientApi } from "@kie-tools-core/envelope-bus/dist/api";
 import { CloudEventFormChannelApi, CloudEventFormDefaultValues, CloudEventFormInitArgs } from "../api";
-import "@patternfly/patternfly/patternfly.css";
 import CloudEventForm from "./components/CloudEventForm/CloudEventForm";
 import { CloudEventFormEnvelopeViewDriver } from "./CloudEventFormEnvelopeViewDriver";
 

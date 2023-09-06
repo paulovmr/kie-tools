@@ -33,7 +33,6 @@ import { Button } from "@patternfly/react-core/dist/js/components/Button";
 import { Form, FormGroup } from "@patternfly/react-core/dist/js/components/Form";
 import { InputGroup } from "@patternfly/react-core/dist/js/components/InputGroup";
 import { ValidatedOptions } from "@patternfly/react-core/dist/js/helpers";
-import { CodeEditor, Language } from "@patternfly/react-code-editor/dist/js/components/CodeEditor";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 import { FormValidations, validateCloudEventRequest } from "./validateCloudEventRequest";
 import CloudEventCustomHeadersEditor, {
@@ -275,18 +274,7 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
             />
           }
         >
-          <CodeEditor
-            isDarkTheme={false}
-            isLineNumbersVisible={true}
-            isReadOnly={false}
-            isCopyEnabled={false}
-            isMinimapVisible={true}
-            isLanguageLabelVisible={false}
-            code={eventData}
-            language={Language.json}
-            height="300px"
-            onChange={setEventData}
-          />
+          <textarea value={eventData} onChange={() => setEventData} />
         </FormGroup>
         <ActionListGroup>
           <Button key={"triggerCloudEventButton"} variant="primary" onClick={doTrigger}>

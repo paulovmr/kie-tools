@@ -33,6 +33,8 @@ import { GlobalAlertsContextProvider } from "./alerts/GlobalAlertsContext";
 import { EditorContextProvider } from "./editor/hooks/EditorContext";
 import { WebToolsWorkspaceContextProvider } from "./workspace/hooks/WebToolsWorkspaceContextProvider";
 import { UpgradeContextProvider } from "./upgrade/UpgradeContext";
+import { WorkflowListContextProvider } from "./runtimeTools/workflows/WorkflowList";
+import { CloudEventFormContextProvider } from "./runtimeTools/workflows/CloudEventForm";
 
 export const App = () => (
   <HashRouter>
@@ -50,7 +52,9 @@ export const App = () => (
       [SampleContextProvider, {}],
       [NavigationContextProvider, {}],
       [EditorContextProvider, {}],
-      [RoutesSwitch, {}]
+      [RoutesSwitch, {}],
+      [WorkflowListContextProvider, {}],
+      [CloudEventFormContextProvider, {}]
     )}
   </HashRouter>
 );
