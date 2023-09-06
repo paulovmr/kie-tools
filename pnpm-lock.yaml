@@ -6188,6 +6188,9 @@ importers:
       "@kie-tools-core/i18n":
         specifier: workspace:*
         version: link:../i18n
+      "@kie-tools-core/monaco-editor":
+        specifier: workspace:*
+        version: link:../monaco-editor
       "@kie-tools-core/notifications":
         specifier: workspace:*
         version: link:../notifications
@@ -6197,9 +6200,6 @@ importers:
       "@kie-tools/i18n-common-dictionary":
         specifier: workspace:*
         version: link:../i18n-common-dictionary
-      "@patternfly/react-code-editor":
-        specifier: 4.82.113
-        version: 4.82.113(react-dom@17.0.2)(react-monaco-editor@0.51.0)(react@17.0.2)
       "@patternfly/react-core":
         specifier: ^4.276.6
         version: 4.276.12(react-dom@17.0.2)(react@17.0.2)
@@ -6327,6 +6327,9 @@ importers:
       "@patternfly/react-table":
         specifier: ^4.112.39
         version: 4.112.39(react-dom@17.0.2)(react@17.0.2)
+      copyfiles:
+        specifier: ^2.4.1
+        version: 2.4.1
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -6733,9 +6736,18 @@ importers:
       "@rhoas/registry-instance-sdk":
         specifier: ^0.34.1
         version: 0.34.1
+      apollo-cache-inmemory:
+        specifier: 1.6.6
+        version: 1.6.6(graphql@14.3.1)
       apollo-client:
         specifier: 2.6.10
         version: 2.6.10(graphql@14.3.1)
+      apollo-link-error:
+        specifier: 1.1.13
+        version: 1.1.13(graphql@14.3.1)
+      apollo-link-http:
+        specifier: 1.5.17
+        version: 1.5.17(graphql@14.3.1)
       axios:
         specifier: ^0.27.2
         version: 0.27.2
@@ -16005,24 +16017,6 @@ packages:
       victory-zoom-container: 36.6.8(react@17.0.2)
     dev: false
 
-  /@patternfly/react-code-editor@4.82.113(react-dom@17.0.2)(react-monaco-editor@0.51.0)(react@17.0.2):
-    resolution:
-      { integrity: sha512-iBwDTuUifwUwwL4wAzpI4KkB5fkCxiPVGlUypWumtNXweVf3x6PWpLCJM2H1rhNUddBRWIj5JOL3DYqPqYpbZg== }
-    peerDependencies:
-      react: ^16.8 || ^17 || ^18
-      react-dom: ^16.8 || ^17 || ^18
-      react-monaco-editor: ^0.51.0
-    dependencies:
-      "@patternfly/react-core": 4.276.12(react-dom@17.0.2)(react@17.0.2)
-      "@patternfly/react-icons": 4.93.7(react-dom@17.0.2)(react@17.0.2)
-      "@patternfly/react-styles": 4.92.8
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
-      react-dropzone: 11.7.1(react@17.0.2)
-      react-monaco-editor: 0.51.0(@types/react@17.0.21)(monaco-editor@0.34.1)(react@17.0.2)
-      tslib: 2.6.2
-    dev: false
-
   /@patternfly/react-core@4.276.12(react-dom@17.0.2)(react@17.0.2):
     resolution:
       { integrity: sha512-bBN2BMFhWjl/27zmTG5z3+6aH7XMO8our9nsaryxuzN5wFn6S8cIDILsw5NY7N8SLOOtmqbFJUgcM5GAn1ZAXg== }
@@ -18151,7 +18145,6 @@ packages:
   /@types/node@18.13.0:
     resolution:
       { integrity: sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg== }
-    dev: true
 
   /@types/normalize-package-data@2.4.0:
     resolution:
@@ -18991,6 +18984,14 @@ packages:
       tslib: 2.6.2
     dev: true
 
+  /@wry/context@0.4.4:
+    resolution:
+      { integrity: sha512-LrKVLove/zw6h2Md/KZyWxIkFM6AoyKp71OqpH9Hiip1csjPVoD3tPxlbQUNxEnHENks3UGgNpSBCAfq9KWuag== }
+    dependencies:
+      "@types/node": 18.13.0
+      tslib: 1.14.1
+    dev: false
+
   /@wry/equality@0.1.11:
     resolution:
       { integrity: sha512-mwEVBDUVODlsQQ5dfuLUS5/Tf7jqUKyhKYHmVi4fPB6bDMOfWvUPJmKgS1Z7Za/sOI3vzWt4+O7yCiL/70MogA== }
@@ -19594,6 +19595,20 @@ packages:
       picomatch: 2.3.1
     dev: true
 
+  /apollo-cache-inmemory@1.6.6(graphql@14.3.1):
+    resolution:
+      { integrity: sha512-L8pToTW/+Xru2FFAhkZ1OA9q4V4nuvfoPecBM34DecAugUZEBhI2Hmpgnzq2hTKZ60LAMrlqiASm0aqAY6F8/A== }
+    peerDependencies:
+      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+    dependencies:
+      apollo-cache: 1.3.5(graphql@14.3.1)
+      apollo-utilities: 1.3.4(graphql@14.3.1)
+      graphql: 14.3.1
+      optimism: 0.10.3
+      ts-invariant: 0.4.4
+      tslib: 1.14.1
+    dev: false
+
   /apollo-cache@1.3.5(graphql@14.3.1):
     resolution:
       { integrity: sha512-1XoDy8kJnyWY/i/+gLTEbYLnoiVtS8y7ikBr/IfmML4Qb+CM7dEEbIUOjnY716WqmZ/UpXIxTfJsY7rMcqiCXA== }
@@ -19619,6 +19634,41 @@ packages:
       ts-invariant: 0.4.4
       tslib: 1.14.1
       zen-observable: 0.8.15
+
+  /apollo-link-error@1.1.13(graphql@14.3.1):
+    resolution:
+      { integrity: sha512-jAZOOahJU6bwSqb2ZyskEK1XdgUY9nkmeclCrW7Gddh1uasHVqmoYc4CKdb0/H0Y1J9lvaXKle2Wsw/Zx1AyUg== }
+    dependencies:
+      apollo-link: 1.2.14(graphql@14.3.1)
+      apollo-link-http-common: 0.2.16(graphql@14.3.1)
+      tslib: 1.14.1
+    transitivePeerDependencies:
+      - graphql
+    dev: false
+
+  /apollo-link-http-common@0.2.16(graphql@14.3.1):
+    resolution:
+      { integrity: sha512-2tIhOIrnaF4UbQHf7kjeQA/EmSorB7+HyJIIrUjJOKBgnXwuexi8aMecRlqTIDWcyVXCeqLhUnztMa6bOH/jTg== }
+    peerDependencies:
+      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+    dependencies:
+      apollo-link: 1.2.14(graphql@14.3.1)
+      graphql: 14.3.1
+      ts-invariant: 0.4.4
+      tslib: 1.14.1
+    dev: false
+
+  /apollo-link-http@1.5.17(graphql@14.3.1):
+    resolution:
+      { integrity: sha512-uWcqAotbwDEU/9+Dm9e1/clO7hTB2kQ/94JYcGouBVLjoKmTeJTUPQKcJGpPwUjZcSqgYicbFqQSoJIW0yrFvg== }
+    peerDependencies:
+      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+    dependencies:
+      apollo-link: 1.2.14(graphql@14.3.1)
+      apollo-link-http-common: 0.2.16(graphql@14.3.1)
+      graphql: 14.3.1
+      tslib: 1.14.1
+    dev: false
 
   /apollo-link@1.2.14(graphql@14.3.1):
     resolution:
@@ -29770,11 +29820,6 @@ packages:
     resolution:
       { integrity: sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw== }
 
-  /monaco-editor@0.34.1:
-    resolution:
-      { integrity: sha512-FKc80TyiMaruhJKKPz5SpJPIjL+dflGvz4CpuThaPMc94AyN7SeC9HQ8hrvaxX7EyHdJcUY5i4D0gNyJj1vSZQ== }
-    dev: false
-
   /monaco-marker-data-provider@1.1.0(monaco-editor@0.33.0):
     resolution:
       { integrity: sha512-g5YH4FLItl3usf0Qxr1Td/vCd4XZmPOFh+dFpo8d+Q5mp8nJZTPFMVA7kwz0vWAy0zBd7bzQYUmfdvHfR1ETBw== }
@@ -30643,6 +30688,13 @@ packages:
   /openapi-types@7.2.3:
     resolution:
       { integrity: sha512-olbaNxz12R27+mTyJ/ZAFEfUruauHH27AkeQHDHRq5AF0LdNkK1SSV7EourXQDK+4aX7dv2HtyirAGK06WMAsA== }
+    dev: false
+
+  /optimism@0.10.3:
+    resolution:
+      { integrity: sha512-9A5pqGoQk49H6Vhjb9kPgAeeECfUDF6aIICbMDL23kDLStBn1MWk3YvcZ4xWF9CsSf6XEgvRLkXy4xof/56vVw== }
+    dependencies:
+      "@wry/context": 0.4.4
     dev: false
 
   /optionator@0.8.3:
@@ -32662,20 +32714,6 @@ packages:
     dependencies:
       "@types/react": 17.0.21
       monaco-editor: 0.33.0
-      prop-types: 15.8.1
-      react: 17.0.2
-    dev: false
-
-  /react-monaco-editor@0.51.0(@types/react@17.0.21)(monaco-editor@0.34.1)(react@17.0.2):
-    resolution:
-      { integrity: sha512-6jx1V8p6gHVKJHFaTvicOtmlhFjOJhekobeNd92ZAo7F5UvAin1cF7bxWLCKgtxClYZ7CB3Ar284Kpbhj22FpQ== }
-    peerDependencies:
-      "@types/react": ">=17 <= 18"
-      monaco-editor: ^0.34.1
-      react: ">=17 <= 18"
-    dependencies:
-      "@types/react": 17.0.21
-      monaco-editor: 0.34.1
       prop-types: 15.8.1
       react: 17.0.2
     dev: false

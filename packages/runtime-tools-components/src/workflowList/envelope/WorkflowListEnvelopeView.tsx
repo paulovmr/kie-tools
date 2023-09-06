@@ -23,7 +23,6 @@ import { MessageBusClientApi } from "@kie-tools-core/envelope-bus/dist/api";
 import { WorkflowListChannelApi, WorkflowListInitArgs } from "../api";
 import WorkflowList from "./components/WorkflowList/WorkflowList";
 import WorkflowListEnvelopeViewDriver from "./WorkflowListEnvelopeViewDriver";
-import "@patternfly/patternfly/patternfly.css";
 
 export interface WorkflowListEnvelopeViewApi {
   initialize: (initialState?: WorkflowListInitArgs) => void;

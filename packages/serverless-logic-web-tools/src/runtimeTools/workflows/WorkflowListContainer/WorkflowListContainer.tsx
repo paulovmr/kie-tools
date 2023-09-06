@@ -66,7 +66,7 @@ const WorkflowListContainer: React.FC<WorkflowListContainerProps & OUIAProps> = 
     <EmbeddedWorkflowList
       {...componentOuiaProps(ouiaId, "workflow-list-container", ouiaSafe)}
       driver={gatewayApi}
-      targetOrigin={"kogitoServiceUrl"} // TODO kogitoServiceUrl
+      targetOrigin={"http://localhost:8080"} // TODO kogitoServiceUrl
       initialState={initialState}
     />
   );

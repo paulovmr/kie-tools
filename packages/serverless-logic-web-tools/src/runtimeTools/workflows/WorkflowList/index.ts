@@ -19,4 +19,4 @@
 
 export { WorkflowListGatewayApi } from "./WorkflowListGatewayApi";
 export * from "./WorkflowListContext";
-export { default as WorkflowListContextProvider } from "./WorkflowListContextProvider";
+export { WorkflowListContextProvider } from "./WorkflowListContextProvider";

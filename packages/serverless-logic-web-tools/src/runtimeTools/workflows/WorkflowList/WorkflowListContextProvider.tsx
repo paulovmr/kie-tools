@@ -19,21 +19,26 @@
 
 import React, { useMemo } from "react";
 import { ApolloClient } from "apollo-client";
-import WorkflowListContext from "./WorkflowListContext";
+import { WorkflowListContext } from "./WorkflowListContext";
 import { WorkflowListGatewayApiImpl } from "./WorkflowListGatewayApi";
 import { GraphQLWorkflowListQueries } from "./WorkflowListQueries";
+import { HttpLink } from "apollo-link-http";
+import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 
-interface WorkflowListContextProviderProps {
-  apolloClient: ApolloClient<any>;
-  children: any;
-}
+export function WorkflowListContextProvider(props: React.PropsWithChildren<{}>) {
+  const httpLink = new HttpLink({
+    uri: "http://localhost:8180", // TODO dataIndexUrl
+  });
+  const cache = new InMemoryCache();
 
-const WorkflowListContextProvider: React.FC<WorkflowListContextProviderProps> = ({ apolloClient, children }) => {
+  const apolloClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+    cache,
+    link: httpLink,
+  });
+
   const gatewayApiImpl = useMemo(() => {
     return new WorkflowListGatewayApiImpl(new GraphQLWorkflowListQueries(apolloClient));
-  }, []);
+  }, [apolloClient]);
 
-  return <WorkflowListContext.Provider value={gatewayApiImpl}>{children}</WorkflowListContext.Provider>;
-};
-
-export default WorkflowListContextProvider;
+  return <WorkflowListContext.Provider value={gatewayApiImpl}>{props.children}</WorkflowListContext.Provider>;
+}

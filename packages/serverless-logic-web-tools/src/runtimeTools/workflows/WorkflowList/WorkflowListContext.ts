@@ -20,9 +20,8 @@
 import React, { useContext } from "react";
 import { WorkflowListGatewayApi } from "./WorkflowListGatewayApi";
 
-const WorkflowListContext = React.createContext<WorkflowListGatewayApi>({} as any);
+export const WorkflowListContext = React.createContext<WorkflowListGatewayApi>({} as any);
 
-export const useWorkflowListGatewayApi = (): WorkflowListGatewayApi =>
-  useContext<WorkflowListGatewayApi>(WorkflowListContext!);
-
-export default WorkflowListContext;
+export function useWorkflowListGatewayApi() {
+  return useContext(WorkflowListContext);
+}
