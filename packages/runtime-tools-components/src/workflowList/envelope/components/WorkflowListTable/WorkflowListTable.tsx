@@ -105,14 +105,14 @@ const WorkflowListTable: React.FC<WorkflowListTableProps & OUIAProps> = ({
       await driver.handleWorkflowSkip(workflowInstance);
       onShowMessage(
         "Skip operation",
-        `The workflows ${workflowInstance.workflowName} was successfully skipped.`,
+        `The workflows ${workflowInstance.processName} was successfully skipped.`,
         TitleType.SUCCESS,
         workflowInstance
       );
     } catch (error) {
       onShowMessage(
         "Skip operation",
-        `The workflow ${workflowInstance.workflowName} failed to skip. Message: ${error.message}`,
+        `The workflow ${workflowInstance.processName} failed to skip. Message: ${error.message}`,
         TitleType.FAILURE,
         workflowInstance
       );
@@ -126,14 +126,14 @@ const WorkflowListTable: React.FC<WorkflowListTableProps & OUIAProps> = ({
       await driver.handleWorkflowRetry(workflowInstance);
       onShowMessage(
         "Retry operation",
-        `The workflow ${workflowInstance.workflowName} was successfully re-executed.`,
+        `The workflow ${workflowInstance.processName} was successfully re-executed.`,
         TitleType.SUCCESS,
         workflowInstance
       );
     } catch (error) {
       onShowMessage(
         "Retry operation",
-        `The workflow ${workflowInstance.workflowName} failed to re-execute. Message: ${error.message}`,
+        `The workflow ${workflowInstance.processName} failed to re-execute. Message: ${error.message}`,
         TitleType.FAILURE,
         workflowInstance
       );
@@ -147,7 +147,7 @@ const WorkflowListTable: React.FC<WorkflowListTableProps & OUIAProps> = ({
       await driver.handleWorkflowAbort(workflowInstance);
       onShowMessage(
         "Abort operation",
-        `The workflow ${workflowInstance.workflowName} was successfully aborted.`,
+        `The workflow ${workflowInstance.processName} was successfully aborted.`,
         TitleType.SUCCESS,
         workflowInstance
       );
@@ -160,7 +160,7 @@ const WorkflowListTable: React.FC<WorkflowListTableProps & OUIAProps> = ({
     } catch (error) {
       onShowMessage(
         "Abort operation",
-        `Failed to abort workflow ${workflowInstance.workflowName}. Message: ${error.message}`,
+        `Failed to abort workflow ${workflowInstance.processName}. Message: ${error.message}`,
         TitleType.FAILURE,
         workflowInstance
       );
@@ -348,7 +348,7 @@ const WorkflowListTable: React.FC<WorkflowListTableProps & OUIAProps> = ({
         handleModalToggle={handleModalToggle}
         modalTitle={setTitle(titleType, modalTitle)}
         modalContent={modalContent}
-        workflowName={selectedWorkflowInstance?.workflowName}
+        workflowName={selectedWorkflowInstance?.processName}
         ouiaId={selectedWorkflowInstance ? "workflow-" + selectedWorkflowInstance.id : undefined}
       />
       <TableComposable

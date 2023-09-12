@@ -78,7 +78,7 @@ export const formatForBulkListJob = (jobsList: (Job & { errorMessage?: string })
 export const getWorkflowInstanceDescription = (workflowInstance: WorkflowInstance) => {
   return {
     id: workflowInstance.id,
-    name: workflowInstance.workflowName,
+    name: workflowInstance.processName,
     description: workflowInstance.businessKey,
   };
 };

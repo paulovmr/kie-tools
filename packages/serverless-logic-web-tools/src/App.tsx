@@ -52,9 +52,10 @@ export const App = () => (
       [SampleContextProvider, {}],
       [NavigationContextProvider, {}],
       [EditorContextProvider, {}],
-      [RoutesSwitch, {}],
       [WorkflowListContextProvider, {}],
-      [CloudEventFormContextProvider, {}]
+      [CloudEventFormContextProvider, {}],
+      // Insert new context providers from here to beginning, always before RoutesSwitch
+      [RoutesSwitch, {}]
     )}
   </HashRouter>
 );

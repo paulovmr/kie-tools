@@ -83,7 +83,7 @@ const CloudEventFormContainer: React.FC<CloudEventFormContainerProps & OUIAProps
   return (
     <EmbeddedCloudEventForm
       {...componentOuiaProps(ouiaId, "cloud-event-form-container", ouiaSafe)}
-      targetOrigin={"kogitoServiceUrl"} // TOOD kogitoServiceUrl
+      targetOrigin={window.location.origin}
       isNewInstanceEvent={isTriggerNewInstance}
       defaultValues={{
         cloudEventSource: "/local/quarkus-devUi",

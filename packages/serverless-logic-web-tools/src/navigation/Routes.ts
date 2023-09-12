@@ -28,12 +28,15 @@ export enum QueryParams {
   RENAME_WORKSPACE = "renameWorkspace",
   SAMPLE_ID = "sampleId",
   SAMPLES_CATEGORY = "category",
+  FILTERS = "filters",
+  SORT_BY = "sortBy",
 }
 
 export enum PathParams {
   EXTENSION = "extension",
   WORKSPACE_ID = "workspaceId",
   FILE_RELATIVE_PATH = "fileRelativePath",
+  WORKFLOW_ID = "workflowId",
 }
 
 export class Route<
@@ -139,7 +142,13 @@ export const routes = {
 
   recentModels: new Route<{}>(() => `/recent-models`),
   sampleCatalog: new Route<{}>(() => `/sample-catalog`),
-  runtimeToolsWorkflows: new Route<{}>(() => `/runtime-tools/workflows`),
+  runtimeToolsWorkflowInstances: new Route<{}>(() => `/runtime-tools/workflow-instances`),
+  runtimeToolsWorkflowDefinitions: new Route<{}>(() => `/runtime-tools/workflow-definitions`),
+  runtimeToolsWorkflowDetails: new Route<{
+    queryParams: QueryParams.FILTERS | QueryParams.SORT_BY;
+    pathParams: PathParams.WORKFLOW_ID;
+  }>(({ workflowId }) => `/runtime-tools/workflow-details/${workflowId}`),
+  runtimeToolsTriggerCloudEvent: new Route<{}>(() => `/runtime-tools/trigger-cloud-event`),
 
   settings: {
     home: new Route<{}>(() => SETTINGS_ROUTE),

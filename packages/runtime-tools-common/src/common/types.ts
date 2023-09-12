@@ -112,8 +112,8 @@ export interface WorkflowInstanceError {
 }
 export interface WorkflowInstance {
   id: string;
-  workflowId: string;
-  workflowName?: string;
+  processId: string;
+  processName?: string;
   parentWorkflowInstanceId?: string;
   rootWorkflowInstanceId?: string;
   rootWorkflowId?: string;

@@ -20,12 +20,12 @@
 import React, { useMemo } from "react";
 import CloudEventFormContext from "./CloudEventFormContext";
 import { CloudEventFormGatewayApiImpl } from "./CloudEventFormGatewayApi";
+import { useSettings } from "../../../settings/SettingsContext";
 
 export function CloudEventFormContextProvider(props: React.PropsWithChildren<{}>) {
-  const gatewayApi = useMemo(
-    () => new CloudEventFormGatewayApiImpl("http://localhost:8080"), // TODO kogitoServiceUrl
-    []
-  );
+  const settings = useSettings();
+
+  const gatewayApi = useMemo(() => new CloudEventFormGatewayApiImpl(settings.runtimeTools.config.kogitoServiceUrl), []);
 
   return <CloudEventFormContext.Provider value={gatewayApi}>{props.children}</CloudEventFormContext.Provider>;
 }
