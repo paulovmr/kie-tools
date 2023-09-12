@@ -24,10 +24,13 @@ import { WorkflowListGatewayApiImpl } from "./WorkflowListGatewayApi";
 import { GraphQLWorkflowListQueries } from "./WorkflowListQueries";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { useSettings } from "../../../settings/SettingsContext";
 
 export function WorkflowListContextProvider(props: React.PropsWithChildren<{}>) {
+  const settings = useSettings();
+
   const httpLink = new HttpLink({
-    uri: "http://localhost:8180", // TODO dataIndexUrl
+    uri: settings.runtimeTools.config.dataIndexUrl,
   });
   const cache = new InMemoryCache();
 

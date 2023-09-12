@@ -75,7 +75,7 @@ export const getWorkflowInstanceDescription = (
 } => {
   return {
     id: workflowInstance.id,
-    name: workflowInstance.workflowName,
+    name: workflowInstance.processName,
     description: workflowInstance.businessKey,
   };
 };
@@ -118,7 +118,7 @@ export const formatForBulkListWorkflowInstance = (
     const formattedObj: BulkListItem = {
       id: item.id,
       description: item.businessKey,
-      name: item.workflowName,
+      name: item.processName,
       errorMessage: item.errorMessage ? item.errorMessage : undefined,
     };
     formattedItems.push(formattedObj);

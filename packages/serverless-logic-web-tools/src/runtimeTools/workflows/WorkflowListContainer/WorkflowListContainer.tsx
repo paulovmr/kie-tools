@@ -41,7 +41,7 @@ const WorkflowListContainer: React.FC<WorkflowListContainerProps & OUIAProps> = 
     const onOpenInstanceUnsubscriber = gatewayApi.onOpenWorkflowListen({
       onOpen(workflow: WorkflowInstance) {
         history.push({
-          pathname: `/Workflow/${workflow.id}`,
+          pathname: `/runtime-tools/workflow-details/${workflow.id}`,
           state: gatewayApi.workflowListState,
         });
       },
@@ -66,7 +66,7 @@ const WorkflowListContainer: React.FC<WorkflowListContainerProps & OUIAProps> = 
     <EmbeddedWorkflowList
       {...componentOuiaProps(ouiaId, "workflow-list-container", ouiaSafe)}
       driver={gatewayApi}
-      targetOrigin={"http://localhost:8080"} // TODO kogitoServiceUrl
+      targetOrigin={window.location.origin}
       initialState={initialState}
     />
   );

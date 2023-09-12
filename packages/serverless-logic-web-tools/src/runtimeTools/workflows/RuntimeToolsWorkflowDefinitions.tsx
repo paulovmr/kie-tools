@@ -17,28 +17,17 @@
  * under the License.
  */
 
-import React, { ReactText, useCallback, useState } from "react";
+import React from "react";
 import { Page, PageSection } from "@patternfly/react-core/dist/js/components/Page";
 import { Text, TextContent, TextVariants } from "@patternfly/react-core/dist/js/components/Text";
-import { Tab, Tabs, TabTitleText } from "@patternfly/react-core/dist/js/components/Tabs";
-import { Card } from "@patternfly/react-core/dist/js/components/Card";
 import WorkflowListContainer from "./WorkflowListContainer/WorkflowListContainer";
 import { useHistory } from "react-router";
 import { WorkflowListState } from "./WorkflowList/WorkflowListGatewayApi";
 
-const PAGE_TITLE = "Workflows";
+const PAGE_TITLE = "Workflow Definitions";
 
-export function RuntimeToolsWorkflows() {
+export function RuntimeToolsWorkflowDefinitions() {
   const history = useHistory();
-
-  const [activeTabKey, setActiveTabKey] = useState<ReactText>(0);
-
-  const handleTabClick = useCallback(
-    (event, tabIndex) => {
-      setActiveTabKey(tabIndex);
-    },
-    [setActiveTabKey]
-  );
 
   const initialState: WorkflowListState = history.location && (history.location.state as WorkflowListState);
 
@@ -49,35 +38,13 @@ export function RuntimeToolsWorkflows() {
           <TextContent>
             <Text component={TextVariants.h1}>{PAGE_TITLE}</Text>
             <Text component={TextVariants.p}>
-              List, view and start workflows from the Data Index and Kogito Service linked in your Runtime Tools
-              settings.
+              Start new workflow instances from the SonataFlow service linked in your Runtime Tools settings.
             </Text>
           </TextContent>
         </PageSection>
 
-        <PageSection isFilled aria-label="workflows-section">
-          <Tabs
-            activeKey={activeTabKey}
-            onSelect={handleTabClick}
-            isBox
-            variant="light300"
-            style={{
-              background: "white",
-            }}
-          >
-            <Tab id="workflow-list-tab" eventKey={0} title={<TabTitleText>Workflow Instances</TabTitleText>}>
-              <PageSection>
-                <Card style={{ height: "100%" }}>
-                  <WorkflowListContainer initialState={initialState} />
-                </Card>
-              </PageSection>
-            </Tab>
-            <Tab id="process-definitions-tab" eventKey={1} title={<TabTitleText>Workflow Definitions</TabTitleText>}>
-              <PageSection>
-                <Card style={{ height: "100%" }}>WorkflowDefinitionListContainer</Card>
-              </PageSection>
-            </Tab>
-          </Tabs>
+        <PageSection isFilled aria-label="workflow-definitions-section">
+          {"WorkflowDefinitionsContainer"}
         </PageSection>
       </Page>
     </>

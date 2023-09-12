@@ -360,7 +360,7 @@ export const handleNodeInstanceCancel = async (
 };
 
 export const handleNodeInstanceRetrigger = async (
-  workflowInstance: Pick<WorkflowInstance, "id" | "serviceUrl" | "workflowId">,
+  workflowInstance: Pick<WorkflowInstance, "id" | "serviceUrl" | "processId">,
   node: Pick<NodeInstance, "id">,
   client: ApolloClient<any>
 ): Promise<void> => {
