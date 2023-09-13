@@ -20,26 +20,31 @@
 import React, { useCallback } from "react";
 import { EnvelopeServer } from "@kie-tools-core/envelope-bus/dist/channel";
 import { EmbeddedEnvelopeProps, RefForwardingEmbeddedEnvelope } from "@kie-tools-core/envelope/dist/embedded";
-import { WorkflowListApi, WorkflowListChannelApi, WorkflowListEnvelopeApi, WorkflowListDriver } from "../api";
-import { WorkflowListChannelApiImpl } from "./WorkflowListChannelApiImpl";
 import { ContainerType } from "@kie-tools-core/envelope/dist/api";
 import { init } from "../envelope";
-import { WorkflowListState } from "@kie-tools/runtime-tools-common";
+import {
+  WorkflowDetailsApi,
+  WorkflowDetailsChannelApi,
+  WorkflowDetailsEnvelopeApi,
+  WorkflowDetailsDriver,
+} from "../api";
+import { WorkflowInstance } from "@kie-tools/runtime-tools-common";
+import { WorkflowDetailsChannelApiImpl } from "./WorkflowDetailsChannelApiImpl";
 
 export interface Props {
   targetOrigin: string;
-  driver: WorkflowListDriver;
-  initialState: WorkflowListState;
+  driver: WorkflowDetailsDriver;
+  workflowInstance: WorkflowInstance;
 }
 
-export const EmbeddedWorkflowList = React.forwardRef((props: Props, forwardedRef: React.Ref<WorkflowListApi>) => {
+export const EmbeddedWorkflowDetails = React.forwardRef((props: Props, forwardedRef: React.Ref<WorkflowDetailsApi>) => {
   const refDelegate = useCallback(
-    (envelopeServer: EnvelopeServer<WorkflowListChannelApi, WorkflowListEnvelopeApi>): WorkflowListApi => ({}),
+    (envelopeServer: EnvelopeServer<WorkflowDetailsChannelApi, WorkflowDetailsEnvelopeApi>): WorkflowDetailsApi => ({}),
     []
   );
   const pollInit = useCallback(
     (
-      envelopeServer: EnvelopeServer<WorkflowListChannelApi, WorkflowListEnvelopeApi>,
+      envelopeServer: EnvelopeServer<WorkflowDetailsChannelApi, WorkflowDetailsEnvelopeApi>,
       container: () => HTMLDivElement
     ) => {
       init({
@@ -50,17 +55,19 @@ export const EmbeddedWorkflowList = React.forwardRef((props: Props, forwardedRef
         container: container(),
         bus: {
           postMessage(message: any, targetOrigin: string, transfer: any) {
+            /* istanbul ignore next */
             window.postMessage(message, targetOrigin, transfer);
           },
         },
       });
-      return envelopeServer.envelopeApi.requests.workflowList__init(
+
+      return envelopeServer.envelopeApi.requests.workflowDetails__init(
         {
           origin: envelopeServer.origin,
           envelopeServerId: envelopeServer.id,
         },
         {
-          initialState: { ...props.initialState },
+          workflowInstance: props.workflowInstance,
         }
       );
     },
@@ -68,9 +75,9 @@ export const EmbeddedWorkflowList = React.forwardRef((props: Props, forwardedRef
   );
 
   return (
-    <EmbeddedWorkflowListEnvelope
+    <EmbeddedWorkflowDetailsEnvelope
       ref={forwardedRef}
-      apiImpl={new WorkflowListChannelApiImpl(props.driver)}
+      apiImpl={new WorkflowDetailsChannelApiImpl(props.driver)}
       origin={props.targetOrigin}
       refDelegate={refDelegate}
       pollInit={pollInit}
@@ -79,8 +86,8 @@ export const EmbeddedWorkflowList = React.forwardRef((props: Props, forwardedRef
   );
 });
 
-const EmbeddedWorkflowListEnvelope =
+const EmbeddedWorkflowDetailsEnvelope =
   React.forwardRef<
-    WorkflowListApi,
-    EmbeddedEnvelopeProps<WorkflowListChannelApi, WorkflowListEnvelopeApi, WorkflowListApi>
+    WorkflowDetailsApi,
+    EmbeddedEnvelopeProps<WorkflowDetailsChannelApi, WorkflowDetailsEnvelopeApi, WorkflowDetailsApi>
   >(RefForwardingEmbeddedEnvelope);

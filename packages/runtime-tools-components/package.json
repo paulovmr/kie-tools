@@ -25,6 +25,7 @@
     "test": "run-script-if --ignore-errors \"$(build-env tests.ignoreFailures)\" --bool \"$(build-env tests.run)\" --then \"jest --silent --verbose --passWithNoTests\""
   },
   "dependencies": {
+    "@kie-tools-core/editor": "workspace:*",
     "@kie-tools-core/envelope": "workspace:*",
     "@kie-tools-core/envelope-bus": "workspace:*",
     "@kie-tools-core/i18n": "workspace:*",
@@ -33,6 +34,7 @@
     "@kie-tools/i18n-common-dictionary": "workspace:*",
     "@kie-tools/runtime-tools-common": "workspace:*",
     "@kie-tools/runtime-tools-gateway-api": "workspace:*",
+    "@kie-tools/serverless-workflow-combined-editor": "workspace:*",
     "@patternfly/react-core": "^4.276.6",
     "@patternfly/react-icons": "^4.93.6",
     "@patternfly/react-table": "^4.112.39",
@@ -40,6 +42,7 @@
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-json-view": "^1.21.3",
     "react-moment": "0.9.7"
   },
   "devDependencies": {

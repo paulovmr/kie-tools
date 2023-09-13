@@ -715,6 +715,11 @@
         "target": "@kie-tools/runtime-tools-gateway-api",
         "weight": 1
       },
+      {
+        "source": "@kie-tools/runtime-tools-components",
+        "target": "@kie-tools/serverless-workflow-combined-editor",
+        "weight": 1
+      },
       { "source": "@kie-tools/runtime-tools-gateway-api", "target": "@kie-tools/runtime-tools-common", "weight": 1 },
       { "source": "@kie-tools/scesim-editor", "target": "@kie-tools-core/patternfly-base", "weight": 1 },
       { "source": "@kie-tools/scesim-editor", "target": "@kie-tools-core/webpack-base", "weight": 1 },
@@ -727,11 +732,6 @@
       {
         "source": "@kie-tools/serverless-logic-web-tools",
         "target": "@kie-tools/runtime-tools-components",
-        "weight": 1
-      },
-      {
-        "source": "@kie-tools/serverless-logic-web-tools",
-        "target": "@kie-tools/serverless-workflow-combined-editor",
         "weight": 1
       },
       { "source": "@kie-tools/serverless-logic-web-tools", "target": "@kie-tools/text-editor", "weight": 1 },
