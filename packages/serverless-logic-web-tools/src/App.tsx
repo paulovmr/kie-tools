@@ -34,6 +34,7 @@ import { EditorContextProvider } from "./editor/hooks/EditorContext";
 import { WebToolsWorkspaceContextProvider } from "./workspace/hooks/WebToolsWorkspaceContextProvider";
 import { UpgradeContextProvider } from "./upgrade/UpgradeContext";
 import { WorkflowListContextProvider } from "./runtimeTools/workflows/WorkflowList";
+import { WorkflowDetailsContextProvider } from "./runtimeTools/workflows/WorkflowDetails";
 import { CloudEventFormContextProvider } from "./runtimeTools/workflows/CloudEventForm";
 
 export const App = () => (
@@ -53,6 +54,7 @@ export const App = () => (
       [NavigationContextProvider, {}],
       [EditorContextProvider, {}],
       [WorkflowListContextProvider, {}],
+      [WorkflowDetailsContextProvider, {}],
       [CloudEventFormContextProvider, {}],
       // Insert new context providers from here to beginning, always before RoutesSwitch
       [RoutesSwitch, {}]

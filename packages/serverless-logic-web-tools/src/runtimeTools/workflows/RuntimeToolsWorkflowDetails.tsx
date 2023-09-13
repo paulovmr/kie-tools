@@ -17,11 +17,18 @@
  * under the License.
  */
 
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Page, PageSection } from "@patternfly/react-core/dist/js/components/Page";
 import { Text, TextContent, TextVariants } from "@patternfly/react-core/dist/js/components/Text";
 import { useHistory } from "react-router";
-import { WorkflowListState } from "./WorkflowList/WorkflowListGatewayApi";
+import { ouiaPageTypeAndObjectId } from "@kie-tools/runtime-tools-common/dist/ouiaTools";
+import { useWorkflowDetailsGatewayApi, WorkflowDetailsGatewayApi } from "./WorkflowDetails";
+import WorkflowDetailsContainer from "./WorkflowDetailsContainer/WorkflowDetailsContainer";
+import { WorkflowInstance } from "@kie-tools/runtime-tools-common";
+import { ServerErrors } from "@kie-tools/runtime-tools-common/dist/components/ServerErrors";
+import { KogitoSpinner } from "@kie-tools/runtime-tools-common/dist/components/KogitoSpinner";
+import { Card } from "@patternfly/react-core/dist/js/components/Card";
+import { Bullseye } from "@patternfly/react-core/dist/js/layouts/Bullseye";
 
 const PAGE_TITLE = "Workflow Details";
 
@@ -29,9 +36,29 @@ interface WorkflowListContainerProps {
   workflowId: string;
 }
 export function RuntimeToolsWorkflowDetails(props: WorkflowListContainerProps) {
-  const history = useHistory();
+  const gatewayApi: WorkflowDetailsGatewayApi = useWorkflowDetailsGatewayApi();
 
-  const initialState: WorkflowListState = history.location && (history.location.state as WorkflowListState);
+  const [workflowInstance, setWorkflowInstance] = useState<WorkflowInstance>({} as WorkflowInstance);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<string>("");
+
+  useEffect(() => {
+    gatewayApi
+      .workflowDetailsQuery(props.workflowId)
+      .then((response) => {
+        setWorkflowInstance(response);
+      })
+      .catch((error) => {
+        setFetchError(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [gatewayApi, props.workflowId]);
+
+  useEffect(() => {
+    return ouiaPageTypeAndObjectId("workflow-details");
+  });
 
   return (
     <>
@@ -44,7 +71,25 @@ export function RuntimeToolsWorkflowDetails(props: WorkflowListContainerProps) {
         </PageSection>
 
         <PageSection isFilled aria-label="workflow-details-section">
-          {"WorkflowDetailsContainer"}
+          {isLoading && (
+            <Card>
+              <KogitoSpinner spinnerText="Loading workflow details..." />
+            </Card>
+          )}
+
+          {!isLoading && workflowInstance && Object.keys(workflowInstance).length > 0 && !fetchError ? (
+            <WorkflowDetailsContainer workflowInstance={workflowInstance} />
+          ) : (
+            <>
+              {fetchError.length > 0 && (
+                <Card className="kogito-management-console__card-size">
+                  <Bullseye>
+                    <ServerErrors error={fetchError} variant="large" />
+                  </Bullseye>
+                </Card>
+              )}
+            </>
+          )}
         </PageSection>
       </Page>
     </>

@@ -49,7 +49,7 @@ const WorkflowListContainer: React.FC<WorkflowListContainerProps & OUIAProps> = 
     const onTriggerCloudEventUnsubscriber = gatewayApi.onOpenTriggerCloudEventListen({
       onOpen(workflowInstance?: WorkflowInstance) {
         history.push({
-          pathname: `/Workflowes/CloudEvent/${workflowInstance?.id ?? ""}`,
+          pathname: `/runtime-tools/trigger-cloud-event/${workflowInstance?.id ?? ""}`,
           state: {
             source: CloudEventPageSource.INSTANCES,
           },

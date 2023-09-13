@@ -41,7 +41,7 @@ export interface Job {
   retries: number;
   lastUpdate: Date;
   executionCounter?: number;
-  endpoint?: string;
+  endpoint: string;
   nodeInstanceId?: string;
 }
 
