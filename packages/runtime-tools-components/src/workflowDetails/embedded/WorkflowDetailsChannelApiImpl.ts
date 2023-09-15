@@ -31,10 +31,6 @@ import {
 export class WorkflowDetailsChannelApiImpl implements WorkflowDetailsChannelApi {
   constructor(private readonly driver: WorkflowDetailsDriver) {}
 
-  workflowDetails__getWorkflowDiagram(data: WorkflowInstance): Promise<SvgSuccessResponse | SvgErrorResponse> {
-    return this.driver.getWorkflowDiagram(data);
-  }
-
   workflowDetails__handleWorkflowAbort(workflowInstance: WorkflowInstance): Promise<void> {
     return this.driver.handleWorkflowAbort(workflowInstance);
   }

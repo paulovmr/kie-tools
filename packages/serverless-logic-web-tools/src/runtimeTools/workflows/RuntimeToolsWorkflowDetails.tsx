@@ -66,7 +66,9 @@ export function RuntimeToolsWorkflowDetails(props: WorkflowListContainerProps) {
         <PageSection variant={"light"}>
           <TextContent>
             <Text component={TextVariants.h1}>{PAGE_TITLE}</Text>
-            <Text component={TextVariants.p}>Explore the details, timeline and variables of a workflow instance.</Text>
+            <Text component={TextVariants.p}>
+              Explore the execution status, details, timeline and variables of a workflow instance.
+            </Text>
           </TextContent>
         </PageSection>
 

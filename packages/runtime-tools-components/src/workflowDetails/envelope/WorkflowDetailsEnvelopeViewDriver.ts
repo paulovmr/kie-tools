@@ -32,10 +32,6 @@ import {
 export default class WorkflowDetailsEnvelopeViewDriver implements WorkflowDetailsDriver {
   constructor(private readonly channelApi: MessageBusClientApi<WorkflowDetailsChannelApi>) {}
 
-  getWorkflowDiagram(data: WorkflowInstance): Promise<SvgSuccessResponse | SvgErrorResponse> {
-    return this.channelApi.requests.workflowDetails__getWorkflowDiagram(data);
-  }
-
   handleWorkflowAbort(workflowInstance: WorkflowInstance): Promise<void> {
     return this.channelApi.requests.workflowDetails__handleWorkflowAbort(workflowInstance);
   }

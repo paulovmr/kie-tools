@@ -27,7 +27,6 @@ import {
   NodeInstance,
 } from "@kie-tools/runtime-tools-common";
 export interface WorkflowDetailsChannelApi {
-  workflowDetails__getWorkflowDiagram(data: WorkflowInstance): Promise<SvgSuccessResponse | SvgErrorResponse>;
   workflowDetails__handleWorkflowAbort(workflowInstance: WorkflowInstance): Promise<void>;
   workflowDetails__cancelJob(job: Pick<Job, "id" | "endpoint">): Promise<JobCancel>;
   workflowDetails__rescheduleJob(

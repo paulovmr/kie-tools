@@ -21,6 +21,7 @@ import React from "react";
 import { Page, PageSection } from "@patternfly/react-core/dist/js/components/Page";
 import { Text, TextContent, TextVariants } from "@patternfly/react-core/dist/js/components/Text";
 import { useHistory } from "react-router";
+import CloudEventFormContainer from "./CloudEventFormContainer/CloudEventFormContainer";
 
 const PAGE_TITLE = "Trigger Cloud Event";
 
@@ -41,7 +42,15 @@ export function RuntimeToolsTriggerCloudEvent() {
         </PageSection>
 
         <PageSection isFilled aria-label="trigger-cloud-event-section">
-          {"TriggerCloudEvent"}
+          <CloudEventFormContainer
+            isTriggerNewInstance={true}
+            onError={(error) => {
+              /* TODO runtime */
+            }}
+            onSuccess={(id) => {
+              /* TODO runtime */
+            }}
+          />
         </PageSection>
       </Page>
     </>

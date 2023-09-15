@@ -42,7 +42,6 @@ export interface WorkflowDetailsState {
 
 export interface WorkflowDetailsGatewayApi {
   workflowDetailsState: any;
-  getWorkflowDiagram: (data: WorkflowInstance) => Promise<SvgSuccessResponse | SvgErrorResponse>;
   handleWorkflowAbort: (workflowInstance: WorkflowInstance) => Promise<void>;
   cancelJob: (job: Job) => Promise<JobCancel>;
   rescheduleJob: (
@@ -82,11 +81,6 @@ export class WorkflowDetailsGatewayApiImpl implements WorkflowDetailsGatewayApi 
   get workflowDetailsState(): WorkflowDetailsState {
     return this._WorkflowDetailsState;
   }
-
-  getWorkflowDiagram = async (data: WorkflowInstance): Promise<SvgSuccessResponse | SvgErrorResponse> => {
-    const result = await this.queries.getSVG(data);
-    return Promise.resolve(result);
-  };
 
   handleWorkflowAbort = (workflowInstance: WorkflowInstance): Promise<void> => {
     return this.queries.handleWorkflowAbort(workflowInstance);

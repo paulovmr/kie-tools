@@ -25,6 +25,7 @@ import { MessageBusClientApi } from "@kie-tools-core/envelope-bus/dist/api";
 import { CloudEventFormChannelApi, CloudEventFormDefaultValues, CloudEventFormInitArgs } from "../api";
 import CloudEventForm from "./components/CloudEventForm/CloudEventForm";
 import { CloudEventFormEnvelopeViewDriver } from "./CloudEventFormEnvelopeViewDriver";
+import { Card, CardBody } from "@patternfly/react-core";
 
 export interface CloudEventFormEnvelopeViewApi {
   initialize: (args: CloudEventFormInitArgs) => void;
@@ -74,7 +75,13 @@ export const CloudEventFormEnvelopeView = React.forwardRef<CloudEventFormEnvelop
       );
     }
 
-    return <CloudEventForm driver={driver} isNewInstanceEvent={isNewInstanceEvent} defaultValues={defaultValues} />;
+    return (
+      <Card>
+        <CardBody>
+          <CloudEventForm driver={driver} isNewInstanceEvent={isNewInstanceEvent} defaultValues={defaultValues} />
+        </CardBody>
+      </Card>
+    );
   }
 );
 
