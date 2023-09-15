@@ -180,3 +180,8 @@ export interface SvgErrorResponse {
   error: string;
   svg?: never;
 }
+
+export interface WorkflowDefinition {
+  workflowName: string;
+  endpoint: string;
+}

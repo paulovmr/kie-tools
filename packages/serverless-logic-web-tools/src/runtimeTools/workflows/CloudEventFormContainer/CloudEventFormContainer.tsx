@@ -86,7 +86,7 @@ const CloudEventFormContainer: React.FC<CloudEventFormContainerProps & OUIAProps
       targetOrigin={window.location.origin}
       isNewInstanceEvent={isTriggerNewInstance}
       defaultValues={{
-        cloudEventSource: "/local/quarkus-devUi",
+        cloudEventSource: "/local/kubesmarts",
         instanceId: instanceId ?? undefined,
       }}
       driver={{

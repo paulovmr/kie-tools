@@ -63,32 +63,28 @@ export function HomePageNav(props: { pathname: string }) {
           <NavExpandable title="Runtime Tools" groupId="runtime-tools-nav-group">
             <NavItem
               itemId={3}
+              key={"RuntimeToolsWorkflowDefinitions-nav"}
+              isActive={props.pathname === routes.runtimeToolsWorkflowDefinitions.path({})}
+              ouiaId="runtime-tools-workflow-definitions-nav"
+            >
+              <Link to={routes.runtimeToolsWorkflowDefinitions.path({})}>Workflow Definitions</Link>
+            </NavItem>
+            <NavItem
+              itemId={4}
               key={"RuntimeToolsWorkflowInstances-nav"}
               isActive={props.pathname === routes.runtimeToolsWorkflowInstances.path({})}
               ouiaId="runtime-tools-workflow-instances-nav"
             >
               <Link to={routes.runtimeToolsWorkflowInstances.path({})}>Workflow Instances</Link>
             </NavItem>
-
-            {/* TODO Enable when Workflow Definitions page is migrated*/}
-            {/*<NavItem
-              itemId={4}
-              key={"RuntimeToolsWorkflowDefinitions-nav"}
-              isActive={props.pathname === routes.runtimeToolsWorkflowDefinitions.path({})}
-              ouiaId="runtime-tools-workflow-definitions-nav"
-            >
-              <Link to={routes.runtimeToolsWorkflowDefinitions.path({})}>Workflow Definitions</Link>
-            </NavItem>*/}
-
-            {/* TODO Enable when Trigger Cloud Event page is migrated*/}
-            {/*<NavItem
-                itemId={5}
-                key={"RuntimeToolsTriggerCloudEvent-nav"}
-                isActive={props.pathname === routes.runtimeToolsTriggerCloudEvent.path({})}
-                ouiaId="runtime-tools-trigger-cloud-event-nav"
+            <NavItem
+              itemId={5}
+              key={"RuntimeToolsTriggerCloudEvent-nav"}
+              isActive={props.pathname === routes.runtimeToolsTriggerCloudEvent.path({})}
+              ouiaId="runtime-tools-trigger-cloud-event-nav"
             >
               <Link to={routes.runtimeToolsTriggerCloudEvent.path({})}>Trigger Cloud Event</Link>
-            </NavItem>*/}
+            </NavItem>
           </NavExpandable>
 
           <NavItem itemId={6} key={"Documentation-nav"} className="chr-c-navigation__additional-links">

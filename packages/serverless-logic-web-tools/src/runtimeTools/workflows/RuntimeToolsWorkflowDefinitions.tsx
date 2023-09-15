@@ -23,6 +23,8 @@ import { Text, TextContent, TextVariants } from "@patternfly/react-core/dist/js/
 import WorkflowListContainer from "./WorkflowListContainer/WorkflowListContainer";
 import { useHistory } from "react-router";
 import { WorkflowListState } from "./WorkflowList/WorkflowListGatewayApi";
+import { Card } from "@patternfly/react-core/dist/esm/components/Card";
+import WorkflowDefinitionListContainer from "./WorkflowDefinitionListContainer/WorkflowDefinitionListContainer";
 
 const PAGE_TITLE = "Workflow Definitions";
 
@@ -44,7 +46,9 @@ export function RuntimeToolsWorkflowDefinitions() {
         </PageSection>
 
         <PageSection isFilled aria-label="workflow-definitions-section">
-          {"WorkflowDefinitionsContainer"}
+          <Card>
+            <WorkflowDefinitionListContainer />
+          </Card>
         </PageSection>
       </Page>
     </>

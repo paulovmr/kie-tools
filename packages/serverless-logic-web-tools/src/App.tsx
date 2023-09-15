@@ -36,6 +36,7 @@ import { UpgradeContextProvider } from "./upgrade/UpgradeContext";
 import { WorkflowListContextProvider } from "./runtimeTools/workflows/WorkflowList";
 import { WorkflowDetailsContextProvider } from "./runtimeTools/workflows/WorkflowDetails";
 import { CloudEventFormContextProvider } from "./runtimeTools/workflows/CloudEventForm";
+import { WorkflowDefinitionListContextProvider } from "./runtimeTools/workflows/WorkflowDefinitionList";
 
 export const App = () => (
   <HashRouter>
@@ -53,6 +54,7 @@ export const App = () => (
       [SampleContextProvider, {}],
       [NavigationContextProvider, {}],
       [EditorContextProvider, {}],
+      [WorkflowDefinitionListContextProvider, {}],
       [WorkflowListContextProvider, {}],
       [WorkflowDetailsContextProvider, {}],
       [CloudEventFormContextProvider, {}],

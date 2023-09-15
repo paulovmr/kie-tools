@@ -39,7 +39,6 @@ import {
   handleNodeInstanceRetrigger,
   getWorkflowDetails,
   getJobs,
-  getSVG,
   getTriggerableNodes,
 } from "@kie-tools/runtime-tools-gateway-api/dist/gatewayApi";
 
@@ -49,7 +48,6 @@ export interface WorkflowDetailsQueries {
   handleWorkflowSkip(workflowInstance: WorkflowInstance): Promise<void>;
   handleWorkflowAbort(workflowInstance: WorkflowInstance): Promise<void>;
   handleWorkflowRetry(workflowInstance: WorkflowInstance): Promise<void>;
-  getSVG(workflowInstance: WorkflowInstance): Promise<any>;
   jobCancel(job: Job): Promise<JobCancel>;
   rescheduleJob: (
     job: Job,
@@ -92,10 +90,6 @@ export class GraphQLWorkflowDetailsQueries implements WorkflowDetailsQueries {
 
   async handleWorkflowRetry(workflowInstance: WorkflowInstance): Promise<void> {
     return handleWorkflowRetry(workflowInstance, this.client);
-  }
-
-  async getSVG(workflowInstance: WorkflowInstance): Promise<SvgSuccessResponse | SvgErrorResponse> {
-    return Promise.resolve(getSVG(workflowInstance, this.client));
   }
 
   async jobCancel(job: Job): Promise<JobCancel> {

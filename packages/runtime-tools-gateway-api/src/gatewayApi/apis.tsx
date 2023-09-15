@@ -29,6 +29,7 @@ import {
   JobStatus,
   Job,
   JobsSortBy,
+  WorkflowDefinition,
 } from "@kie-tools/runtime-tools-common";
 import { OperationType } from "@kie-tools/runtime-tools-common/dist/components/BulkList";
 import { ApolloClient } from "apollo-client";
@@ -36,6 +37,7 @@ import { buildWorkflowListWhereArgument } from "./QueryUtils";
 import { CloudEventRequest, KOGITO_BUSINESS_KEY } from "@kie-tools/runtime-tools-common/dist/components/CloudEventForm";
 import axios from "axios";
 import uuidv4 from "uuid";
+import SwaggerParser from "@apidevtools/swagger-parser";
 
 export const getWorkflowInstances = async (
   offset: number,
@@ -381,23 +383,6 @@ export const handleNodeInstanceRetrigger = async (
   });
 };
 
-export const getSVG = async (workflowInstance: WorkflowInstance, client: ApolloClient<any>): Promise<any> => {
-  return client
-    .query({
-      query: GraphQL.GetProcessInstanceSvgDocument,
-      variables: {
-        processId: workflowInstance.id,
-      },
-      fetchPolicy: "network-only",
-    })
-    .then((value) => {
-      return { svg: value.data.ProcessInstances[0].diagram };
-    })
-    .catch((reason) => {
-      return { error: reason.message };
-    });
-};
-
 export const getWorkflowDetails = async (id: string, client: ApolloClient<any>): Promise<any> => {
   return new Promise((resolve, reject) => {
     client
@@ -515,4 +500,81 @@ export const triggerStartCloudEvent = (event: CloudEventRequest, devUIUrl: strin
 
 export const triggerCloudEvent = (event: CloudEventRequest, devUIUrl: string): Promise<any> => {
   return doTriggerCloudEvent(event, devUIUrl);
+};
+
+export const createWorkflowDefinitionList = (
+  workflowDefinitionObjs: WorkflowDefinition[],
+  url: string
+): WorkflowDefinition[] => {
+  const workflowDefinitionList: WorkflowDefinition[] = [];
+  workflowDefinitionObjs.forEach((workflowDefObj) => {
+    const workflowName = Object.keys(workflowDefObj)[0].split("/")[1];
+    const endpoint = `${url}/${workflowName}`;
+    workflowDefinitionList.push({
+      workflowName,
+      endpoint,
+    });
+  });
+  return workflowDefinitionList;
+};
+
+export const getWorkflowDefinitionList = (devUIUrl: string, openApiPath: string): Promise<WorkflowDefinition[]> => {
+  return new Promise((resolve, reject) => {
+    SwaggerParser.parse(`${devUIUrl}/${openApiPath}`)
+      .then((response) => {
+        const workflowDefinitionObjs: any[] = [];
+        const paths = response.paths;
+        const regexPattern = /^\/[^\n/]+\/schema/;
+        Object.getOwnPropertyNames(paths)
+          .filter((path) => regexPattern.test(path.toString()))
+          .forEach((url) => {
+            let workflowArray = url.split("/");
+            workflowArray = workflowArray.filter((name) => name.length !== 0);
+            /* istanbul ignore else*/
+            if (Object.prototype.hasOwnProperty.call(paths![`/${workflowArray[0]}`], "post")) {
+              workflowDefinitionObjs.push({ [url]: paths![url] });
+            }
+          });
+        resolve(createWorkflowDefinitionList(workflowDefinitionObjs, devUIUrl));
+      })
+      .catch((err: any) => reject(err));
+  });
+};
+
+export const getWorkflowSchema = (workflowDefinitionData: WorkflowDefinition): Promise<Record<string, any>> => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${workflowDefinitionData.endpoint}/schema`)
+      .then((response) => {
+        /* istanbul ignore else*/
+        if (response.status === 200) {
+          resolve(response.data);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export const startWorkflowInstance = (
+  formData: any,
+  businessKey: string,
+  workflowDefinitionData: WorkflowDefinition
+): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const requestURL = `${workflowDefinitionData.endpoint}${
+      businessKey.length > 0 ? `?businessKey=${businessKey}` : ""
+    }`;
+    axios
+      .post(requestURL, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        resolve(response.data.id);
+      })
+      .catch((error) => reject(error));
+  });
 };

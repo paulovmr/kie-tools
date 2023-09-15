@@ -27,7 +27,6 @@ import {
   NodeInstance,
 } from "@kie-tools/runtime-tools-common";
 export interface WorkflowDetailsDriver {
-  getWorkflowDiagram(data: WorkflowInstance): Promise<SvgSuccessResponse | SvgErrorResponse>;
   handleWorkflowAbort(workflowInstance: WorkflowInstance): Promise<void>;
   cancelJob(job: Pick<Job, "id" | "endpoint">): Promise<JobCancel>;
   rescheduleJob(
