@@ -37,6 +37,7 @@ import { WorkflowListContextProvider } from "./runtimeTools/workflows/WorkflowLi
 import { WorkflowDetailsContextProvider } from "./runtimeTools/workflows/WorkflowDetails";
 import { CloudEventFormContextProvider } from "./runtimeTools/workflows/CloudEventForm";
 import { WorkflowDefinitionListContextProvider } from "./runtimeTools/workflows/WorkflowDefinitionList";
+import { WorkflowFormContextProvider } from "./runtimeTools/workflows/WorkflowForm";
 
 export const App = () => (
   <HashRouter>
@@ -57,6 +58,7 @@ export const App = () => (
       [WorkflowDefinitionListContextProvider, {}],
       [WorkflowListContextProvider, {}],
       [WorkflowDetailsContextProvider, {}],
+      [WorkflowFormContextProvider, {}],
       [CloudEventFormContextProvider, {}],
       // Insert new context providers from here to beginning, always before RoutesSwitch
       [RoutesSwitch, {}]

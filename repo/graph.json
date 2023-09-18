@@ -709,6 +709,7 @@
       { "source": "@kie-tools/runtime-tools-common", "target": "@kie-tools-core/notifications", "weight": 1 },
       { "source": "@kie-tools/runtime-tools-common", "target": "@kie-tools-core/patternfly-base", "weight": 1 },
       { "source": "@kie-tools/runtime-tools-common", "target": "@kie-tools/i18n-common-dictionary", "weight": 1 },
+      { "source": "@kie-tools/runtime-tools-common", "target": "@kie-tools/uniforms-patternfly", "weight": 1 },
       { "source": "@kie-tools/runtime-tools-common", "target": "@kie-tools-core/webpack-base", "weight": 1 },
       {
         "source": "@kie-tools/runtime-tools-components",

@@ -37,6 +37,7 @@ export enum PathParams {
   WORKSPACE_ID = "workspaceId",
   FILE_RELATIVE_PATH = "fileRelativePath",
   WORKFLOW_ID = "workflowId",
+  WORKFLOW_NAME = "workflowName",
 }
 
 export class Route<
@@ -148,6 +149,9 @@ export const routes = {
     queryParams: QueryParams.FILTERS | QueryParams.SORT_BY;
     pathParams: PathParams.WORKFLOW_ID;
   }>(({ workflowId }) => `/runtime-tools/workflow-details/${workflowId}`),
+  runtimeToolsWorkflowForm: new Route<{
+    pathParams: PathParams.WORKFLOW_NAME;
+  }>(({ workflowName }) => `/runtime-tools/workflow-definition/${workflowName}`),
   runtimeToolsTriggerCloudEvent: new Route<{}>(() => `/runtime-tools/trigger-cloud-event`),
 
   settings: {

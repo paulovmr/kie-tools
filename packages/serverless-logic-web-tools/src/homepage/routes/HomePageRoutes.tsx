@@ -35,6 +35,7 @@ import { RuntimeToolsWorkflowInstances } from "../../runtimeTools/workflows/Runt
 import { RuntimeToolsWorkflowDetails } from "../../runtimeTools/workflows/RuntimeToolsWorkflowDetails";
 import { RuntimeToolsWorkflowDefinitions } from "../../runtimeTools/workflows/RuntimeToolsWorkflowDefinitions";
 import { RuntimeToolsTriggerCloudEvent } from "../../runtimeTools/workflows/RuntimeToolsTriggerCloudEvent";
+import { RuntimeToolsWorkflowForm } from "../../runtimeTools/workflows/RuntimeToolsWorkflowForm";
 
 export function HomePageRoutes(props: { isNavOpen: boolean }) {
   const routes = useRoutes();
@@ -83,6 +84,9 @@ export function HomePageRoutes(props: { isNavOpen: boolean }) {
       </Route>
       <Route path={routes.runtimeToolsWorkflowDetails.path({ workflowId: ":workflowId" })}>
         {({ match }) => <RuntimeToolsWorkflowDetails workflowId={match!.params.workflowId!} />}
+      </Route>
+      <Route path={routes.runtimeToolsWorkflowForm.path({ workflowName: ":workflowName" })}>
+        <RuntimeToolsWorkflowForm />
       </Route>
       <Route path={routes.runtimeToolsWorkflowDefinitions.path({})}>
         <RuntimeToolsWorkflowDefinitions />

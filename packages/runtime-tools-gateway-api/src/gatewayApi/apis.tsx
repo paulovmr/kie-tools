@@ -578,3 +578,54 @@ export const startWorkflowInstance = (
       .catch((error) => reject(error));
   });
 };
+
+export const startWorkflowRest = (
+  data: Record<string, any>,
+  endpoint: string,
+  businessKey: string
+): Promise<string> => {
+  const requestURL = `${endpoint}${businessKey.length > 0 ? `?businessKey=${businessKey}` : ""}`;
+  return new Promise((resolve, reject) => {
+    axios
+      .post(requestURL, { workflowdata: data })
+      .then((response: any) => {
+        resolve(response.data.id);
+      })
+      .catch((err) => reject(err));
+  });
+};
+
+export const getCustomWorkflowSchema = (
+  devUIUrl: string,
+  openApiPath: string,
+  workflowName: string
+): Promise<Record<string, any>> => {
+  return new Promise((resolve, reject) => {
+    SwaggerParser.parse(`${devUIUrl}/${openApiPath}`)
+      .then((response: any) => {
+        let schema = {};
+        try {
+          const schemaFromRequestBody =
+            response.paths["/" + workflowName].post.requestBody.content["application/json"].schema;
+          /* istanbul ignore else*/
+          if (schemaFromRequestBody.type) {
+            schema = {
+              type: schemaFromRequestBody.type,
+              properties: schemaFromRequestBody.properties,
+            };
+          } else {
+            schema = response.components.schemas[workflowName + "_input"];
+          }
+        } catch (e) {
+          console.log(e);
+          schema = response.components.schemas[workflowName + "_input"];
+        }
+        if (schema) {
+          resolve(schema);
+        } else {
+          reject();
+        }
+      })
+      .catch((err) => reject(err));
+  });
+};
