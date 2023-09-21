@@ -42,15 +42,7 @@ export function RuntimeToolsTriggerCloudEvent() {
         </PageSection>
 
         <PageSection isFilled aria-label="trigger-cloud-event-section">
-          <CloudEventFormContainer
-            isTriggerNewInstance={true}
-            onError={(error) => {
-              /* TODO runtime */
-            }}
-            onSuccess={(id) => {
-              /* TODO runtime */
-            }}
-          />
+          <CloudEventFormContainer isTriggerNewInstance={true} />
         </PageSection>
       </Page>
     </>

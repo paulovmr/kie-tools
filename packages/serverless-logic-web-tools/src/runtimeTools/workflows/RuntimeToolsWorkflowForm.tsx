@@ -38,23 +38,6 @@ export function RuntimeToolsWorkflowForm() {
 
   const workflowDefinition: WorkflowDefinition = (history.location.state as any)["workflowDefinition"];
 
-  const showNotification = (
-    notificationType: "error" | "success",
-    submitMessage: string,
-    notificationDetails?: string
-  ) => {
-    // TODO runtime
-  };
-
-  const onSubmitSuccess = (message: string): void => {
-    showNotification("success", message);
-  };
-
-  const onSubmitError = (details?: string) => {
-    const message = "Failed to trigger workflow.";
-    showNotification("error", message, details);
-  };
-
   const onResetForm = () => {
     gatewayApi.setBusinessKey("");
     inlineEditRef.current!.reset();
@@ -87,12 +70,7 @@ export function RuntimeToolsWorkflowForm() {
 
         <PageSection isFilled aria-label="workflow-definitions-section">
           <Card>
-            <WorkflowFormContainer
-              workflowDefinitionData={workflowDefinition}
-              onSubmitSuccess={onSubmitSuccess}
-              onSubmitError={onSubmitError}
-              onResetForm={onResetForm}
-            />
+            <WorkflowFormContainer workflowDefinitionData={workflowDefinition} onResetForm={onResetForm} />
           </Card>
         </PageSection>
       </Page>

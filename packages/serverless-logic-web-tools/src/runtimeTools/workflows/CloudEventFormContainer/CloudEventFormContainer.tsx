@@ -25,11 +25,11 @@ import {
   EmbeddedCloudEventForm,
 } from "@kie-tools/runtime-tools-common/dist/components/CloudEventForm";
 import { useParams } from "react-router";
+import { useGlobalAlert } from "../../../alerts/GlobalAlertsContext";
+import { Alert, AlertActionCloseButton } from "@patternfly/react-core/dist/js/components/Alert";
 
 export type CloudEventFormContainerProps = {
   isTriggerNewInstance: boolean;
-  onSuccess: (id: string) => void;
-  onError: (details?: string) => void;
 };
 
 export type CloudEventFormContainerParams = {
@@ -38,8 +38,6 @@ export type CloudEventFormContainerParams = {
 
 const CloudEventFormContainer: React.FC<CloudEventFormContainerProps & OUIAProps> = ({
   isTriggerNewInstance,
-  onSuccess,
-  onError,
   ouiaId,
   ouiaSafe,
 }) => {
@@ -47,16 +45,53 @@ const CloudEventFormContainer: React.FC<CloudEventFormContainerProps & OUIAProps
 
   const { instanceId } = useParams<CloudEventFormContainerParams>();
 
+  const triggerEventSuccessAlert = useGlobalAlert<{ message: string }>(
+    useCallback(({ close }, { message }) => {
+      return (
+        <Alert
+          className="pf-u-mb-md"
+          variant="success"
+          title={message}
+          aria-live="polite"
+          actionClose={<AlertActionCloseButton onClose={close} />}
+        />
+      );
+    }, [])
+  );
+
+  const startWorkflowErrorAlert = useGlobalAlert<{ message: string }>(
+    useCallback(({ close }, { message }) => {
+      return (
+        <Alert
+          className="pf-u-mb-md"
+          variant="warning"
+          title={
+            <>
+              Something went wrong while triggering your workflow.
+              <br />
+              {`Reason: ${message}`}
+            </>
+          }
+          aria-live="polite"
+          data-testid="alert-upload-error"
+          actionClose={<AlertActionCloseButton onClose={close} />}
+        />
+      );
+    }, [])
+  );
+
   const triggerStartCloudEvent = useCallback(
     (event: CloudEventRequest) => {
       return gatewayApi
         .triggerStartCloudEvent(event)
         .then((businessKey) => {
-          onSuccess(`A workflow with business key ${businessKey} has been successfully triggered.`);
+          triggerEventSuccessAlert.show({
+            message: `A workflow with business key ${businessKey} has been successfully triggered.`,
+          });
         })
         .catch((error) => handleError(error));
     },
-    [gatewayApi, onSuccess, onError]
+    [gatewayApi, triggerEventSuccessAlert]
   );
 
   const triggerCloudEvent = useCallback(
@@ -65,19 +100,19 @@ const CloudEventFormContainer: React.FC<CloudEventFormContainerProps & OUIAProps
         .triggerCloudEvent(event)
         .then((response) => {
           console.log(response);
-          onSuccess("The CloudEvent has been successfully triggered.");
+          triggerEventSuccessAlert.show({ message: "The cloud event has been successfully triggered." });
         })
         .catch((error) => handleError(error));
     },
-    [gatewayApi, onSuccess, onError]
+    [gatewayApi, triggerEventSuccessAlert]
   );
 
   const handleError = useCallback(
     (error) => {
       const message = error?.message || "Unknown error. More details in the developer tools console.";
-      onError(message);
+      startWorkflowErrorAlert.show({ message });
     },
-    [gatewayApi, onSuccess, onError]
+    [gatewayApi, startWorkflowErrorAlert]
   );
 
   return (

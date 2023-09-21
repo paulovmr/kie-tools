@@ -41,38 +41,6 @@ const CloudEventForm: React.FC<OUIAProps> = ({ ouiaId, ouiaSafe }) => {
     return source === CloudEventPageSource.DEFINITIONS;
   }, [history]);
 
-  const showNotification = useCallback(
-    (notificationType: "error" | "success", submitMessage: string, notificationDetails?: string) => {
-      setNotification({
-        type: notificationType,
-        message: submitMessage,
-        details: notificationDetails,
-        customActions: [
-          {
-            label: "Go to workflow list",
-            onClick: () => {
-              setNotification(undefined);
-              history.push("/Processes");
-            },
-          },
-        ],
-        close: () => {
-          setNotification(undefined);
-        },
-      });
-    },
-    []
-  );
-
-  const onSubmitSuccess = useCallback((message: string): void => {
-    showNotification("success", message);
-  }, []);
-
-  const onSubmitError = useCallback((details?: string) => {
-    const message = "Failed to trigger workflow.";
-    showNotification("error", message, details);
-  }, []);
-
   useEffect(() => {
     return ouiaPageTypeAndObjectId("trigger-cloud-event-form");
   }, []);
@@ -97,11 +65,7 @@ const CloudEventForm: React.FC<OUIAProps> = ({ ouiaId, ouiaSafe }) => {
       >
         <Card className="Dev-ui__card-size">
           <CardBody className="pf-u-h-100">
-            <CloudEventFormContainer
-              isTriggerNewInstance={isTriggerNewInstance}
-              onSuccess={(id: string) => onSubmitSuccess(id)}
-              onError={(details: string) => onSubmitError(details)}
-            />
+            <CloudEventFormContainer isTriggerNewInstance={isTriggerNewInstance} />
           </CardBody>
         </Card>
       </PageSection>
