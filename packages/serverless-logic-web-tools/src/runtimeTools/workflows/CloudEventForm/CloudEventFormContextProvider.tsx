@@ -21,11 +21,20 @@ import React, { useMemo } from "react";
 import CloudEventFormContext from "./CloudEventFormContext";
 import { CloudEventFormGatewayApiImpl } from "./CloudEventFormGatewayApi";
 import { useSettings } from "../../../settings/SettingsContext";
+import { useEnv } from "../../../env/EnvContext";
 
 export function CloudEventFormContextProvider(props: React.PropsWithChildren<{}>) {
   const settings = useSettings();
+  const { env } = useEnv();
 
-  const gatewayApi = useMemo(() => new CloudEventFormGatewayApiImpl(settings.runtimeTools.config.kogitoServiceUrl), []);
+  const gatewayApi = useMemo(
+    () =>
+      new CloudEventFormGatewayApiImpl(
+        settings.runtimeTools.config.kogitoServiceUrl,
+        env.SERVERLESS_LOGIC_WEB_TOOLS_CORS_PROXY_URL
+      ),
+    []
+  );
 
   return <CloudEventFormContext.Provider value={gatewayApi}>{props.children}</CloudEventFormContext.Provider>;
 }

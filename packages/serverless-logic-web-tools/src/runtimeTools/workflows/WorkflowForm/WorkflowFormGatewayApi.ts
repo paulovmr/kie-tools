@@ -30,11 +30,13 @@ export class WorkflowFormGatewayApiImpl implements WorkflowFormGatewayApi {
   private businessKey: string;
   private readonly baseUrl: string;
   private readonly openApiPath: string;
+  private readonly proxyEndpoint: string;
 
-  constructor(baseUrl: string, openApiPath: string) {
+  constructor(baseUrl: string, openApiPath: string, proxyEndpoint: string) {
     this.businessKey = "";
     this.baseUrl = baseUrl;
     this.openApiPath = openApiPath;
+    this.proxyEndpoint = proxyEndpoint;
   }
 
   setBusinessKey(bk: string): void {
@@ -50,6 +52,6 @@ export class WorkflowFormGatewayApiImpl implements WorkflowFormGatewayApi {
   }
 
   startWorkflow(endpoint: string, data: Record<string, any>): Promise<string> {
-    return startWorkflowRest(data, endpoint, this.businessKey);
+    return startWorkflowRest(data, endpoint, this.businessKey, this.proxyEndpoint);
   }
 }

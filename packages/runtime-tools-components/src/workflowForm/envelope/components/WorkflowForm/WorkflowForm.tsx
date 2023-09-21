@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { componentOuiaProps, OUIAProps } from "@kie-tools/runtime-tools-common/dist/ouiaTools";
 import { WorkflowDefinition, WorkflowFormDriver } from "../../../api";
 import { ActionGroup, Form, FormGroup } from "@patternfly/react-core/dist/js/components/Form";
@@ -31,6 +31,7 @@ import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 import { validateWorkflowData } from "./validateWorkflowData";
 import { KogitoSpinner } from "@kie-tools/runtime-tools-common/dist/components/KogitoSpinner";
+import { RequestDataEditor } from "@kie-tools/runtime-tools-common/dist/components/RequestDataEditor";
 
 export interface WorkflowFormProps {
   workflowDefinition: WorkflowDefinition;
@@ -63,6 +64,10 @@ const WorkflowForm: React.FC<WorkflowFormProps & OUIAProps> = ({ workflowDefinit
     setIsLoading(false);
     resetForm();
   }, [driver, data]);
+
+  const requestDataEditor = useMemo(() => {
+    return <RequestDataEditor content={""} onContentChange={(args) => setData(args.content)} isReadOnly={false} />;
+  }, [setData]);
 
   if (isLoading) {
     return (
@@ -112,7 +117,7 @@ const WorkflowForm: React.FC<WorkflowFormProps & OUIAProps> = ({ workflowDefinit
                 </Popover>
               }
             >
-              <textarea value={data} onChange={() => setData} />
+              {requestDataEditor}
             </FormGroup>
             <ActionGroup>
               <Button variant="primary" onClick={onSubmit} data-testid="start-button">

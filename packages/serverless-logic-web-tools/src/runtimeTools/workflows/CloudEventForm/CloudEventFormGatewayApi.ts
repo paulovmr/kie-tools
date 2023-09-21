@@ -26,14 +26,14 @@ export interface CloudEventFormGatewayApi {
 }
 
 export class CloudEventFormGatewayApiImpl implements CloudEventFormGatewayApi {
-  constructor(private readonly baseUrl: string) {}
+  constructor(private readonly baseUrl: string, private readonly proxyEndpoint: string) {}
 
   async triggerStartCloudEvent(event: CloudEventRequest): Promise<string> {
-    const response = await triggerStartCloudEvent(event, this.baseUrl);
+    const response = await triggerStartCloudEvent(event, this.baseUrl, this.proxyEndpoint);
     return response;
   }
 
   triggerCloudEvent(event: CloudEventRequest): Promise<any> {
-    return triggerCloudEvent(event, this.baseUrl);
+    return triggerCloudEvent(event, this.baseUrl, this.proxyEndpoint);
   }
 }

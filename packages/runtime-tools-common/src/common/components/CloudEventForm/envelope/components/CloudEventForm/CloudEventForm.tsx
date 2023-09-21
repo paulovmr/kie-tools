@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { componentOuiaProps, OUIAProps } from "../../../../../ouiaTools";
 import {
   CloudEventFormDefaultValues,
@@ -39,6 +39,7 @@ import CloudEventCustomHeadersEditor, {
   CloudEventCustomHeadersEditorApi,
 } from "../CloudEventCustomHeadersEditor/CloudEventCustomHeadersEditor";
 import CloudEventFieldLabelIcon from "../CloudEventFieldLabelIcon/CloudEventFieldLabelIcon";
+import { RequestDataEditor } from "../../../../RequestDataEditor";
 
 export interface CloudEventFormProps {
   driver: CloudEventFormDriver;
@@ -130,6 +131,10 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
       resetForm();
     });
   }, [method, endpoint, eventType, eventSource, eventData, instanceId, businessKey]);
+
+  const requestDataEditor = useMemo(() => {
+    return <RequestDataEditor content={""} onContentChange={(args) => setEventData(args.content)} isReadOnly={false} />;
+  }, [setEventData]);
 
   return (
     <div {...componentOuiaProps(ouiaId, "workflow-form", ouiaSafe)}>
@@ -274,7 +279,7 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
             />
           }
         >
-          <textarea value={eventData} onChange={() => setEventData} />
+          {requestDataEditor}
         </FormGroup>
         <ActionListGroup>
           <Button key={"triggerCloudEventButton"} variant="primary" onClick={doTrigger}>

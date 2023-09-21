@@ -29,10 +29,6 @@ import WorkflowDefinitionListContainer from "./WorkflowDefinitionListContainer/W
 const PAGE_TITLE = "Workflow Definitions";
 
 export function RuntimeToolsWorkflowDefinitions() {
-  const history = useHistory();
-
-  const initialState: WorkflowListState = history.location && (history.location.state as WorkflowListState);
-
   return (
     <>
       <Page>

@@ -77,7 +77,7 @@ export const getChildWorkflowInstances = async (
       .query({
         query: GraphQL.GetChildInstancesDocument,
         variables: {
-          rootWorkflowInstanceId,
+          rootProcessInstanceId: rootWorkflowInstanceId,
         },
       })
       .then((value) => {
@@ -463,7 +463,7 @@ export const getJobsWithFilters = async (
   }
 };
 
-const doTriggerCloudEvent = (event: CloudEventRequest, devUIUrl: string): Promise<any> => {
+const doTriggerCloudEvent = (event: CloudEventRequest, devUIUrl: string, proxyEndpoint: string): Promise<any> => {
   const cloudEvent = {
     ...event.headers.extensions,
     specversion: "1.0",
@@ -480,26 +480,33 @@ const doTriggerCloudEvent = (event: CloudEventRequest, devUIUrl: string): Promis
   const url = `${devUIUrl}${event.endpoint.startsWith("/") ? "" : "/"}${event.endpoint}`;
 
   return axios.request({
-    url,
+    url: proxyEndpoint,
     method: event.method,
     data: cloudEvent,
+    headers: {
+      "Target-Url": url,
+    },
   });
 };
 
-export const triggerStartCloudEvent = (event: CloudEventRequest, devUIUrl: string): Promise<string> => {
+export const triggerStartCloudEvent = (
+  event: CloudEventRequest,
+  devUIUrl: string,
+  proxyEndpoint: string
+): Promise<string> => {
   if (!event.headers.extensions[KOGITO_BUSINESS_KEY]) {
     event.headers.extensions[KOGITO_BUSINESS_KEY] = String(Math.floor(Math.random() * 100000));
   }
 
   return new Promise((resolve, reject) => {
-    doTriggerCloudEvent(event, devUIUrl)
+    doTriggerCloudEvent(event, devUIUrl, proxyEndpoint)
       .then((response: any) => resolve(event.headers.extensions[KOGITO_BUSINESS_KEY]))
       .catch((error) => reject(error));
   });
 };
 
-export const triggerCloudEvent = (event: CloudEventRequest, devUIUrl: string): Promise<any> => {
-  return doTriggerCloudEvent(event, devUIUrl);
+export const triggerCloudEvent = (event: CloudEventRequest, devUIUrl: string, proxyEndpoint: string): Promise<any> => {
+  return doTriggerCloudEvent(event, devUIUrl, proxyEndpoint);
 };
 
 export const createWorkflowDefinitionList = (
@@ -560,15 +567,17 @@ export const getWorkflowSchema = (workflowDefinitionData: WorkflowDefinition): P
 export const startWorkflowInstance = (
   formData: any,
   businessKey: string,
-  workflowDefinitionData: WorkflowDefinition
+  workflowDefinitionData: WorkflowDefinition,
+  proxyEndpoint: string
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
     const requestURL = `${workflowDefinitionData.endpoint}${
       businessKey.length > 0 ? `?businessKey=${businessKey}` : ""
     }`;
     axios
-      .post(requestURL, formData, {
+      .post(proxyEndpoint, formData, {
         headers: {
+          "Target-Url": requestURL,
           "Content-Type": "application/json",
         },
       })
@@ -582,12 +591,21 @@ export const startWorkflowInstance = (
 export const startWorkflowRest = (
   data: Record<string, any>,
   endpoint: string,
-  businessKey: string
+  businessKey: string,
+  proxyEndpoint: string
 ): Promise<string> => {
   const requestURL = `${endpoint}${businessKey.length > 0 ? `?businessKey=${businessKey}` : ""}`;
   return new Promise((resolve, reject) => {
     axios
-      .post(requestURL, { workflowdata: data })
+      .post(
+        proxyEndpoint,
+        { workflowdata: data },
+        {
+          headers: {
+            "Target-Url": requestURL,
+          },
+        }
+      )
       .then((response: any) => {
         resolve(response.data.id);
       })

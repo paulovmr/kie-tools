@@ -21,12 +21,18 @@ import React, { useMemo } from "react";
 import { WorkflowFormContext } from "./WorkflowFormContext";
 import { WorkflowFormGatewayApiImpl } from "./WorkflowFormGatewayApi";
 import { useSettings } from "../../../settings/SettingsContext";
+import { useEnv } from "../../../env/EnvContext";
 
 export function WorkflowFormContextProvider(props: React.PropsWithChildren<{}>) {
   const settings = useSettings();
+  const { env } = useEnv();
 
   const gatewayApiImpl = useMemo(() => {
-    return new WorkflowFormGatewayApiImpl(settings.runtimeTools.config.kogitoServiceUrl, "q/openapi.json");
+    return new WorkflowFormGatewayApiImpl(
+      settings.runtimeTools.config.kogitoServiceUrl,
+      "q/openapi.json",
+      env.SERVERLESS_LOGIC_WEB_TOOLS_CORS_PROXY_URL
+    );
   }, []);
 
   return <WorkflowFormContext.Provider value={gatewayApiImpl}>{props.children}</WorkflowFormContext.Provider>;

@@ -6186,6 +6186,9 @@ importers:
 
   packages/runtime-tools-common:
     dependencies:
+      "@kie-tools-core/editor":
+        specifier: workspace:*
+        version: link:../editor
       "@kie-tools-core/envelope":
         specifier: workspace:*
         version: link:../envelope
@@ -6201,12 +6204,18 @@ importers:
       "@kie-tools-core/notifications":
         specifier: workspace:*
         version: link:../notifications
+      "@kie-tools-core/operating-system":
+        specifier: workspace:*
+        version: link:../operating-system
       "@kie-tools-core/patternfly-base":
         specifier: workspace:*
         version: link:../patternfly-base
       "@kie-tools/i18n-common-dictionary":
         specifier: workspace:*
         version: link:../i18n-common-dictionary
+      "@kie-tools/json-yaml-language-service":
+        specifier: workspace:*
+        version: link:../json-yaml-language-service
       "@kie-tools/uniforms-patternfly":
         specifier: workspace:*
         version: link:../uniforms-patternfly
@@ -6231,6 +6240,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      monaco-editor:
+        specifier: ^0.33.0
+        version: 0.33.0
       react:
         specifier: ^17.0.2
         version: 17.0.2
