@@ -38,6 +38,6 @@ export interface WorkflowListDriver {
     operationType: OperationType
   ): Promise<BulkWorkflowInstanceActionResponse>;
   query(offset: number, limit: number): Promise<WorkflowInstance[]>;
-  getChildWorkflowesQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]>;
+  getChildWorkflowsQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]>;
   openTriggerCloudEvent(workflowInstance?: WorkflowInstance): void;
 }

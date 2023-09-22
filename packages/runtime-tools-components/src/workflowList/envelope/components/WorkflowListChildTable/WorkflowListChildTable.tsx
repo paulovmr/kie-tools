@@ -202,7 +202,7 @@ const WorkflowListChildTable: React.FC<WorkflowListChildTableProps & OUIAProps> 
   const getChildWorkflowInstances = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      const response: WorkflowInstance[] = await driver.getChildWorkflowesQuery(parentWorkflowId);
+      const response: WorkflowInstance[] = await driver.getChildWorkflowsQuery(parentWorkflowId);
       workflowInstances.forEach((workflowInstance: WorkflowInstance) => {
         if (workflowInstance.id === parentWorkflowId) {
           response.forEach((child: WorkflowInstance) => {

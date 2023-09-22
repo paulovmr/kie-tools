@@ -65,7 +65,7 @@ const CloudEventFormContainer: React.FC<CloudEventFormContainerProps & OUIAProps
       return (
         <Alert
           className="pf-u-mb-md"
-          variant="warning"
+          variant="danger"
           title={
             <>
               Something went wrong while triggering your workflow.

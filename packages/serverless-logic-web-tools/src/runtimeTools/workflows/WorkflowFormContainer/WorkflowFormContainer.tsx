@@ -82,7 +82,7 @@ const WorkflowFormContainer: React.FC<WorkflowFormContainerProps & OUIAProps> = 
       return (
         <Alert
           className="pf-u-mb-md"
-          variant="warning"
+          variant="danger"
           title={
             <>
               Something went wrong while triggering your workflow.

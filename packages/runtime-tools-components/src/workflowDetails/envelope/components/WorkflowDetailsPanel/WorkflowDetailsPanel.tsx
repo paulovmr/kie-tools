@@ -125,7 +125,7 @@ const WorkflowDetailsPanel: React.FC<IOwnProps & OUIAProps> = ({ workflowInstanc
           )}
 
           {workflowInstance.childWorkflowInstances && workflowInstance.childWorkflowInstances.length !== 0 && (
-            <FormGroup label="Sub Workflowes" fieldId="child">
+            <FormGroup label="Sub Workflows" fieldId="child">
               {workflowInstance.childWorkflowInstances.map((child) => (
                 <div key={child.id}>
                   <Button

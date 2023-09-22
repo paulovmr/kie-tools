@@ -46,7 +46,8 @@ const DisablePopup: React.FC<DisablePopupProps & OUIAProps> = ({
     content = "Management add-on capability not enabled. Contact your administrator to set up";
   }
   return (
-    <Tooltip content={content} {...componentOuiaProps(ouiaId, "disable-popup", ouiaSafe)}>
+    // TODO Replace "Unavailable" by content once it makes sense in the webtools context.
+    <Tooltip content={"Unavailable"} {...componentOuiaProps(ouiaId, "disable-popup", ouiaSafe)}>
       {component}
     </Tooltip>
   );

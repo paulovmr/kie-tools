@@ -37,6 +37,6 @@ export interface WorkflowListChannelApi {
     operationType: OperationType
   ): Promise<BulkWorkflowInstanceActionResponse>;
   workflowList__query(offset: number, limit: number): Promise<WorkflowInstance[]>;
-  workflowList__getChildWorkflowesQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]>;
+  workflowList__getChildWorkflowsQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]>;
   workflowList__openTriggerCloudEvent(workflowInstance?: WorkflowInstance): void;
 }

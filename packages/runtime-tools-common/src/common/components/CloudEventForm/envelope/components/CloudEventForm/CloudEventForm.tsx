@@ -40,6 +40,8 @@ import CloudEventCustomHeadersEditor, {
 } from "../CloudEventCustomHeadersEditor/CloudEventCustomHeadersEditor";
 import CloudEventFieldLabelIcon from "../CloudEventFieldLabelIcon/CloudEventFieldLabelIcon";
 import { RequestDataEditor, RequestDataEditorApi } from "../../../../RequestDataEditor";
+import { Bullseye } from "@patternfly/react-core/dist/js/layouts/Bullseye";
+import { KogitoSpinner } from "../../../../KogitoSpinner";
 
 export interface CloudEventFormProps {
   driver: CloudEventFormDriver;
@@ -67,6 +69,7 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
   const [eventType, setEventType] = useState<string>("");
   const [eventSource, setEventSource] = useState<string>("/from/form");
   const [eventData, setEventData] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const resetForm = useCallback(() => {
     setMethod(CloudEventMethod.POST);
@@ -129,9 +132,15 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
       return;
     }
 
-    driver.triggerCloudEvent(eventRequest).then((response: any) => {
-      resetForm();
-    });
+    setIsLoading(true);
+    driver
+      .triggerCloudEvent(eventRequest)
+      .then((response: any) => {
+        resetForm();
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [method, endpoint, eventType, eventSource, eventData, instanceId, businessKey]);
 
   const requestDataEditor = useMemo(() => {
@@ -144,6 +153,14 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
       />
     );
   }, [setEventData]);
+
+  if (isLoading) {
+    return (
+      <Bullseye>
+        <KogitoSpinner spinnerText="Triggering cloud event..." ouiaId="cloud-event-form-loading" />
+      </Bullseye>
+    );
+  }
 
   return (
     <div {...componentOuiaProps(ouiaId, "workflow-form", ouiaSafe)}>

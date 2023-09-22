@@ -59,8 +59,8 @@ export default class WorkflowListEnvelopeViewDriver implements WorkflowListDrive
   query(offset: number, limit: number): Promise<WorkflowInstance[]> {
     return this.channelApi.requests.workflowList__query(offset, limit);
   }
-  getChildWorkflowesQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]> {
-    return this.channelApi.requests.workflowList__getChildWorkflowesQuery(rootWorkflowInstanceId);
+  getChildWorkflowsQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]> {
+    return this.channelApi.requests.workflowList__getChildWorkflowsQuery(rootWorkflowInstanceId);
   }
 
   openTriggerCloudEvent(workflowInstance?: WorkflowInstance): void {

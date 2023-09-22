@@ -46,12 +46,12 @@ export class WorkflowDefinitionListGatewayApiImpl implements WorkflowDefinitionL
   private readonly onOpenWorkflowListeners: OnOpenWorkflowFormListener[] = [];
   private readonly onOpenTriggerCloudEventListeners: OnOpenTriggerCloudEventListener[] = [];
 
-  private readonly devUIUrl: string;
+  private readonly baseUrl: string;
   private readonly openApiPath: string;
   private workflowDefinitionFilter: string[] = [];
 
   constructor(url: string, path: string) {
-    this.devUIUrl = url;
+    this.baseUrl = url;
     this.openApiPath = path;
   }
 
@@ -100,7 +100,7 @@ export class WorkflowDefinitionListGatewayApiImpl implements WorkflowDefinitionL
   }
 
   getWorkflowDefinitionsQuery(): Promise<WorkflowDefinition[]> {
-    return getWorkflowDefinitionList(this.devUIUrl, this.openApiPath);
+    return getWorkflowDefinitionList(this.baseUrl, this.openApiPath);
   }
 
   openTriggerCloudEvent(): void {

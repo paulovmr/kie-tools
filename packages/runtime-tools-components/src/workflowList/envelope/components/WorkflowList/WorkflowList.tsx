@@ -122,7 +122,7 @@ const WorkflowList: React.FC<WorkflowListProps & OUIAProps> = ({
   const doQuery = async (
     _offset: number,
     _limit: number,
-    _resetWorkflowes: boolean,
+    _resetWorkflows: boolean,
     _resetPagination: boolean = false,
     _loadMore: boolean = false
   ): Promise<void> => {
@@ -132,7 +132,7 @@ const WorkflowList: React.FC<WorkflowListProps & OUIAProps> = ({
     try {
       const response: WorkflowInstance[] = await driver.query(_offset, _limit);
       setLimit(response.length);
-      if (_resetWorkflowes) {
+      if (_resetWorkflows) {
         countExpandableRows(response);
         setWorkflowInstances(response);
       } else {

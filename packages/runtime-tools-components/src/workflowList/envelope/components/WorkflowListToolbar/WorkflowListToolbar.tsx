@@ -451,14 +451,14 @@ const WorkflowListToolbar: React.FC<WorkflowListToolbarProps & OUIAProps> = ({
       onClick={() => handleCheckboxSelectClick(BulkSelectionType.PARENT, false)}
       id="all-parent"
     >
-      Select all parent workflowes
+      Select all parent workflows
     </DropdownItem>,
     <DropdownItem
       key="all-parent-child"
       onClick={() => handleCheckboxSelectClick(BulkSelectionType.PARENT_CHILD, false)}
       id="all-parent-child"
     >
-      Select all workflowes
+      Select all workflows
     </DropdownItem>,
   ];
 

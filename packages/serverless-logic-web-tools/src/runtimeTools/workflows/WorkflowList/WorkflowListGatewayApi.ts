@@ -40,7 +40,7 @@ export interface WorkflowListGatewayApi {
     operationType: OperationType
   ) => Promise<BulkWorkflowInstanceActionResponse>;
   query(offset: number, limit: number): Promise<WorkflowInstance[]>;
-  getChildWorkflowesQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]>;
+  getChildWorkflowsQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]>;
   openTriggerCloudEvent: (workflowInstance?: WorkflowInstance) => void;
   onOpenWorkflowListen: (listener: OnOpenWorkflowListener) => UnSubscribeHandler;
   onOpenTriggerCloudEventListen: (listener: OnOpenTriggerCloudEventListener) => UnSubscribeHandler;
@@ -136,7 +136,7 @@ export class WorkflowListGatewayApiImpl implements WorkflowListGatewayApi {
     });
   }
 
-  getChildWorkflowesQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]> {
+  getChildWorkflowsQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]> {
     return new Promise<WorkflowInstance[]>((resolve, reject) => {
       this.queries
         .getChildWorkflowInstances(rootWorkflowInstanceId)

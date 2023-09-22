@@ -463,7 +463,7 @@ export const getJobsWithFilters = async (
   }
 };
 
-const doTriggerCloudEvent = (event: CloudEventRequest, devUIUrl: string, proxyEndpoint: string): Promise<any> => {
+const doTriggerCloudEvent = (event: CloudEventRequest, baseUrl: string, proxyEndpoint: string): Promise<any> => {
   const cloudEvent = {
     ...event.headers.extensions,
     specversion: "1.0",
@@ -473,11 +473,11 @@ const doTriggerCloudEvent = (event: CloudEventRequest, devUIUrl: string, proxyEn
     data: event.data ? JSON.parse(event.data) : {},
   };
 
-  if (devUIUrl.endsWith("/")) {
-    devUIUrl = devUIUrl.slice(0, devUIUrl.length - 1);
+  if (baseUrl.endsWith("/")) {
+    baseUrl = baseUrl.slice(0, baseUrl.length - 1);
   }
 
-  const url = `${devUIUrl}${event.endpoint.startsWith("/") ? "" : "/"}${event.endpoint}`;
+  const url = `${baseUrl}${event.endpoint.startsWith("/") ? "" : "/"}${event.endpoint}`;
 
   return axios.request({
     url: proxyEndpoint,
@@ -491,7 +491,7 @@ const doTriggerCloudEvent = (event: CloudEventRequest, devUIUrl: string, proxyEn
 
 export const triggerStartCloudEvent = (
   event: CloudEventRequest,
-  devUIUrl: string,
+  baseUrl: string,
   proxyEndpoint: string
 ): Promise<string> => {
   if (!event.headers.extensions[KOGITO_BUSINESS_KEY]) {
@@ -499,14 +499,14 @@ export const triggerStartCloudEvent = (
   }
 
   return new Promise((resolve, reject) => {
-    doTriggerCloudEvent(event, devUIUrl, proxyEndpoint)
+    doTriggerCloudEvent(event, baseUrl, proxyEndpoint)
       .then((response: any) => resolve(event.headers.extensions[KOGITO_BUSINESS_KEY]))
       .catch((error) => reject(error));
   });
 };
 
-export const triggerCloudEvent = (event: CloudEventRequest, devUIUrl: string, proxyEndpoint: string): Promise<any> => {
-  return doTriggerCloudEvent(event, devUIUrl, proxyEndpoint);
+export const triggerCloudEvent = (event: CloudEventRequest, baseUrl: string, proxyEndpoint: string): Promise<any> => {
+  return doTriggerCloudEvent(event, baseUrl, proxyEndpoint);
 };
 
 export const createWorkflowDefinitionList = (
@@ -525,9 +525,9 @@ export const createWorkflowDefinitionList = (
   return workflowDefinitionList;
 };
 
-export const getWorkflowDefinitionList = (devUIUrl: string, openApiPath: string): Promise<WorkflowDefinition[]> => {
+export const getWorkflowDefinitionList = (baseUrl: string, openApiPath: string): Promise<WorkflowDefinition[]> => {
   return new Promise((resolve, reject) => {
-    SwaggerParser.parse(`${devUIUrl}/${openApiPath}`)
+    SwaggerParser.parse(`${baseUrl}/${openApiPath}`)
       .then((response) => {
         const workflowDefinitionObjs: any[] = [];
         const paths = response.paths;
@@ -542,7 +542,7 @@ export const getWorkflowDefinitionList = (devUIUrl: string, openApiPath: string)
               workflowDefinitionObjs.push({ [url]: paths![url] });
             }
           });
-        resolve(createWorkflowDefinitionList(workflowDefinitionObjs, devUIUrl));
+        resolve(createWorkflowDefinitionList(workflowDefinitionObjs, baseUrl));
       })
       .catch((err: any) => reject(err));
   });
@@ -614,12 +614,12 @@ export const startWorkflowRest = (
 };
 
 export const getCustomWorkflowSchema = (
-  devUIUrl: string,
+  baseUrl: string,
   openApiPath: string,
   workflowName: string
 ): Promise<Record<string, any>> => {
   return new Promise((resolve, reject) => {
-    SwaggerParser.parse(`${devUIUrl}/${openApiPath}`)
+    SwaggerParser.parse(`${baseUrl}/${openApiPath}`)
       .then((response: any) => {
         let schema = {};
         try {

@@ -64,8 +64,8 @@ export class WorkflowListChannelApiImpl implements WorkflowListChannelApi {
     return this.driver.query(offset, limit);
   }
 
-  workflowList__getChildWorkflowesQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]> {
-    return this.driver.getChildWorkflowesQuery(rootWorkflowInstanceId);
+  workflowList__getChildWorkflowsQuery(rootWorkflowInstanceId: string): Promise<WorkflowInstance[]> {
+    return this.driver.getChildWorkflowsQuery(rootWorkflowInstanceId);
   }
 
   workflowList__openTriggerCloudEvent(workflowInstance?: WorkflowInstance): void {
