@@ -28,6 +28,7 @@ export interface RequestDataEditorApi {
   undo: () => void;
   redo: () => void;
   getContent: () => string;
+  setContent: (content: string) => void;
   setTheme: (theme: EditorTheme) => void;
   forceRedraw: () => void;
   dispose: () => void;
@@ -90,7 +91,7 @@ export class RequestDataEditorController implements RequestDataEditorApi {
       language: FileLanguage.JSON,
       scrollBeyondLastLine: false,
       automaticLayout: true,
-      fontSize: 12,
+      fontSize: 14,
       theme: this.getMonacoThemeByEditorTheme(theme),
       readOnly: this.isReadOnly,
     });
@@ -114,6 +115,10 @@ export class RequestDataEditorController implements RequestDataEditorApi {
 
   public getContent(): string {
     return this.editor?.getModel()?.getValue() || "";
+  }
+
+  public setContent(content: string) {
+    this.editor?.getModel()?.setValue(content);
   }
 
   public forceRedraw() {

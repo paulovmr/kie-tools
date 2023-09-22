@@ -59,8 +59,8 @@ const WorkflowDefinitionList: React.FC<WorkflowDefinitionListProps & OUIAProps> 
   const init = async (): Promise<void> => {
     try {
       const response = await driver.getWorkflowDefinitionsQuery();
-      const pdFilter = await driver.getWorkflowDefinitionFilter();
-      setFilterWorkflowNames(pdFilter);
+      const workflowDefinitionFilter = await driver.getWorkflowDefinitionFilter();
+      setFilterWorkflowNames(workflowDefinitionFilter);
       setWorkflowDefinitionList(response);
       setIsLoading(false);
     } catch (errorContent) {
@@ -87,7 +87,9 @@ const WorkflowDefinitionList: React.FC<WorkflowDefinitionListProps & OUIAProps> 
     if (filterWorkflowNames.length === 0) {
       return workflowDefinitionList;
     }
-    return workflowDefinitionList.filter((pd) => filterWorkflowNames.includes(pd.workflowName));
+    return workflowDefinitionList.filter((workflowDefinition) => {
+      return filterWorkflowNames.some((filter) => workflowDefinition.workflowName.includes(filter));
+    });
   };
 
   const workflowDefinitionLoadingComponent: JSX.Element = (

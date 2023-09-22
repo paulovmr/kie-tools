@@ -56,7 +56,8 @@ const CloudEventFormContainer: React.FC<CloudEventFormContainerProps & OUIAProps
           actionClose={<AlertActionCloseButton onClose={close} />}
         />
       );
-    }, [])
+    }, []),
+    { durationInSeconds: 5 }
   );
 
   const startWorkflowErrorAlert = useGlobalAlert<{ message: string }>(
@@ -77,7 +78,8 @@ const CloudEventFormContainer: React.FC<CloudEventFormContainerProps & OUIAProps
           actionClose={<AlertActionCloseButton onClose={close} />}
         />
       );
-    }, [])
+    }, []),
+    { durationInSeconds: 5 }
   );
 
   const triggerStartCloudEvent = useCallback(

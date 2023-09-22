@@ -31,7 +31,10 @@ import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 import { validateWorkflowData } from "./validateWorkflowData";
 import { KogitoSpinner } from "@kie-tools/runtime-tools-common/dist/components/KogitoSpinner";
-import { RequestDataEditor } from "@kie-tools/runtime-tools-common/dist/components/RequestDataEditor";
+import {
+  RequestDataEditor,
+  RequestDataEditorApi,
+} from "@kie-tools/runtime-tools-common/dist/components/RequestDataEditor";
 
 export interface WorkflowFormProps {
   workflowDefinition: WorkflowDefinition;
@@ -43,10 +46,13 @@ const WorkflowForm: React.FC<WorkflowFormProps & OUIAProps> = ({ workflowDefinit
   const [isValid, setIsValid] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const requestDataEditorRef = useRef<RequestDataEditorApi>(null);
+
   const resetForm = useCallback(() => {
     driver.resetBusinessKey();
     setData("");
     setIsValid(true);
+    requestDataEditorRef.current?.setContent("");
   }, []);
 
   const onSubmit = useCallback(async () => {
@@ -66,7 +72,14 @@ const WorkflowForm: React.FC<WorkflowFormProps & OUIAProps> = ({ workflowDefinit
   }, [driver, data]);
 
   const requestDataEditor = useMemo(() => {
-    return <RequestDataEditor content={""} onContentChange={(args) => setData(args.content)} isReadOnly={false} />;
+    return (
+      <RequestDataEditor
+        ref={requestDataEditorRef}
+        content={""}
+        onContentChange={(args) => setData(args.content)}
+        isReadOnly={false}
+      />
+    );
   }, [setData]);
 
   if (isLoading) {

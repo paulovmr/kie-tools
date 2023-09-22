@@ -23,7 +23,8 @@ import { WorkflowDefinition } from "@kie-tools/runtime-tools-common";
 import { WorkflowFormGatewayApi, useWorkflowFormGatewayApi } from "../WorkflowForm";
 import { EmbeddedWorkflowForm } from "@kie-tools/runtime-tools-components/dist/workflowForm";
 import { useGlobalAlert } from "../../../alerts/GlobalAlertsContext";
-import { Alert, AlertActionCloseButton } from "@patternfly/react-core/dist/js/components/Alert";
+import { Alert, AlertActionCloseButton, AlertActionLink } from "@patternfly/react-core/dist/js/components/Alert";
+import { useHistory } from "react-router";
 
 interface WorkflowFormContainerProps {
   workflowDefinitionData: WorkflowDefinition;
@@ -36,19 +37,44 @@ const WorkflowFormContainer: React.FC<WorkflowFormContainerProps & OUIAProps> = 
   ouiaSafe,
 }) => {
   const gatewayApi: WorkflowFormGatewayApi = useWorkflowFormGatewayApi();
+  const history = useHistory();
+
+  const openWorkflowInstance = useCallback(
+    (id: string) => {
+      history.push({
+        pathname: `/runtime-tools/workflow-details/${id}`,
+      });
+    },
+    [history]
+  );
 
   const startWorkflowSuccessAlert = useGlobalAlert<{ id: string }>(
-    useCallback(({ close }, { id }) => {
-      return (
-        <Alert
-          className="pf-u-mb-md"
-          variant="success"
-          title={`A workflow with id ${id} was triggered successfully.`}
-          aria-live="polite"
-          actionClose={<AlertActionCloseButton onClose={close} />}
-        />
-      );
-    }, [])
+    useCallback(
+      ({ close }, { id }) => {
+        const viewDetails = () => {
+          openWorkflowInstance(id);
+          close();
+        };
+
+        return (
+          <Alert
+            className="pf-u-mb-md"
+            variant="success"
+            title={`A workflow with id ${id} was started successfully.`}
+            aria-live="polite"
+            actionClose={<AlertActionCloseButton onClose={close} />}
+            actionLinks={
+              <>
+                <AlertActionLink onClick={viewDetails}>{"View details"}</AlertActionLink>
+                <AlertActionLink onClick={close}>{"Ignore"}</AlertActionLink>
+              </>
+            }
+          />
+        );
+      },
+      [openWorkflowInstance]
+    ),
+    { durationInSeconds: 5 }
   );
 
   const startWorkflowErrorAlert = useGlobalAlert<{ message: string }>(
@@ -69,7 +95,8 @@ const WorkflowFormContainer: React.FC<WorkflowFormContainerProps & OUIAProps> = 
           actionClose={<AlertActionCloseButton onClose={close} />}
         />
       );
-    }, [])
+    }, []),
+    { durationInSeconds: 5 }
   );
 
   return (

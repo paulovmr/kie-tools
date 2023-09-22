@@ -48,7 +48,7 @@ export class WorkflowDefinitionListGatewayApiImpl implements WorkflowDefinitionL
 
   private readonly devUIUrl: string;
   private readonly openApiPath: string;
-  private workflowDefinitonFilter: string[] = [];
+  private workflowDefinitionFilter: string[] = [];
 
   constructor(url: string, path: string) {
     this.devUIUrl = url;
@@ -56,11 +56,11 @@ export class WorkflowDefinitionListGatewayApiImpl implements WorkflowDefinitionL
   }
 
   getWorkflowDefinitionFilter(): Promise<string[]> {
-    return Promise.resolve(this.workflowDefinitonFilter);
+    return Promise.resolve(this.workflowDefinitionFilter);
   }
 
   setWorkflowDefinitionFilter(filter: string[]): Promise<void> {
-    this.workflowDefinitonFilter = filter;
+    this.workflowDefinitionFilter = filter;
     return Promise.resolve();
   }
 

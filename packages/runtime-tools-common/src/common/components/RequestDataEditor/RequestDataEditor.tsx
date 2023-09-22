@@ -58,7 +58,7 @@ const RefForwardingRequestDataEditor: React.ForwardRefRenderFunction<RequestData
 
   useImperativeHandle(forwardedRef, () => controller, [controller]);
 
-  return <div style={{ height: "400px" }} ref={container} />;
+  return <div className={"kogito-request-data-editor-container"} ref={container} />;
 };
 
 export const RequestDataEditor = React.forwardRef(RefForwardingRequestDataEditor);

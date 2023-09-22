@@ -39,7 +39,7 @@ import CloudEventCustomHeadersEditor, {
   CloudEventCustomHeadersEditorApi,
 } from "../CloudEventCustomHeadersEditor/CloudEventCustomHeadersEditor";
 import CloudEventFieldLabelIcon from "../CloudEventFieldLabelIcon/CloudEventFieldLabelIcon";
-import { RequestDataEditor } from "../../../../RequestDataEditor";
+import { RequestDataEditor, RequestDataEditorApi } from "../../../../RequestDataEditor";
 
 export interface CloudEventFormProps {
   driver: CloudEventFormDriver;
@@ -57,6 +57,7 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
   const [validationState, setValidationState] = useState<FormValidations>();
 
   const customHeadersEditorApi = useRef<CloudEventCustomHeadersEditorApi>(null);
+  const requestDataEditorRef = useRef<RequestDataEditorApi>(null);
 
   const [isMethodOpen, setIsMethodOpen] = useState<boolean>(false);
   const [method, setMethod] = useState<CloudEventMethod>(CloudEventMethod.POST);
@@ -76,6 +77,7 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
     setInstanceId(defaultValues?.instanceId ?? "");
     setBusinessKey("");
     customHeadersEditorApi?.current?.reset();
+    requestDataEditorRef.current?.setContent("");
   }, [defaultValues]);
 
   useEffect(() => {
@@ -133,7 +135,14 @@ export const CloudEventForm: React.FC<CloudEventFormProps & OUIAProps> = ({
   }, [method, endpoint, eventType, eventSource, eventData, instanceId, businessKey]);
 
   const requestDataEditor = useMemo(() => {
-    return <RequestDataEditor content={""} onContentChange={(args) => setEventData(args.content)} isReadOnly={false} />;
+    return (
+      <RequestDataEditor
+        ref={requestDataEditorRef}
+        content={""}
+        onContentChange={(args) => setEventData(args.content)}
+        isReadOnly={false}
+      />
+    );
   }, [setEventData]);
 
   return (

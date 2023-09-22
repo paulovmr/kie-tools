@@ -27,3 +27,9 @@
 .kogito-components-common__form-footer-padding-top {
   padding-top: 20px;
 }
+
+.kogito-request-data-editor-container {
+  border: #d2d2d2 solid 1px;
+  height: 350px;
+  padding: 5px;
+}

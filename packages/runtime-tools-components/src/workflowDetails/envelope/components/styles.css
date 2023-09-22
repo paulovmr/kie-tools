@@ -85,5 +85,4 @@
 }
 .kogito-workflow-details--timeline-status {
   background-color: var(--pf-global--BackgroundColor--100);
-  margin-left: calc(-1 * var(--pf-global--spacer--sm));
 }

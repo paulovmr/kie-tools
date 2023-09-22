@@ -21,7 +21,7 @@ import React, { useEffect, useRef } from "react";
 import { Page, PageSection } from "@patternfly/react-core/dist/js/components/Page";
 import { Text, TextContent, TextVariants } from "@patternfly/react-core/dist/js/components/Text";
 import { useHistory } from "react-router";
-import { Card } from "@patternfly/react-core/dist/esm/components/Card";
+import { Card, CardBody } from "@patternfly/react-core/dist/js/components/Card";
 import WorkflowFormContainer from "./WorkflowFormContainer/WorkflowFormContainer";
 import { useWorkflowFormGatewayApi, WorkflowFormGatewayApi } from "./WorkflowForm";
 import { WorkflowDefinition } from "@kie-tools/runtime-tools-common";
@@ -70,7 +70,9 @@ export function RuntimeToolsWorkflowForm() {
 
         <PageSection isFilled aria-label="workflow-definitions-section">
           <Card>
-            <WorkflowFormContainer workflowDefinitionData={workflowDefinition} onResetForm={onResetForm} />
+            <CardBody>
+              <WorkflowFormContainer workflowDefinitionData={workflowDefinition} onResetForm={onResetForm} />
+            </CardBody>
           </Card>
         </PageSection>
       </Page>

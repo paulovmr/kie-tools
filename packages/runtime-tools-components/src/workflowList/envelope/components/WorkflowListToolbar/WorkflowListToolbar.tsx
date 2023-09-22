@@ -434,10 +434,6 @@ const WorkflowListToolbar: React.FC<WorkflowListToolbarProps & OUIAProps> = ({
     setWorkflowInstances(clonedWorkflowInstances);
   };
 
-  const onOpenCloudEventClick = useCallback(() => {
-    driver.openTriggerCloudEvent();
-  }, [driver]);
-
   const statusMenuItems: JSX.Element[] = [
     <SelectOption key="ACTIVE" value="ACTIVE" />,
     <SelectOption key="COMPLETED" value="COMPLETED" />,
@@ -624,14 +620,6 @@ const WorkflowListToolbar: React.FC<WorkflowListToolbarProps & OUIAProps> = ({
               <SyncIcon />
             </Button>
           </Tooltip>
-        </ToolbarItem>
-      </ToolbarGroup>
-      <ToolbarGroup>
-        <ToolbarItem variant="separator" />
-        <ToolbarItem>
-          <Button variant="primary" onClick={() => onOpenCloudEventClick()}>
-            Trigger Cloud Event
-          </Button>
         </ToolbarItem>
       </ToolbarGroup>
     </React.Fragment>
