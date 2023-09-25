@@ -25,12 +25,17 @@ import { GraphQLWorkflowDetailsQueries } from "./WorkflowDetailsQueries";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import { useSettings } from "../../../settings/SettingsContext";
+import { useEnv } from "../../../env/EnvContext";
 
 export function WorkflowDetailsContextProvider(props: React.PropsWithChildren<{}>) {
   const settings = useSettings();
+  const { env } = useEnv();
 
   const httpLink = new HttpLink({
-    uri: settings.runtimeTools.config.dataIndexUrl,
+    uri: env.SERVERLESS_LOGIC_WEB_TOOLS_CORS_PROXY_URL,
+    headers: {
+      "Target-Url": settings.runtimeTools.config.dataIndexUrl,
+    },
   });
   const cache = new InMemoryCache();
 

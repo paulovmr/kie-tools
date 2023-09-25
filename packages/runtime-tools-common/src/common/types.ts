@@ -123,7 +123,7 @@ export interface WorkflowInstance {
   serviceUrl?: string;
   nodes: NodeInstance[];
   milestones?: Milestone[];
-  variables?: string;
+  variables?: string | unknown;
   start: Date;
   end?: Date;
   parentWorkflowInstance?: WorkflowInstance;

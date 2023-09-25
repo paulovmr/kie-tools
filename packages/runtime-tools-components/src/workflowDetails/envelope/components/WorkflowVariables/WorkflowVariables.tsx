@@ -32,7 +32,7 @@ interface WorkflowVariablesProps {
   displayLabel: boolean;
   displaySuccess: boolean;
   setDisplayLabel: (displayLabel: boolean) => void;
-  setUpdateJson: (updateJson: (variableJson: Record<string, unknown>) => void) => void;
+  setUpdateJson: (variableJson: Record<string, unknown>) => void;
   updateJson: Record<string, unknown>;
   workflowInstance: WorkflowInstance;
 }

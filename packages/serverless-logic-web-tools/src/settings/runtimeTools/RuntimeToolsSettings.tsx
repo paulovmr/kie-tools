@@ -108,7 +108,7 @@ export function RuntimeToolsSettings(props: SettingsPageProps) {
                 <b>Data Index URL: </b>
                 <i>{config.dataIndexUrl}</i>
                 <br />
-                <b>Kogito Service URL: </b>
+                <b>SonataFlow Service URL: </b>
                 <i>{config.kogitoServiceUrl}</i>
                 <br />
                 <br />
@@ -190,12 +190,12 @@ export function RuntimeToolsSettings(props: SettingsPageProps) {
               </InputGroup>
             </FormGroup>
             <FormGroup
-              label={"Kogito Service URL"}
+              label={"SonataFlow Service URL"}
               labelIcon={
-                <Popover bodyContent={"Kogito Service URL associated with your running Kogito runtime service."}>
+                <Popover bodyContent={"URL associated with your running SonataFlow runtime service."}>
                   <button
                     type="button"
-                    aria-label="More info for Kogito Service URL field"
+                    aria-label="More info for SonataFlow Service URL field"
                     onClick={(e) => e.preventDefault()}
                     aria-describedby="kogito-service-url-field"
                     className="pf-c-form__group-label-help"
@@ -214,7 +214,7 @@ export function RuntimeToolsSettings(props: SettingsPageProps) {
                   type="text"
                   id="kogito-service-url-field"
                   name="kogito-service-url-field"
-                  aria-label="Kogito Service URL field"
+                  aria-label="SonataFlow Service URL field"
                   aria-describedby="kogito-service-url-field-helper"
                   value={config.kogitoServiceUrl}
                   onChange={onKogitoServiceUrlChanged}
@@ -225,7 +225,7 @@ export function RuntimeToolsSettings(props: SettingsPageProps) {
                   <Button
                     isSmall
                     variant="plain"
-                    aria-label="Clear Kogito Service URL button"
+                    aria-label="Clear SonataFlow Service URL button"
                     onClick={onClearKogitoServiceUrl}
                   >
                     <TimesIcon />

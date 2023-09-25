@@ -58,7 +58,7 @@ interface WorkflowDetailsProps {
 const WorkflowDetails: React.FC<WorkflowDetailsProps> = ({ isEnvelopeConnectedToChannel, driver, workflowDetails }) => {
   const [data, setData] = useState<WorkflowInstance>({} as WorkflowInstance);
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [updateJson, setUpdateJson] = useState<any>({});
+  const [updateJson, setUpdateJson] = useState<Record<string, unknown>>({});
   const [displayLabel, setDisplayLabel] = useState<boolean>(false);
   const [displaySuccess, setDisplaySuccess] = useState<boolean>(false);
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
@@ -91,7 +91,7 @@ const WorkflowDetails: React.FC<WorkflowDetailsProps> = ({ isEnvelopeConnectedTo
   useEffect(() => {
     const getVariableJSON = (): void => {
       if (data && data.id === workflowDetails.id) {
-        setUpdateJson(data.variables);
+        setUpdateJson(typeof data.variables === "string" ? JSON.parse(data.variables) : data.variables);
       }
     };
 
