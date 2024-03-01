@@ -18,7 +18,7 @@
  */
 
 import * as React from "react";
-import { Editor } from "../api";
+import { Editor, EditorTheme } from "../api";
 import { LoadingScreen } from "./LoadingScreen";
 import { KeyBindingsHelpOverlay } from "./KeyBindingsHelpOverlay";
 import { useCallback, useImperativeHandle, useState } from "react";
@@ -56,6 +56,15 @@ export const EditorEnvelopeViewRef: React.ForwardRefRenderFunction<EditorEnvelop
     },
     [props, editor]
   );
+
+  //TODO THEME throw null pointer it seems we don't have GWT ready to set theme at this point
+  // Add a subscription here won't work
+  // React.useEffect(() => {
+  //   if (editor !== undefined){
+  //     editor.setTheme(EditorTheme.DARK);
+  //   }
+
+  // });
 
   return (
     <>

@@ -24,6 +24,7 @@ import {
   EditorContent,
   EditorFactory,
   EditorInitArgs,
+  EditorTheme,
   KogitoEditorChannelApi,
   KogitoEditorEnvelopeApi,
   KogitoEditorEnvelopeContextType,
@@ -93,6 +94,14 @@ export class KogitoEditorEnvelopeApiImpl<
 
     const editorContent = await this.args.envelopeContext.channelApi.requests.kogitoEditor_contentRequest();
     this.normalizedPosixPathRelativeToTheWorkspaceRoot = editorContent.normalizedPosixPathRelativeToTheWorkspaceRoot;
+
+    //TODO THEME it works but we may need a place to unsubscribe it
+    const subscription = this.args.envelopeContext.channelApi.shared.kogitoEditor_theme.subscribe(
+      (theme: EditorTheme) => {
+        this.editor.setTheme(theme);
+        //this.args.envelopeContext.channelApi.shared.kogitoEditor_theme.unsubscribe(subscription);// where to unsubscribe it???
+      }
+    );
 
     await this.editor
       .setContent(editorContent.normalizedPosixPathRelativeToTheWorkspaceRoot, editorContent.content)
