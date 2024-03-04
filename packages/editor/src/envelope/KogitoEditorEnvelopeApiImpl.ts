@@ -102,6 +102,7 @@ export class KogitoEditorEnvelopeApiImpl<
         //this.args.envelopeContext.channelApi.shared.kogitoEditor_theme.unsubscribe(subscription);// where to unsubscribe it???
       }
     );
+    this.view().setThemeSubscription(subscription);
 
     await this.editor
       .setContent(editorContent.normalizedPosixPathRelativeToTheWorkspaceRoot, editorContent.content)

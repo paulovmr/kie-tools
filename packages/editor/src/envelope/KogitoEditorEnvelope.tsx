@@ -84,6 +84,7 @@ export class KogitoEditorEnvelope<
             {({ setLocale }) => (
               <EditorEnvelopeView
                 ref={editorEnvelopeViewRef}
+                envelopeContext={this.context}
                 setLocale={setLocale}
                 showKeyBindingsOverlay={this.keyboardShortcutsService.isEnabled()}
               />

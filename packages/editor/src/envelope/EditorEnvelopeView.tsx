@@ -18,12 +18,13 @@
  */
 
 import * as React from "react";
-import { Editor, EditorTheme } from "../api";
+import { Editor, EditorTheme, KogitoEditorChannelApi, KogitoEditorEnvelopeContextType } from "../api";
 import { LoadingScreen } from "./LoadingScreen";
 import { KeyBindingsHelpOverlay } from "./KeyBindingsHelpOverlay";
-import { useCallback, useImperativeHandle, useState } from "react";
+import { useCallback, useContext, useEffect, useImperativeHandle, useState } from "react";
 
 interface Props {
+  envelopeContext: KogitoEditorEnvelopeContextType<any>;
   setLocale: React.Dispatch<string>;
   showKeyBindingsOverlay: boolean;
 }
@@ -34,6 +35,7 @@ export interface EditorEnvelopeViewApi<E extends Editor> {
   setLoading: () => void;
   setLoadingFinished: () => void;
   setLocale: (locale: string) => void;
+  setThemeSubscription: (themeSubscription: (themeSubscription: EditorTheme) => void) => void;
 }
 
 export const EditorEnvelopeViewRef: React.ForwardRefRenderFunction<EditorEnvelopeViewApi<Editor>, Props> = (
@@ -42,7 +44,9 @@ export const EditorEnvelopeViewRef: React.ForwardRefRenderFunction<EditorEnvelop
 ) => {
   const [editor, setEditor] = useState<Editor | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+  const [themeSub, setThemeSub] = useState<((themeSubscription: EditorTheme) => void) | undefined>(undefined);
 
+  console.error("2222");
   useImperativeHandle(
     forwardingRef,
     () => {
@@ -52,19 +56,22 @@ export const EditorEnvelopeViewRef: React.ForwardRefRenderFunction<EditorEnvelop
         setLoading: () => setLoading(true),
         setLoadingFinished: () => setLoading(false),
         setLocale: (locale) => props.setLocale(locale),
+        setThemeSubscription: (themeSubscription) => setThemeSub(themeSubscription),
       };
     },
     [props, editor]
   );
 
-  //TODO THEME throw null pointer it seems we don't have GWT ready to set theme at this point
-  // Add a subscription here won't work
-  // React.useEffect(() => {
-  //   if (editor !== undefined){
-  //     editor.setTheme(EditorTheme.DARK);
-  //   }
-
-  // });
+  useEffect(() => {
+    console.error("000");
+    return () => {
+      console.error("111111111");
+      if (themeSub) {
+        console.error("333");
+        props.envelopeContext.channelApi.shared.kogitoEditor_theme.unsubscribe(themeSub);
+      }
+    };
+  }, [themeSub]);
 
   return (
     <>
