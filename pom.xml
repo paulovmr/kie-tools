@@ -193,6 +193,16 @@
             </configuration>
           </execution>
           <execution>
+            <id>pnpm update-version-to</id>
+            <goals>
+              <goal>pnpm</goal>
+            </goals>
+            <configuration>
+              <skip>${skipPnpmUpdateVersionTo}</skip>
+              <arguments>update-version-to ${packagesVersion} -F @kie-tools/sonataflow-quarkus-devui... -F vscode-extension-serverless-logic-editor...</arguments>
+            </configuration>
+          </execution>
+          <execution>
             <id>pnpm build:prod</id>
             <goals>
               <goal>pnpm</goal>
@@ -278,9 +288,11 @@
 
   <profiles>
     <profile>
-      <id>default</id>
+      <id>doSkipNpmConfigRegistry</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>!env.NPM_REGISTRY_URL</name>
+        </property>
       </activation>
       <properties>
         <skipNpmConfigRegistry>true</skipNpmConfigRegistry>
@@ -295,6 +307,28 @@
       </activation>
       <properties>
         <skipNpmConfigRegistry>false</skipNpmConfigRegistry>
+      </properties>
+    </profile>
+    <profile>
+      <id>doSkipPnpmUpdateVersionTo</id>
+      <activation>
+        <property>
+          <name>!packagesVersion</name>
+        </property>
+      </activation>
+      <properties>
+        <skipPnpmUpdateVersionTo>true</skipPnpmUpdateVersionTo>
+      </properties>
+    </profile>
+    <profile>
+      <id>doNotSkipPnpmUpdateVersionTo</id>
+      <activation>
+        <property>
+          <name>packagesVersion</name>
+        </property>
+      </activation>
+      <properties>
+        <skipPnpmUpdateVersionTo>false</skipPnpmUpdateVersionTo>
       </properties>
     </profile>
   </profiles>
