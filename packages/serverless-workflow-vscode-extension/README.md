@@ -1,4 +1,4 @@
-## Openshift Serverless Logic Editor
+## OpenShift Serverless Logic Editor
 
 ![vs-code-support](https://img.shields.io/badge/Visual%20Studio%20Code-1.67.0+-blue.svg)
 

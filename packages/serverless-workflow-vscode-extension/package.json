@@ -89,7 +89,7 @@
   "engines": {
     "vscode": "^1.67.0"
   },
-  "displayName": "Openshift Serverless Logic Editor",
+  "displayName": "OpenShift Serverless Logic Editor",
   "categories": [
     "Other"
   ],
