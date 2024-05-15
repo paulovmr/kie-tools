@@ -1,0 +1,47 @@
+#!/usr/bin/env groovy
+
+node('rhel8') {
+    stage('Install requirements') {
+        def nodeHome = tool 'nodejs-lts'
+        env.PATH = "${env.PATH}:${nodeHome}/bin"
+        sh 'node -v'
+        sh 'npm -v'
+    }
+
+    stage('Download VSIX files') {
+        // TODO Change URL to the one published by the product build
+        sh 'wget "https://github.com/kiegroup/kie-tools/releases/download/$VERSION/serverless_workflow_vscode_extension_$VERSION.vsix"'
+        sh 'md5sum *.vsix'
+    }
+
+    stage('Archive VSIX files') {
+        def vsix = findFiles(glob: '**.vsix')
+        archiveArtifacts artifacts: '**.vsix'
+    }
+
+    if (publishToMarketPlace.equals('true') || publishToOVSX.equals('true')) {
+        timeout(time:1, unit:'DAYS') {
+            input message:'Approve deployment?', submitter: 'fantonan,hcunha,rguimara,gcaponet,prego'
+        }
+
+        def vsix_serverless_workflow_vscode_extension = findFiles(glob: '**serverless_workflow_vscode_extension*.vsix')
+
+        if (publishToMarketPlace.equals('true')) {
+            stage('Publish to VS Code Marketplace') {
+                sh 'npm install -g @vscode/vsce'
+                withCredentials([[$class: 'StringBinding', credentialsId: 'vscode_java_marketplace', variable: 'TOKEN']]) {
+                    sh 'vsce publish -p ${TOKEN} --packagePath' + " ${vsix_serverless_workflow_vscode_extension[0].path}"
+                }
+            }
+        }
+
+        if (publishToOVSX.equals('true')) {
+            stage('Publish to Open-vsx Marketplace') {
+                sh "npm install -g ovsx"
+                withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
+                    sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix_serverless_workflow_vscode_extension[0].path}"
+                }
+            }
+        }
+    }
+}
