@@ -177,7 +177,7 @@
       { "id": "@kie-tools/serverless-workflow-dev-ui-monitoring-webapp" },
       { "id": "@kie-tools/serverless-workflow-jq-expressions" },
       { "id": "@kie-tools/serverless-workflow-service-catalog" },
-      { "id": "swf-vscode-extension" },
+      { "id": "vscode-extension-serverless-logic-editor" },
       { "id": "vscode-extension-dashbuilder-editor" },
       { "id": "vscode-extension-kie-ba-bundle" },
       { "id": "vscode-extension-kogito-bundle" },
@@ -1132,15 +1132,27 @@
         "target": "@kie-tools-core/envelope-bus",
         "weight": 1
       },
-      { "source": "swf-vscode-extension", "target": "@kie-tools-core/vscode-extension", "weight": 1 },
-      { "source": "swf-vscode-extension", "target": "@kie-tools/serverless-workflow-language-service", "weight": 1 },
-      { "source": "swf-vscode-extension", "target": "@kie-tools-core/webpack-base", "weight": 1 },
       {
-        "source": "swf-vscode-extension",
+        "source": "vscode-extension-serverless-logic-editor",
+        "target": "@kie-tools-core/vscode-extension",
+        "weight": 1
+      },
+      {
+        "source": "vscode-extension-serverless-logic-editor",
+        "target": "@kie-tools/serverless-workflow-language-service",
+        "weight": 1
+      },
+      { "source": "vscode-extension-serverless-logic-editor", "target": "@kie-tools-core/webpack-base", "weight": 1 },
+      {
+        "source": "vscode-extension-serverless-logic-editor",
         "target": "@kie-tools/serverless-workflow-diagram-editor-assets",
         "weight": 1
       },
-      { "source": "swf-vscode-extension", "target": "@kie-tools/vscode-extension-common-test-helpers", "weight": 1 },
+      {
+        "source": "vscode-extension-serverless-logic-editor",
+        "target": "@kie-tools/vscode-extension-common-test-helpers",
+        "weight": 1
+      },
       { "source": "vscode-extension-dashbuilder-editor", "target": "@kie-tools-core/vscode-extension", "weight": 1 },
       {
         "source": "vscode-extension-dashbuilder-editor",
@@ -1342,7 +1354,7 @@
     ["@kie-tools/serverless-workflow-service-catalog", "packages/serverless-workflow-service-catalog"],
     ["@kie-tools/serverless-workflow-standalone-editor", "packages/serverless-workflow-standalone-editor"],
     ["@kie-tools/serverless-workflow-text-editor", "packages/serverless-workflow-text-editor"],
-    ["swf-vscode-extension", "packages/serverless-workflow-vscode-extension"],
+    ["vscode-extension-serverless-logic-editor", "packages/serverless-workflow-vscode-extension"],
     ["sonataflow-deployment-webapp", "packages/sonataflow-deployment-webapp"],
     ["@kie-tools/sonataflow-quarkus-devui", "packages/sonataflow-quarkus-devui"],
     ["@kie-tools/storybook-base", "packages/storybook-base"],

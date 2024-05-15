@@ -172,7 +172,7 @@ digraph G {
   "@kie-tools/serverless-workflow-jq-expressions" [ color = "blue", fontcolor = "blue", style = "rounded" ];
   "@kie-tools/serverless-workflow-service-catalog" [ color = "blue", fontcolor = "blue", style = "rounded" ];
   "@kie-tools/serverless-workflow-language-service" [ color = "blue", fontcolor = "blue", style = "rounded" ];
-  "swf-vscode-extension" [ color = "blue", fontcolor = "blue", style = "rounded" ];
+  "vscode-extension-serverless-logic-editor" [ color = "blue", fontcolor = "blue", style = "rounded" ];
   "@kie-tools/stunner-editors-dmn-loader" [ color = "blue", fontcolor = "blue", style = "rounded" ];
   "@kie-tools/unitables" [ color = "blue", fontcolor = "blue", style = "rounded" ];
   "vscode-extension-dashbuilder-editor" [ color = "blue", fontcolor = "blue", style = "rounded" ];
@@ -519,11 +519,11 @@ digraph G {
   "@kie-tools/serverless-workflow-text-editor" -> "@kie-tools-core/editor" [ style = "solid", color = "blue" ];
   "@kie-tools/serverless-workflow-text-editor" -> "@kie-tools/serverless-workflow-language-service" [ style = "solid", color = "blue" ];
   "@kie-tools/serverless-workflow-text-editor" -> "@kie-tools-core/webpack-base" [ style = "dashed", color = "blue" ];
-  "swf-vscode-extension" -> "@kie-tools-core/vscode-extension" [ style = "solid", color = "blue" ];
-  "swf-vscode-extension" -> "@kie-tools/serverless-workflow-language-service" [ style = "solid", color = "blue" ];
-  "swf-vscode-extension" -> "@kie-tools-core/webpack-base" [ style = "dashed", color = "blue" ];
-  "swf-vscode-extension" -> "@kie-tools/serverless-workflow-diagram-editor-assets" [ style = "dashed", color = "blue" ];
-  "swf-vscode-extension" -> "@kie-tools/vscode-extension-common-test-helpers" [ style = "dashed", color = "blue" ];
+  "vscode-extension-serverless-logic-editor" -> "@kie-tools-core/vscode-extension" [ style = "solid", color = "blue" ];
+  "vscode-extension-serverless-logic-editor" -> "@kie-tools/serverless-workflow-language-service" [ style = "solid", color = "blue" ];
+  "vscode-extension-serverless-logic-editor" -> "@kie-tools-core/webpack-base" [ style = "dashed", color = "blue" ];
+  "vscode-extension-serverless-logic-editor" -> "@kie-tools/serverless-workflow-diagram-editor-assets" [ style = "dashed", color = "blue" ];
+  "vscode-extension-serverless-logic-editor" -> "@kie-tools/vscode-extension-common-test-helpers" [ style = "dashed", color = "blue" ];
   "sonataflow-deployment-webapp" -> "@kie-tools-core/react-hooks" [ style = "solid", color = "blue" ];
   "sonataflow-deployment-webapp" -> "@kie-tools/runtime-tools-shared-webapp-components" [ style = "solid", color = "blue" ];
   "sonataflow-deployment-webapp" -> "@kie-tools/runtime-tools-swf-webapp-components" [ style = "solid", color = "blue" ];

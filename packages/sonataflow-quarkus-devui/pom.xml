@@ -78,32 +78,5 @@
         </plugin>
       </plugins>
     </pluginManagement>
-
-    <plugins>
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <inherited>false</inherited>
-        <configuration>
-          <workingDirectory>../../</workingDirectory>
-        </configuration>
-        <executions>
-          <execution>
-            <id>pnpm build:prod</id>
-            <goals>
-              <goal>pnpm</goal>
-            </goals>
-            <configuration>
-              <skip>${skip.ui.build}</skip>
-              <arguments>-F serverless-workflow-dev-ui-webapp... build:prod</arguments>
-              <environmentVariables>
-                <KIE_TOOLS_BUILD__runTests>false</KIE_TOOLS_BUILD__runTests>
-                <KIE_TOOLS_BUILD__runIntegrationTests>false</KIE_TOOLS_BUILD__runIntegrationTests>
-              </environmentVariables>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
   </build>
 </project>
